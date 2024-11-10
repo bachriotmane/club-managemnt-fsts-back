@@ -1,60 +1,43 @@
 package club.management.club.entities;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.Set;
+import static jakarta.persistence.FetchType.EAGER;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
+@Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uid;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    @Column(unique = false)
     private String email;
-    private String nom;
-    private String prenom;
+    @Column(unique = true)
     private String cin;
-    
-    // Constructeur par défaut 
-    public User() {
-    }
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+    private boolean accountLocked;
+    private boolean accountLEnabled;
+    private boolean accountCompleted;
 
-    
-    
-    
-    
-	public Long getUid() {
-		return uid;
-	}
-	public void setUid(Long uid) {
-		this.uid = uid;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getNom() {
-		return nom;
-	}
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-	public String getPrenom() {
-		return prenom;
-	}
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
-	public String getCin() {
-		return cin;
-	}
-	public void setCin(String cin) {
-		this.cin = cin;
-	}
+    @ManyToMany(fetch = EAGER)
+    @JoinTable(
+            name = "user_authorities",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
+    Set<Authority> authorities;
 
-   
 }
