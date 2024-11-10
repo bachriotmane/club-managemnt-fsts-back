@@ -1,9 +1,18 @@
 package club.management.club.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Date;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Historique {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,64 +24,4 @@ public class Historique {
     @ManyToOne
     @JoinColumn(name = "demande_id") 
     private Demande demande;
-
-    
-    public Historique() {
-    	
-    }
-
-
-	public Long getId() {
-		return id;
-	}
-
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	public String getTitre() {
-		return titre;
-	}
-
-
-	public void setTitre(String titre) {
-		this.titre = titre;
-	}
-
-
-	public String getDescription() {
-		return description;
-	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-	public Date getDate() {
-		return date;
-	}
-
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-
-	public Demande getDemande() {
-		return demande;
-	}
-
-
-	public void setDemande(Demande demande) {
-		this.demande = demande;
-	}
-    
-    
-    
-    
-    
 }
