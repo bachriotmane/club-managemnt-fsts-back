@@ -1,10 +1,19 @@
 package club.management.club.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,95 +46,4 @@ public class Club {
         inverseJoinColumns = @JoinColumn(name = "etudiant_id")
     )
     private List<Etudiant> admins;
-    
-    //vide
-    public Club() {
-    	
-    }
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getLogo() {
-		return logo;
-	}
-
-	public void setLogo(String logo) {
-		this.logo = logo;
-	}
-
-	public String getInstagramme() {
-		return instagramme;
-	}
-
-	public void setInstagramme(String instagramme) {
-		this.instagramme = instagramme;
-	}
-
-	public List<Etudiant> getMembers() {
-		return members;
-	}
-
-	public void setMembers(List<Etudiant> members) {
-		this.members = members;
-	}
-
-	public List<Publication> getPublications() {
-		return publications;
-	}
-
-	public void setPublications(List<Publication> publications) {
-		this.publications = publications;
-	}
-
-	public List<Demande> getDemandes() {
-		return demandes;
-	}
-
-	public void setDemandes(List<Demande> demandes) {
-		this.demandes = demandes;
-	}
-
-	public List<Etudiant> getAdmins() {
-		return admins;
-	}
-
-	public void setAdmins(List<Etudiant> admins) {
-		this.admins = admins;
-	}
-
-
-	
-    
-    
-  
 }
