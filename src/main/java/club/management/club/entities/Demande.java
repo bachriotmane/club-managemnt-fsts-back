@@ -23,20 +23,23 @@ public class Demande {
     private Date date;
 
     @ManyToOne
-    private Etudiant etudiant;
+    private Etudiant etudiantDemandeur;
 
     @ManyToOne
-    private Club club;
+    private Club creationClub;
+
+    @ManyToOne
+    private Club integrationClub;
     
-    @OneToMany(mappedBy = "demande") 
+    @OneToMany(mappedBy = "demande")
     private List<Historique> historiques;
     
     @OneToOne
-    @JoinColumn(name = "evenement_id") 
-    private Evenement evenement;
+    @JoinColumn(name = "evenement_id")
+    private Evenement organisationEvenement;
 
     @Enumerated(EnumType.STRING)
-    private StatutDemande statut;
+    private StatutDemande statutDemande;
     
     @Enumerated(EnumType.STRING)
     private TypeDemande type;

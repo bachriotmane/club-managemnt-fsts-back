@@ -17,7 +17,4 @@ public class Publication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    private Club club;
 }

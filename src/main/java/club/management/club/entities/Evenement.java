@@ -23,6 +23,4 @@ public class Evenement {
     private String location;
     private Double budget;
 
-    @OneToOne(mappedBy = "evenement")
-    private Demande demande;
 }

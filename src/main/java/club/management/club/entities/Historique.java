@@ -20,8 +20,4 @@ public class Historique {
     private String titre;
     private String description;
     private Date date;
-    
-    @ManyToOne
-    @JoinColumn(name = "demande_id") 
-    private Demande demande;
 }
