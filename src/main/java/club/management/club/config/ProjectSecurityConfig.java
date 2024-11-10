@@ -9,7 +9,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -22,7 +24,7 @@ import java.util.Collections;
 public class ProjectSecurityConfig {
     private final JWTTokenValidatorFilter jwtTokenValidatorFilter;
     private final AuthenticationProvider authenticationProvider;
-
+    private final CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler;
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 
@@ -62,9 +64,16 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/myCards").hasRole("USER")
                         .requestMatchers("/test/get")
                         .authenticated()
-                        .requestMatchers("/notices","/contact","/auth/**").permitAll()
+                        .requestMatchers("/notices","/contact","/auth/**", "/login/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                );
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/login-success",true)
+                        .failureUrl("/login-failure")
+                        .successHandler(customOAuth2LoginSuccessHandler)
+                        .failureHandler(new SimpleUrlAuthenticationFailureHandler())
+                )
+                .addFilterBefore(jwtTokenValidatorFilter, OAuth2LoginAuthenticationFilter.class);;
 
         return http.build();
     }

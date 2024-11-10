@@ -29,6 +29,8 @@ public class User {
     private String password;
     private boolean accountLocked;
     private boolean accountLEnabled;
+    private boolean accountCompleted;
+
     @ManyToMany(fetch = EAGER)
     @JoinTable(
             name = "user_authorities",
