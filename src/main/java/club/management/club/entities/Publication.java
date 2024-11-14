@@ -4,6 +4,7 @@ package club.management.club.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UUID;
 
 import java.util.Date;
 
@@ -15,8 +16,8 @@ import java.util.Date;
 @Builder
 public class Publication {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String title;
     private String pubDesc;
     private Date date;

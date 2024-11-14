@@ -9,11 +9,13 @@ import java.util.Date;
 @Component
 public class PublicationMapper {
     public PublicationDTO convertToDTO(Publication publication) {
-        return new PublicationDTO("", "", "",new Date(), false,"false");
+        return new PublicationDTO(publication.getId(), publication.getTitle(), publication.getPubDesc(),publication.getDate(), publication.isPublic(),"");
     }
 
     public Publication convertToPublication(PublicationDTO dto) {
-        return new Publication();
+        Publication publication = new Publication();
+        publication.setId(dto.id());
+        return publication;
     }
 
 }

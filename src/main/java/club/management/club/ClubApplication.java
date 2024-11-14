@@ -15,6 +15,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Date;
+
 @OpenAPIDefinition(
         info = @Info(
                 title = "FSTs Clubs management",
@@ -51,16 +53,16 @@ public class ClubApplication {
             }
 
             // Add Some Pubs to the database
-            publicationRepository.save(Publication.builder().id(1L).isPublic(true).title("New Member Joins Us").pubDesc("We are thrilled to welcome a new team member!").build());
-            publicationRepository.save(Publication.builder().id(2L).isPublic(true).title("Quarterly Sales Report Released").pubDesc("Our Q3 sales report shows promising growth.").build());
-            publicationRepository.save(Publication.builder().id(3L).isPublic(true).title("Tech Conference 2024").pubDesc("Excited to participate in the upcoming tech conference!").build());
-            publicationRepository.save(Publication.builder().id(4L).isPublic(true).title("Product Launch").pubDesc("Announcing our latest product in the market.").build());
-            publicationRepository.save(Publication.builder().id(5L).isPublic(false).title("Internal Strategy Meeting").pubDesc("A meeting to discuss our future strategies.").build());
-            publicationRepository.save(Publication.builder().id(6L).isPublic(true).title("Office Renovation Complete").pubDesc("Our office renovation is now complete! Check it out!").build());
-            publicationRepository.save(Publication.builder().id(7L).isPublic(true).title("Charity Drive Success").pubDesc("Thanks to all who participated in our recent charity event.").build());
-            publicationRepository.save(Publication.builder().id(8L).isPublic(true).title("Employee of the Month").pubDesc("Congratulations to Jane Doe, our employee of the month!").build());
-            publicationRepository.save(Publication.builder().id(9L).isPublic(true).title("Health and Wellness Workshop").pubDesc("Join our upcoming wellness workshop for all employees.").build());
-            publicationRepository.save(Publication.builder().id(10L).isPublic(true).title("Holiday Party Announced").pubDesc("Our annual holiday party is coming up soon, stay tuned!").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("New Member Joins Us").pubDesc("We are thrilled to welcome a new team member!").build());
+            publicationRepository.save(Publication.builder().date(new Date()).isPublic(true).title("Quarterly Sales Report Released").pubDesc("Our Q3 sales report shows promising growth.").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("Tech Conference 2024").pubDesc("Excited to participate in the upcoming tech conference!").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("Product Launch").pubDesc("Announcing our latest product in the market.").build());
+            publicationRepository.save(Publication.builder().isPublic(false).title("Internal Strategy Meeting").pubDesc("A meeting to discuss our future strategies.").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("Office Renovation Complete").pubDesc("Our office renovation is now complete! Check it out!").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("Charity Drive Success").pubDesc("Thanks to all who participated in our recent charity event.").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("Employee of the Month").pubDesc("Congratulations to Jane Doe, our employee of the month!").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("Health and Wellness Workshop").pubDesc("Join our upcoming wellness workshop for all employees.").build());
+            publicationRepository.save(Publication.builder().isPublic(true).title("Holiday Party Announced").pubDesc("Our annual holiday party is coming up soon, stay tuned!").build());
 
         };
     }
