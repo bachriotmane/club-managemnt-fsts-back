@@ -66,6 +66,7 @@ public class ProjectSecurityConfig {
                         .authenticated()
                         .requestMatchers("/notices","/contact","/auth/**", "/login/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("/login-success",true)
