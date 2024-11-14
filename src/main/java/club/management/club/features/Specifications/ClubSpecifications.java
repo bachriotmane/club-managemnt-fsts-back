@@ -5,6 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ClubSpecifications {
     public static Specification<Club> withNom(String nom) {
-        return (root, query, builder) -> nom ==  null || nom.isEmpty() ? null : builder.equal(root.get("nom"), false);
+        return (root, query, builder) ->
+                (nom == null || nom.isEmpty())
+                        ? null
+                        : builder.like(root.get("nom"), nom + "%");
     }
 }
