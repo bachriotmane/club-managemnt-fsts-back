@@ -1,7 +1,7 @@
 package club.management.club;
 
-import club.management.club.entities.Authority;
-import club.management.club.repositories.AuthorityRepo;
+import club.management.club.features.entities.Authority;
+import club.management.club.features.repositories.AuthorityRepo;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
