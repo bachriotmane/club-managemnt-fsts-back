@@ -24,18 +24,11 @@ public class Demande {
 
     @ManyToOne
     private Etudiant etudiantDemandeur;
-
     @ManyToOne
-    private Club creationClub;
-
-    @ManyToOne
-    private Club integrationClub;
-    
-    @OneToMany(mappedBy = "demande")
+    private Club club;
+    @OneToMany
     private List<Historique> historiques;
-    
     @OneToOne
-    @JoinColumn(name = "evenement_id")
     private Evenement organisationEvenement;
 
     @Enumerated(EnumType.STRING)

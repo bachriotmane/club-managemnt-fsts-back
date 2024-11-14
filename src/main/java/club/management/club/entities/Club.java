@@ -32,10 +32,10 @@ public class Club {
     )
     private List<Etudiant> members;
 
-    @OneToMany(mappedBy = "club")
+    @OneToMany
     private List<Publication> publications;
 
-    @OneToMany(mappedBy = "club")
+    @OneToMany
     private List<Demande> demandes;
 
     
