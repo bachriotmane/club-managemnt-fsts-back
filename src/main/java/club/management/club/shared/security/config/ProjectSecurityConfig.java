@@ -48,12 +48,10 @@ public class ProjectSecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenValidatorFilter, OAuth2LoginAuthenticationFilter.class)
-                .authorizeRequests((requests) -> requests
+                .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/test/get").hasRole("USER")
-                        .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/test/post").hasRole("ADMIN")
-                        .requestMatchers("/test/get", "/myCards").authenticated()
-                        .requestMatchers("/notices", "/contact", "/auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/test/post").hasAnyRole("ADMIN")
+                        .requestMatchers( "/auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

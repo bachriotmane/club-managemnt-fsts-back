@@ -26,7 +26,6 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
     private final JwtTokenService jwtTokenService;
     @Value("${url.frontend}")
     private String frontendUrl;
-    private final String JWT_SECRET = "your_jwt_secret_key"; // Ideally store securely in env variables
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -52,7 +51,8 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
         claims.put("fullName", userService.getFullName(user.get()));
         claims.put("accountCompleted",user.get().isAccountCompleted());
         var jwtToken = jwtTokenService.generateToken(claims, user.get());
-        // Send token in response
+        // still in the test , not yet verified
+        // any changes or bugs please contact abdelkarim
         response.setHeader("Authorization", "Bearer " + jwtToken);
         response.sendRedirect(frontendUrl+"/home");
     }
