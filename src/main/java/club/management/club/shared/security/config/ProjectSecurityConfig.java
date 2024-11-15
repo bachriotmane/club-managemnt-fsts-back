@@ -25,59 +25,40 @@ public class ProjectSecurityConfig {
     private final JWTTokenValidatorFilter jwtTokenValidatorFilter;
     private final AuthenticationProvider authenticationProvider;
     private final CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler;
+
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-
-//            http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests((requests) -> requests
-//                        .anyRequest().permitAll()
-//                )
-//                 // enable the default form login behavior provided by Spring Security.
-//                .formLogin(Customizer.withDefaults())
-//                 //enable the default HTTP Basic authentication configuration.
-//                 // Clients need to send an Authorization header with a base64-encoded username and password.
-//                .httpBasic(Customizer.withDefaults());
-
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
                     config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
-                    // specifies which HTTP headers the client is allowed to include in the request
-                    config.setAllowedHeaders(Collections.singletonList("*"));
-                    // refers to the response headers that the client (browser) is allowed to access.
+                    config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "*"));
                     config.setExposedHeaders(Arrays.asList("Authorization"));
-                    // his specifies how long the results of a pre-flight request
-                    // (OPTIONS request) can be cached by the client (browser).
                     config.setMaxAge(3600L);
                     return config;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests((requests)->requests
+                .addFilterBefore(jwtTokenValidatorFilter, OAuth2LoginAuthenticationFilter.class)
+                .authorizeRequests((requests) -> requests
                         .requestMatchers("/test/get").hasRole("USER")
-                        .requestMatchers("/myBalance").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/test/post").hasRole("ADMIN")
-                        .requestMatchers("/myCards").hasRole("USER")
-                        .requestMatchers("/test/get")
-                        .authenticated()
-                        .requestMatchers("/notices","/contact","/auth/**", "/login/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/test/get", "/myCards").authenticated()
+                        .requestMatchers("/notices", "/contact", "/auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/login-success",true)
+                        .defaultSuccessUrl("/login-success", true)
                         .failureUrl("/login-failure")
                         .successHandler(customOAuth2LoginSuccessHandler)
                         .failureHandler(new SimpleUrlAuthenticationFailureHandler())
-                )
-                .addFilterBefore(jwtTokenValidatorFilter, OAuth2LoginAuthenticationFilter.class);;
+                );
 
         return http.build();
     }
-
-
 }

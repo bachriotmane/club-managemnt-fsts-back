@@ -36,6 +36,9 @@ public class UserController {
         }
         return response;
     }
-
+    @GetMapping("/test")
+    public String test( ){
+        return "hello fom protected resources ";
+    }
 
 }

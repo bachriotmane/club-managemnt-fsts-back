@@ -4,6 +4,7 @@ import club.management.club.shared.dtos.ListSuccessResponse;
 import club.management.club.features.dto.responses.ClubListResponse;
 import club.management.club.features.services.clubs.ClubList;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/clubs")
 @AllArgsConstructor
 @Tag(name = "Clubs API")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ClubsController {
 
     private final ClubList clubList;
