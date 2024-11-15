@@ -1,11 +1,9 @@
-package club.management.club.controllers;
+package club.management.club.features.controllers;
 
-import club.management.club.dto.PublicationDTO;
-import club.management.club.services.publications.PublicationsService;
+import club.management.club.features.dto.responses.PublicationDTO;
+import club.management.club.features.services.publications.PublicationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

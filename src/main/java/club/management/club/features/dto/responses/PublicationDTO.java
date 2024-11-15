@@ -1,7 +1,6 @@
-package club.management.club.dto;
+package club.management.club.features.dto.responses;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public record PublicationDTO(
         String id,

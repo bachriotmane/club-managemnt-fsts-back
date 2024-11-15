@@ -1,7 +1,7 @@
-package club.management.club.mappers;
+package club.management.club.features.mappers;
 
-import club.management.club.dto.PublicationDTO;
-import club.management.club.entities.Publication;
+import club.management.club.features.dto.responses.PublicationDTO;
+import club.management.club.features.entities.Publication;
 import org.springframework.stereotype.Component;
 
 

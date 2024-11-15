@@ -1,11 +1,11 @@
-package club.management.club.services.publications.impl;
+package club.management.club.features.services.publications.impl;
 
-import club.management.club.dto.PublicationDTO;
-import club.management.club.entities.Publication;
-import club.management.club.mappers.PublicationMapper;
-import club.management.club.repositories.PublicationRepository;
-import club.management.club.services.publications.PublicationSpecifications;
-import club.management.club.services.publications.PublicationsService;
+import club.management.club.features.Specifications.PublicationSpecifications;
+import club.management.club.features.dto.responses.PublicationDTO;
+import club.management.club.features.entities.Publication;
+import club.management.club.features.mappers.PublicationMapper;
+import club.management.club.features.repositories.PublicationRepository;
+import club.management.club.features.services.publications.PublicationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

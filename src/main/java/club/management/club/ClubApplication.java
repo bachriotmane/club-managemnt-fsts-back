@@ -1,9 +1,10 @@
 package club.management.club;
 
-import club.management.club.entities.Authority;
-import club.management.club.entities.Publication;
-import club.management.club.repositories.AuthorityRepo;
-import club.management.club.repositories.PublicationRepository;
+
+import club.management.club.features.entities.Authority;
+import club.management.club.features.entities.Publication;
+import club.management.club.features.repositories.AuthorityRepo;
+import club.management.club.features.repositories.PublicationRepository;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Date;
 
 @OpenAPIDefinition(
         info = @Info(

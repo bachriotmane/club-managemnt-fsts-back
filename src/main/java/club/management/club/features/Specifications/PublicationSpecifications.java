@@ -1,6 +1,7 @@
-package club.management.club.services.publications;
+package club.management.club.features.Specifications;
 
-import club.management.club.entities.Publication;
+
+import club.management.club.features.entities.Publication;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;

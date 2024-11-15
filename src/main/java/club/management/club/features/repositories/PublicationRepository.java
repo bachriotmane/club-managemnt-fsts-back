@@ -1,6 +1,7 @@
-package club.management.club.repositories;
+package club.management.club.features.repositories;
 
-import club.management.club.entities.Publication;
+
+import club.management.club.features.entities.Publication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
