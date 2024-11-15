@@ -15,7 +15,14 @@ public class PublicationController {
     private final PublicationsService publicationsService;
 
     @GetMapping
-    public Page<PublicationDTO> getPublications(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return publicationsService.getAllPublications(page, size, true);
+    public Page<PublicationDTO> getPublications(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Boolean isPublic,
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate
+    ) {
+        return publicationsService.getAllPublications(page, size, true, isPublic, keyword, fromDate, toDate);
     }
 }

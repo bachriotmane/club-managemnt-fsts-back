@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 import java.util.Set;
 
 public interface PublicationsService {
-    Page<PublicationDTO> getAllPublications(int page, int size, boolean isDesc);
+    Page<PublicationDTO> getAllPublications(int page, int size, boolean isDesc, boolean isPublic , String keyword, String formDate, String toDate);
 }

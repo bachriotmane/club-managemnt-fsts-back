@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
 @AllArgsConstructor
 public class PublicationServiceImpl implements PublicationsService {
@@ -21,8 +19,9 @@ public class PublicationServiceImpl implements PublicationsService {
 
 
     @Override
-    public Page<PublicationDTO> getAllPublications(int page, int size, boolean isDesc) {
+    public Page<PublicationDTO> getAllPublications(int page, int size, boolean isDesc, boolean isPublic, String keyword, String formDate, String toDate) {
         Pageable pageable =  PageRequest.of(page, size, Sort.by("date").descending());
         return publicationRepository.findAll(pageable).map(publicationMapper::convertToDTO);
     }
+
 }
