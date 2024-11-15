@@ -6,7 +6,9 @@ import club.management.club.repositories.PublicationRepository;
 import club.management.club.services.publications.PublicationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -19,7 +21,8 @@ public class PublicationServiceImpl implements PublicationsService {
 
 
     @Override
-    public Page<PublicationDTO> getAllPublications(Pageable pageable) {
+    public Page<PublicationDTO> getAllPublications(int page, int size, boolean isDesc) {
+        Pageable pageable =  PageRequest.of(page, size, Sort.by("date").descending());
         return publicationRepository.findAll(pageable).map(publicationMapper::convertToDTO);
     }
 }

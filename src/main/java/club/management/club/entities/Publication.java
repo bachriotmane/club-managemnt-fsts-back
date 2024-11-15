@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.UUID;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -20,6 +21,6 @@ public class Publication {
     private String id;
     private String title;
     private String pubDesc;
-    private Date date;
+    private LocalDateTime date;
     private  boolean isPublic;
 }

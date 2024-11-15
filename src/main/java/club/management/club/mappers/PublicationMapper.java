@@ -4,7 +4,6 @@ import club.management.club.dto.PublicationDTO;
 import club.management.club.entities.Publication;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 
 @Component
 public class PublicationMapper {
