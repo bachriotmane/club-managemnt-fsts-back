@@ -2,6 +2,7 @@ package club.management.club.shared.security.config;
 
 import club.management.club.shared.security.filters.JWTTokenValidatorFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,6 +26,9 @@ public class ProjectSecurityConfig {
     private final JWTTokenValidatorFilter jwtTokenValidatorFilter;
     private final AuthenticationProvider authenticationProvider;
     private final CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler;
+    @Value("${url.frontend}")
+    private String frontendUrl;
+
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -32,7 +36,7 @@ public class ProjectSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                    config.setAllowedOrigins(Collections.singletonList(frontendUrl));
                     config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
                     config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "*"));

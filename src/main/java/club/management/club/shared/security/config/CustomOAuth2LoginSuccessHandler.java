@@ -6,6 +6,7 @@ import club.management.club.features.services.auths.AuthorityService;
 import club.management.club.features.services.auths.JwtTokenService;
 import club.management.club.features.services.users.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -23,7 +24,8 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
     private final UserService userService;
     private final AuthorityService authorityService;
     private final JwtTokenService jwtTokenService;
-
+    @Value("${url.frontend}")
+    private String frontendUrl;
     private final String JWT_SECRET = "your_jwt_secret_key"; // Ideally store securely in env variables
 
     @Override
@@ -52,6 +54,6 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
         var jwtToken = jwtTokenService.generateToken(claims, user.get());
         // Send token in response
         response.setHeader("Authorization", "Bearer " + jwtToken);
-        response.sendRedirect("http://localhost:4200/home");
+        response.sendRedirect(frontendUrl+"/home");
     }
 }
