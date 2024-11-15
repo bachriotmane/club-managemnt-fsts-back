@@ -19,7 +19,7 @@ public class PublicationController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Boolean isPublic,
+            @RequestParam(required = false) boolean isPublic,
             @RequestParam(required = false) String fromDate,
             @RequestParam(required = false) String toDate
     ) {
