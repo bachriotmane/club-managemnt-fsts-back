@@ -31,7 +31,6 @@ public class AuthenticationController {
     public ResponseEntity<?> register(
             @RequestBody @Valid RegistrationRequest request
     ) throws MessagingException {
-        System.out.println("kk");
         authenticationService.register(request);
         return ResponseEntity.accepted().build();
     }

@@ -9,6 +9,7 @@ import club.management.club.features.entities.Authority;
 import club.management.club.features.entities.MailToken;
 import club.management.club.features.entities.User;
 import club.management.club.features.services.users.UserService;
+import club.management.club.shared.exceptionHandler.MailDontValidateException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +58,10 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        User user =  userService.findUserByEmail(request.getEmail());
+        if (!user.isAccountLEnabled()){
+            throw new MailDontValidateException();
+        }
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -66,7 +71,6 @@ public class AuthenticationService {
 
         Map<String, Object> claims = new HashMap<>();
         String userEmail =  auth.getPrincipal().toString();
-        User user =  userService.findUserByEmail(userEmail);
         claims.put("fullName", userService.getFullName(user));
         claims.put("accountCompleted",true);
         claims.put("id",user.getId());
