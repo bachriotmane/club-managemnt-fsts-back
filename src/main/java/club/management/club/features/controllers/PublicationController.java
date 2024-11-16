@@ -19,8 +19,9 @@ public class PublicationController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) boolean isPublic,
             @RequestParam(required = false) String fromDate,
-            @RequestParam(required = false) String toDate
+            @RequestParam(required = false) String toDate,
+            @RequestParam(required = false) Long userId
     ) {
-        return publicationsService.getAllPublications(page, size, true, isPublic, keyword, fromDate, toDate);
+        return publicationsService.getAllPublications(page, size, true, isPublic, keyword, fromDate, toDate, userId);
     }
 }

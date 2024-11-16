@@ -1,7 +1,12 @@
 package club.management.club.features.Specifications;
 
 
+import club.management.club.features.entities.Club;
+import club.management.club.features.entities.Etudiant;
+import club.management.club.features.entities.Integration;
 import club.management.club.features.entities.Publication;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;

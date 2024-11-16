@@ -23,4 +23,7 @@ public class Publication {
     private String pubDesc;
     private LocalDateTime date;
     private  boolean isPublic;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Club club;
 }
