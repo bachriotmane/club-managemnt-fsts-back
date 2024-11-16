@@ -30,39 +30,40 @@ public class PublicationServiceImpl implements PublicationsService {
 
     @Override
     public Page<PublicationDTO> getAllPublications(PublicationsRequest publicationsRequest) {
-        Specification<Publication> publicationSpecifications = PublicationSpecifications.withTitle(publicationsRequest.keyword());
+            Specification<Publication> publicationSpecifications = PublicationSpecifications.withTitle(publicationsRequest.keyword());
 
-        LocalDateTime parsedFromDate = publicationsRequest.fromDate() == null || publicationsRequest.fromDate().isEmpty() ?  null : LocalDateTime.parse(publicationsRequest.fromDate());
-        LocalDateTime parsedToDate = publicationsRequest.toDate() == null || publicationsRequest.toDate().isEmpty() ?  null : LocalDateTime.parse(publicationsRequest.toDate());
+            LocalDateTime parsedFromDate = publicationsRequest.fromDate() == null || publicationsRequest.fromDate().isEmpty() ?  null : LocalDateTime.parse(publicationsRequest.fromDate());
+            LocalDateTime parsedToDate = publicationsRequest.toDate() == null || publicationsRequest.toDate().isEmpty() ?  null : LocalDateTime.parse(publicationsRequest.toDate());
 
-
-        if (parsedFromDate != null || parsedToDate != null) {
             publicationSpecifications = Specification.where(publicationSpecifications)
-                    .and(PublicationSpecifications.withDateRange(parsedFromDate, parsedToDate));
-        }
+                    .and(PublicationSpecifications.withPublicStatus(publicationsRequest.isPublic()));
+            if (parsedFromDate != null || parsedToDate != null) {
+                publicationSpecifications = Specification.where(publicationSpecifications)
+                        .and(PublicationSpecifications.withDateRange(parsedFromDate, parsedToDate));
+            }
 
-        Pageable pageable =  PageRequest.of(publicationsRequest.page(), publicationsRequest.size(), Sort.by("date").descending());
-        Page<Publication> publicationList = publicationRepository.findAll(publicationSpecifications,pageable);
-        if (!publicationsRequest.isPublic() && publicationsRequest.userId() != null) {
-            Etudiant etudiant = (Etudiant) userRepo.findById(publicationsRequest.userId()).orElseThrow(() -> new RuntimeException("User not found"));
-            List<Publication> filteredPublications = publicationList.stream()
-                    .filter(publication -> {
-                        if (publication.isPublic()) {
-                            return false;
-                        }
-                        return publication.getClub().getIntegrations().stream()
-                                .anyMatch(integration -> integration.getEtudiant().equals(etudiant));
-                    })
-                    .toList();
-            int start = publicationsRequest.page() * publicationsRequest.size();
-            int end = Math.min((start + publicationsRequest.size()), filteredPublications.size());
-            List<PublicationDTO> publicationDTOList = filteredPublications.subList(start, end)
-                    .stream()
-                    .map(publicationMapper::convertToDTO)
-                    .collect(Collectors.toList());
-            return new PageImpl<>(publicationDTOList, pageable, filteredPublications.size());
-        }
-        return publicationList.map(publicationMapper::convertToDTO);
+            Pageable pageable =  PageRequest.of(publicationsRequest.page(), publicationsRequest.size(), Sort.by("date").descending());
+            Page<Publication> publicationList = publicationRepository.findAll(publicationSpecifications,pageable);
+            if (!publicationsRequest.isPublic() && publicationsRequest.userId() != null) {
+                Etudiant etudiant = (Etudiant) userRepo.findById(publicationsRequest.userId()).orElseThrow(() -> new RuntimeException("User not found"));
+                List<Publication> filteredPublications = publicationList.stream()
+                        .filter(publication -> {
+                            if (publication.isPublic()) {
+                                return false;
+                            }
+                            return publication.getClub().getIntegrations().stream()
+                                    .anyMatch(integration -> integration.getEtudiant().equals(etudiant));
+                        })
+                        .toList();
+                int start = publicationsRequest.page() * publicationsRequest.size();
+                int end = Math.min(start + publicationsRequest.size(), filteredPublications.size());
+                List<PublicationDTO> publicationDTOList = filteredPublications.subList(start, end)
+                        .stream()
+                        .map(publicationMapper::convertToDTO)
+                        .collect(Collectors.toList());
+                return new PageImpl<>(publicationDTOList, pageable, filteredPublications.size());
+            }
+            return publicationList.map(publicationMapper::convertToDTO);
     }
 
 }
