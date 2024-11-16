@@ -7,7 +7,7 @@ public record PublicationsRequest(
         Boolean isPublic,
         String fromDate,
         String toDate,
-        Long userId
+        String userId
 ) {
     public PublicationsRequest {
         if(page == null || page < 0) page = 0;

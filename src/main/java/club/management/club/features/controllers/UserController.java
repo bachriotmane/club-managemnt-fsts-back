@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
@@ -24,7 +26,7 @@ public class UserController {
             String hashPwd = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashPwd);
             savedUser = userService.saveUser(user);
-            if (savedUser.getId() > 0) {
+            if (savedUser.getId() != null) {//please Abdelkrim  check your logic here Long to UUID (savedUser.getId()>0 ==>savedUser.getId() != null)
                 response = ResponseEntity
                         .status(HttpStatus.CREATED)
                         .body(savedUser);

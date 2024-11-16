@@ -13,7 +13,8 @@ public class Etudiant extends User {
     private String cne;
     private String filiere;
 
+
     @OneToMany
     private List<Demande> demandes;
-    
+
 }

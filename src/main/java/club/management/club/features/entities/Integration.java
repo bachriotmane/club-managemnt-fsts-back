@@ -17,9 +17,9 @@ public class Integration {
     private String roleName;
     private MemberRole memberRole;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Etudiant etudiant;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Club club;
 }
