@@ -2,16 +2,14 @@ package club.management.club.features.entities;
 
 import club.management.club.features.enums.MemberRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class Integration {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

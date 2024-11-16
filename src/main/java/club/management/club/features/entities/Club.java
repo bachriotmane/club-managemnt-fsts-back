@@ -1,11 +1,9 @@
 package club.management.club.features.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,8 +24,8 @@ public class Club {
     private String instagramme;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Integration> integrations;
+    private List<Integration> integrations = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Publication> publications;
+    private List<Publication> publications = new ArrayList<>();
 }
