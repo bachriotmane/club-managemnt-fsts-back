@@ -135,4 +135,12 @@ public class AuthenticationService {
 
         return codeBuilder.toString();
     }
+
+    public void resendActivation(String email) throws MessagingException {
+        User user = userService.findUserByEmail(email);
+        if (user.isAccountLEnabled()) {
+            throw new RuntimeException("Account is already activated");
+        }
+        sendValidationEmail(user);
+    }
 }
