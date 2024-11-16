@@ -4,6 +4,8 @@ import club.management.club.features.services.auths.AuthenticationService;
 import club.management.club.features.dto.requests.RegistrationRequest;
 import club.management.club.features.dto.requests.AuthenticationRequest;
 import club.management.club.features.dto.responses.AuthenticationResponse;
+import club.management.club.shared.dtos.ChangePasswordRequest;
+import club.management.club.shared.dtos.ResetPasswordRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -54,5 +56,26 @@ public class AuthenticationController {
             @RequestParam String email
     ) throws MessagingException {
         authenticationService.resendActivation(email);
+    }
+
+    @GetMapping("/forgot-password")
+    public void forgotPassword(
+            @RequestParam String email
+    ) throws MessagingException {
+        authenticationService.forgotPassword(email);
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(
+            @RequestBody ResetPasswordRequest request
+            ) {
+        authenticationService.resetPassword(request.token(), request.password());
+    }
+
+    @PostMapping("/change-password")
+    public void changePassword(
+            @RequestBody ChangePasswordRequest request
+            ) {
+        authenticationService.changePassword(request.email(), request.oldPassword(), request.newPassword());
     }
 }
