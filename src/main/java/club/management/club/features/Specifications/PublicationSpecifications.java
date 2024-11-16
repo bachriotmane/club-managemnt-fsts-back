@@ -19,6 +19,13 @@ public class PublicationSpecifications {
                         : builder.like(root.get("title"), "%" + title + "%");
     }
 
+    public static Specification<Publication> withPublicStatus(Boolean isPublic) {
+        return (root, query, builder) ->
+                isPublic == null
+                        ? null
+                        : builder.equal(root.get("isPublic"), isPublic);
+    }
+
 
     public static Specification<Publication> withDateRange(LocalDateTime fromDate, LocalDateTime toDate) {
         return (root, query, builder) -> {
