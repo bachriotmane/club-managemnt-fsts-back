@@ -24,7 +24,7 @@ public class Publication {
     private LocalDateTime date;
     private  boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "club_id")
     private Club club;
 }

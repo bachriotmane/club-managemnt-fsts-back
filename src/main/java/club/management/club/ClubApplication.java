@@ -170,8 +170,6 @@ public class ClubApplication {
             publicationRepository.save(pub5);
 
 
-            addPublications();
-
         };
     }
 
@@ -215,77 +213,5 @@ public class ClubApplication {
             integration.setClub(club);
             integrationRepository.save(integration);
         }
-    }
-
-    private void addPublications() {
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("New Member Joins Us")
-                .pubDesc("We are thrilled to welcome a new team member!")
-                .date(LocalDateTime.of(2024, Month.JANUARY, 5, 10, 30))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Quarterly Sales Report Released")
-                .pubDesc("Our Q3 sales report shows promising growth.")
-                .date(LocalDateTime.of(2024, Month.MARCH, 1, 14, 0))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Tech Conference 2024")
-                .pubDesc("Excited to participate in the upcoming tech conference!")
-                .date(LocalDateTime.of(2024, Month.MAY, 18, 9, 45))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Product Launch")
-                .pubDesc("Announcing our latest product in the market.")
-                .date(LocalDateTime.of(2024, Month.JULY, 12, 11, 15))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(false)
-                .title("Internal Strategy Meeting")
-                .pubDesc("A meeting to discuss our future strategies.")
-                .date(LocalDateTime.of(2024, Month.AUGUST, 20, 16, 0))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Office Renovation Complete")
-                .pubDesc("Our office renovation is now complete! Check it out!")
-                .date(LocalDateTime.of(2024, Month.SEPTEMBER, 25, 13, 30))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Charity Drive Success")
-                .pubDesc("Thanks to all who participated in our recent charity event.")
-                .date(LocalDateTime.of(2024, Month.OCTOBER, 15, 15, 45))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Employee of the Month")
-                .pubDesc("Congratulations to Jane Doe, our employee of the month!")
-                .date(LocalDateTime.of(2024, Month.NOVEMBER, 3, 12, 0))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Health and Wellness Workshop")
-                .pubDesc("Join our upcoming wellness workshop for all employees.")
-                .date(LocalDateTime.of(2024, Month.DECEMBER, 10, 9, 0))
-                .build());
-
-        publicationRepository.save(Publication.builder()
-                .isPublic(true)
-                .title("Holiday Party Announced")
-                .pubDesc("Our annual holiday party is coming up soon, stay tuned!")
-                .date(LocalDateTime.of(2024, Month.DECEMBER, 20, 18, 30))
-                .build());
     }
 }
