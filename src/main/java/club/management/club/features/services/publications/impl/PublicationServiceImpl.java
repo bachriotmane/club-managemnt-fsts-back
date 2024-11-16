@@ -53,4 +53,10 @@ public class PublicationServiceImpl implements PublicationsService {
             return publicationList.map(publicationMapper::convertToDTO);
     }
 
+    @Override
+    public PublicationDTO get(String id) {
+        Publication publication = publicationRepository.findById(id).orElseThrow(()-> new RuntimeException("Publication not found!"));
+        return publicationMapper.convertToDTO(publication);
+    }
+
 }
