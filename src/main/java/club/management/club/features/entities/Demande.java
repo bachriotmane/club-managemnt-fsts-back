@@ -21,20 +21,20 @@ public class Demande {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date date;
+    @Enumerated(EnumType.STRING)
+    private StatutDemande statutDemande;
+    @Enumerated(EnumType.STRING)
+    private TypeDemande type;
 
     @ManyToOne
     private Etudiant etudiantDemandeur;
     @ManyToOne
     private Club club;
-    @OneToMany
+    @ManyToOne
+    private Integration integration;
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Historique> historiques;
     @OneToOne
     private Evenement organisationEvenement;
-
-    @Enumerated(EnumType.STRING)
-    private StatutDemande statutDemande;
-    
-    @Enumerated(EnumType.STRING)
-    private TypeDemande type;
 }
 

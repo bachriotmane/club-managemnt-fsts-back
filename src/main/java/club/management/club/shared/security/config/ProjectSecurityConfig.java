@@ -52,7 +52,8 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/test/get").hasRole("USER")
                         .requestMatchers("/test/post").hasAnyRole("ADMIN")
                         .requestMatchers( "/auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                                .requestMatchers("/**").permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("/login-success", true)

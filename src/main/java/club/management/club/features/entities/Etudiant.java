@@ -16,12 +16,6 @@ public class Etudiant extends User {
     private String cne;
     private String filiere;
 
-    @ManyToMany
-    private List<Club> clubs;
-
-    @ManyToMany
-    private List<Club> clubsAdmin;
-
     @OneToMany
     private List<Demande> demandes;
     

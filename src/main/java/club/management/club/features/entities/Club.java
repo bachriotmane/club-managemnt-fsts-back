@@ -24,26 +24,9 @@ public class Club {
     private String logo; 
     private String instagramme;
 
-    @ManyToMany
-    @JoinTable(
-        name = "club_etudiant",
-        joinColumns = @JoinColumn(name = "club_id"),
-        inverseJoinColumns = @JoinColumn(name = "etudiant_id")
-    )
-    private List<Etudiant> members;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Integration> integrations;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Publication> publications;
-
-    @OneToMany
-    private List<Demande> demandes;
-
-    
-    @ManyToMany
-    @JoinTable(
-        name = "club_admins",
-        joinColumns = @JoinColumn(name = "club_id"),
-        inverseJoinColumns = @JoinColumn(name = "etudiant_id")
-    )
-    private List<Etudiant> admins;
 }
