@@ -1,5 +1,6 @@
 package club.management.club.features.controllers;
 
+import club.management.club.features.dto.requests.PublicationsRequest;
 import club.management.club.features.dto.responses.PublicationDTO;
 import club.management.club.features.services.publications.PublicationsService;
 import lombok.AllArgsConstructor;
@@ -13,15 +14,7 @@ public class PublicationController {
     private final PublicationsService publicationsService;
 
     @GetMapping
-    public Page<PublicationDTO> getPublications(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) boolean isPublic,
-            @RequestParam(required = false) String fromDate,
-            @RequestParam(required = false) String toDate,
-            @RequestParam(required = false) Long userId
-    ) {
-        return publicationsService.getAllPublications(page, size, true, isPublic, keyword, fromDate, toDate, userId);
+    public Page<PublicationDTO> getPublications(@ModelAttribute PublicationsRequest publicationsRequest) {
+        return publicationsService.getAllPublications(publicationsRequest);
     }
 }

@@ -1,6 +1,7 @@
 package club.management.club.features.services.publications.impl;
 
 import club.management.club.features.Specifications.PublicationSpecifications;
+import club.management.club.features.dto.requests.PublicationsRequest;
 import club.management.club.features.dto.responses.PublicationDTO;
 import club.management.club.features.entities.Etudiant;
 import club.management.club.features.entities.Integration;
@@ -28,11 +29,11 @@ public class PublicationServiceImpl implements PublicationsService {
 
 
     @Override
-    public Page<PublicationDTO> getAllPublications(int page, int size, boolean isDesc, boolean isPublic, String keyword, String formDate, String toDate, Long userId) {
-        Specification<Publication> publicationSpecifications = PublicationSpecifications.withTitle(keyword);
+    public Page<PublicationDTO> getAllPublications(PublicationsRequest publicationsRequest) {
+        Specification<Publication> publicationSpecifications = PublicationSpecifications.withTitle(publicationsRequest.keyword());
 
-        LocalDateTime parsedFromDate = formDate == null || formDate.isEmpty() ?  null : LocalDateTime.parse(formDate);
-        LocalDateTime parsedToDate = toDate == null || toDate.isEmpty() ?  null : LocalDateTime.parse(toDate);
+        LocalDateTime parsedFromDate = publicationsRequest.fromDate() == null || publicationsRequest.fromDate().isEmpty() ?  null : LocalDateTime.parse(publicationsRequest.fromDate());
+        LocalDateTime parsedToDate = publicationsRequest.toDate() == null || publicationsRequest.toDate().isEmpty() ?  null : LocalDateTime.parse(publicationsRequest.toDate());
 
 
         if (parsedFromDate != null || parsedToDate != null) {
@@ -40,10 +41,10 @@ public class PublicationServiceImpl implements PublicationsService {
                     .and(PublicationSpecifications.withDateRange(parsedFromDate, parsedToDate));
         }
 
-        Pageable pageable =  PageRequest.of(page, size, Sort.by("date").descending());
+        Pageable pageable =  PageRequest.of(publicationsRequest.page(), publicationsRequest.size(), Sort.by("date").descending());
         Page<Publication> publicationList = publicationRepository.findAll(publicationSpecifications,pageable);
-        if (!isPublic && userId != null) {
-            Etudiant etudiant = (Etudiant) userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        if (!publicationsRequest.isPublic() && publicationsRequest.userId() != null) {
+            Etudiant etudiant = (Etudiant) userRepo.findById(publicationsRequest.userId()).orElseThrow(() -> new RuntimeException("User not found"));
             List<Publication> filteredPublications = publicationList.stream()
                     .filter(publication -> {
                         if (publication.isPublic()) {
@@ -53,8 +54,8 @@ public class PublicationServiceImpl implements PublicationsService {
                                 .anyMatch(integration -> integration.getEtudiant().equals(etudiant));
                     })
                     .toList();
-            int start = page * size;
-            int end = Math.min((start + size), filteredPublications.size());
+            int start = publicationsRequest.page() * publicationsRequest.size();
+            int end = Math.min((start + publicationsRequest.size()), filteredPublications.size());
             List<PublicationDTO> publicationDTOList = filteredPublications.subList(start, end)
                     .stream()
                     .map(publicationMapper::convertToDTO)
