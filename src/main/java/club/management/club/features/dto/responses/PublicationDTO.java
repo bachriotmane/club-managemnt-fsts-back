@@ -8,6 +8,8 @@ public record PublicationDTO(
         String description,
         LocalDateTime date,
         boolean isPublic,
-        String publisher
+        String publisher,
+        long membersLength,
+        String clubId
 ) {
 }

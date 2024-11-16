@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PublicationMapper {
     public PublicationDTO convertToDTO(Publication publication) {
-        return new PublicationDTO(publication.getId(), publication.getTitle(), publication.getPubDesc(),publication.getDate(), publication.isPublic(),"");
+        return new PublicationDTO(publication.getId(), publication.getTitle(), publication.getPubDesc(),publication.getDate(), publication.isPublic(),publication.getClub().getNom(), publication.getClub().getIntegrations().size(),publication.getClub().getId() );
     }
 
     public Publication convertToPublication(PublicationDTO dto) {
