@@ -10,6 +10,8 @@ import club.management.club.features.entities.MailToken;
 import club.management.club.features.entities.User;
 import club.management.club.features.services.users.UserService;
 import club.management.club.shared.exceptionHandler.MailDontValidateException;
+import club.management.club.shared.exceptions.AccountAlreadyActivated;
+import club.management.club.shared.exceptions.AccountNotFoundException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -137,9 +139,12 @@ public class AuthenticationService {
     }
 
     public void resendActivation(String email) throws MessagingException {
+        if(email.isEmpty()){
+            throw new AccountNotFoundException("Email is mandatory");
+        }
         User user = userService.findUserByEmail(email);
         if (user.isAccountLEnabled()) {
-            throw new RuntimeException("Account is already activated");
+            throw new AccountAlreadyActivated("Account is already activated");
         }
         sendValidationEmail(user);
     }
