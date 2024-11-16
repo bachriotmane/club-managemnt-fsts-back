@@ -19,8 +19,9 @@ import java.util.stream.Collectors;
 public class ClubList {
     private final ClubRepository clubRepository;
 
-    public ListSuccessResponse<ClubListResponse> getAllClubs(Pageable pageable, String nomClub) {
-        var spec = ClubSpecifications.withNom(nomClub);
+    public ListSuccessResponse<ClubListResponse> getAllClubs(Pageable pageable, String nomClub,String idStudent) {
+        var spec = ClubSpecifications.withNom(nomClub)
+                .and(ClubSpecifications.withStudentId(idStudent));
         var clubPage = clubRepository.findAll(spec, pageable);
 
         var serviceResponses = getData(clubPage);

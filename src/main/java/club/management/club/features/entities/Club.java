@@ -3,7 +3,6 @@ package club.management.club.features.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +22,9 @@ public class Club {
     private String logo; 
     private String instagramme;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Integration> integrations = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "club")
+    private List<Integration> integrations;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Publication> publications = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "club")
+    private List<Publication> publications;
 }

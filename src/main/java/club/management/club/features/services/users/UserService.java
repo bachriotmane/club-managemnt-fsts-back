@@ -26,7 +26,7 @@ public class UserService {
     public Optional<User> findByEmail(String email) {
         return userRepo.findUserByEmail(email);
     }
-    public Optional<User> findUserById(Long id){
+    public Optional<User> findUserById(String id){
         return userRepo.findUserById(id);
     }
     public User saveUser(User user) {
@@ -38,7 +38,7 @@ public class UserService {
                 map(authority -> new SimpleGrantedAuthority(authority.getName())).
                 collect(Collectors.toList());
     }
-    public void deleteUserById(Long id){
+    public void deleteUserById(String id){
          userRepo.deleteById(id);
     }
     public String getFullName(User user){

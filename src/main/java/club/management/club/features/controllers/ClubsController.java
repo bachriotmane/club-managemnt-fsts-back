@@ -27,8 +27,10 @@ public class ClubsController {
     @Operation(summary = "Get all clubs.")
     public ListSuccessResponse<ClubListResponse> getAllClubs(@RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size,
-                                                             @RequestParam(required = false) String nomClub) {
+                                                             @RequestParam(required = false) String nomClub,
+                                                             @RequestParam(defaultValue = "") String idUser
+    ) {
         var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return clubList.getAllClubs(paging, nomClub);
+        return clubList.getAllClubs(paging, nomClub,idUser);
     }
 }
