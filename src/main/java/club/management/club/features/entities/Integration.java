@@ -18,7 +18,7 @@ public class Integration {
     private String id;
     private String roleName;
     private MemberRole memberRole;
-    private Date IntegrationDate;
+    private Date integrationDate;
     @ManyToOne(fetch = FetchType.LAZY)
     private Etudiant etudiant;
 
