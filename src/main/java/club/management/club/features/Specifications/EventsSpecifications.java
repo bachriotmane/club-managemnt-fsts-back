@@ -11,7 +11,7 @@ public class EventsSpecifications {
         return (root, query, builder) ->
                 (title == null || title.isEmpty())
                         ? null
-                        : builder.like(root.get("title"), "%" + title + "%");
+                        : builder.like(root.get("nom"), "%" + title + "%");
     }
 
 
