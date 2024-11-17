@@ -21,6 +21,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @OpenAPIDefinition(
@@ -50,6 +51,7 @@ public class ClubApplication {
     private ClubRepository clubRepository;
     private final UserRepo userRepo;
     private final IntegrationRepository integrationRepository;
+    private final EventRepository eventRepository;
 
     private final EtudiantRepository etudiantRepository;
     private final AuthorityRepo authorityRepo;
@@ -169,6 +171,8 @@ public class ClubApplication {
             pub5.setClub(newClub);
             publicationRepository.save(pub5);
 
+            createEventsForClub(newClub);
+
 
         };
     }
@@ -213,5 +217,19 @@ public class ClubApplication {
             integration.setClub(club);
             integrationRepository.save(integration);
         }
+    }
+
+    private void createEventsForClub(Club club){
+        club.setEvenements(new ArrayList<>());
+        Stream.of("Event 1", "Event 2", "Event 3", "Event 4", "Event 5")
+                .forEach(eventName -> {
+                    Evenement event = new Evenement();
+                    event.setNom(eventName);
+                    event.setDescription("Description for " + eventName);
+                    event.setClub(club);
+                    event = eventRepository.save(event);
+                    club.getEvenements().add(event);
+                    clubRepository.save(club);
+                });
     }
 }
