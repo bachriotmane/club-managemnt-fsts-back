@@ -26,6 +26,16 @@ public class User {
     private String email;
     @Column(unique = true)
     private String cin;
+
+    @Column(unique = true)
+    private String facebook;
+
+    @Column(unique = true)
+    private String instagram;
+
+    @Column(unique = true)
+    private String whatsapp;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private boolean accountLocked;

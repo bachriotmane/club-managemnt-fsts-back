@@ -1,7 +1,9 @@
 package club.management.club.features.controllers;
 
 import club.management.club.features.dto.responses.ClubDetailsResponse;
+import club.management.club.features.dto.responses.ClubListMembersResponse;
 import club.management.club.features.services.clubs.ClubDetails;
+import club.management.club.features.services.clubs.ClubListMembers;
 import club.management.club.shared.dtos.ListSuccessResponse;
 import club.management.club.features.dto.responses.ClubListResponse;
 import club.management.club.features.services.clubs.ClubList;
@@ -23,6 +25,7 @@ public class ClubsController {
 
     private final ClubList clubList;
     private final ClubDetails clubDetails;
+    private final ClubListMembers clubListMembers;
 
     @GetMapping
     @Operation(summary = "Get all clubs.")
@@ -48,5 +51,14 @@ public class ClubsController {
             @RequestParam(defaultValue = "10") int size) {
         var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return clubList.getClubsWhereUserAdmin(paging,uuid);
+    @GetMapping("/club/{uuid}/members")
+    @Operation(summary = "Get all members by UUID.")
+    public ListSuccessResponse<ClubListMembersResponse> getAllMembers(@PathVariable("uuid") String uuid,
+                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "10") int size,
+                                                                      @RequestParam(required = false) String studentName
+    ) {
+        var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return clubListMembers.getAllMembers(paging, studentName, uuid);
     }
 }

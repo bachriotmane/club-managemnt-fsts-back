@@ -10,6 +10,9 @@ import club.management.club.features.entities.MailToken;
 import club.management.club.features.entities.User;
 import club.management.club.features.services.users.UserService;
 import club.management.club.shared.exceptionHandler.MailDontValidateException;
+import club.management.club.shared.exceptions.AccountAlreadyActivated;
+import club.management.club.shared.exceptions.AccountNotFoundException;
+import club.management.club.shared.exceptions.TokenNotMatchException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,6 +125,19 @@ public class AuthenticationService {
                 );
     }
 
+    private void sendForgetPasswordEmail(User user) throws MessagingException {
+        var newToken = generateAndSaveActivationToken(user);
+
+        emailService.sendEmail(
+                user.getEmail(),
+                userService.getFullName(user) ,
+                EmailTemplateName.FORGOT_PASSWORD,
+                activationUrl,
+                newToken,
+                "Request to reset password"
+                );
+    }
+
     private String generateActivationCode(int length) {
         String characters = "0123456789";
         StringBuilder codeBuilder = new StringBuilder();
@@ -134,5 +150,51 @@ public class AuthenticationService {
         }
 
         return codeBuilder.toString();
+    }
+
+    public void resendActivation(String email) throws MessagingException {
+        if(email.isEmpty()){
+            throw new AccountNotFoundException("Email is mandatory");
+        }
+        User user = userService.findUserByEmail(email);
+        if (user.isAccountLEnabled()) {
+            throw new AccountAlreadyActivated("Account is already activated");
+        }
+        sendValidationEmail(user);
+    }
+
+    public void forgotPassword(String email) throws MessagingException {
+        if(email.isEmpty()){
+            throw new AccountNotFoundException("Email is mandatory");
+        }
+        User user = userService.findUserByEmail(email);
+        if (!user.isAccountLEnabled()) {
+            throw new MailDontValidateException();
+        }
+        sendForgetPasswordEmail(user);
+
+    }
+
+    public void resetPassword(String token, String password) {
+        MailToken savedToken = mailTokenService.findMailTokenByToken(token)
+                .orElseThrow(() -> new TokenNotMatchException("No token match the provided one"));
+        if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
+            throw new RuntimeException("Activation token has expired. A new token has been send to the same email address");
+        }
+
+        var user = userService.findUserById(savedToken.getUser().getId())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setPassword(passwordEncoder.encode(password));
+        userService.saveUser(user);
+        mailTokenService.deleteTokenById(savedToken.getId());
+    }
+
+    public void changePassword(String email, String oldPassword, String newPassword) {
+        User user = userService.findUserByEmail(email);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userService.saveUser(user);
     }
 }
