@@ -12,6 +12,7 @@ import club.management.club.features.services.users.UserService;
 import club.management.club.shared.exceptionHandler.MailDontValidateException;
 import club.management.club.shared.exceptions.AccountAlreadyActivated;
 import club.management.club.shared.exceptions.AccountNotFoundException;
+import club.management.club.shared.exceptions.TokenNotMatchException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -130,10 +131,10 @@ public class AuthenticationService {
         emailService.sendEmail(
                 user.getEmail(),
                 userService.getFullName(user) ,
-                EmailTemplateName.ACTIVATE_ACCOUNT,
+                EmailTemplateName.FORGOT_PASSWORD,
                 activationUrl,
                 newToken,
-                "Password reset"
+                "Request to reset password"
                 );
     }
 
@@ -176,7 +177,7 @@ public class AuthenticationService {
 
     public void resetPassword(String token, String password) {
         MailToken savedToken = mailTokenService.findMailTokenByToken(token)
-                .orElseThrow(() -> new RuntimeException("No token match the provided one"));
+                .orElseThrow(() -> new TokenNotMatchException("No token match the provided one"));
         if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
             throw new RuntimeException("Activation token has expired. A new token has been send to the same email address");
         }

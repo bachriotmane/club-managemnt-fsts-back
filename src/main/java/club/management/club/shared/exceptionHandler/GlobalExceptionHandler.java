@@ -2,6 +2,7 @@ package club.management.club.shared.exceptionHandler;
 
 import club.management.club.shared.dtos.ErrorResponseDto;
 import club.management.club.shared.exceptions.AccountNotFoundException;
+import club.management.club.shared.exceptions.TokenNotMatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -79,27 +80,28 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(AccountNotFoundException.class)
-//    public ResponseEntity<ErrorResponseDto> handleAccountNotFoundException(AccountNotFoundException exception,
-//                                                                                 WebRequest webRequest){
-//        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
-//                webRequest.getDescription(false),
-//                HttpStatus.NOT_FOUND,
-//                exception.getMessage(),
-//                LocalDateTime.now()
-//        );
-//        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
-//    }
-//
-//    @ExceptionHandler(UserAlreadyExistsException.class)
-//    public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistsException(UserAlreadyExistsException exception,
-//                                                                                 WebRequest webRequest){
-//        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
-//                webRequest.getDescription(false),
-//                HttpStatus.BAD_REQUEST,
-//                exception.getMessage(),
-//                LocalDateTime.now()
-//        );
-//        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleAccountNotFoundException(AccountNotFoundException exception,
+                                                                                WebRequest webRequest){
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(TokenNotMatchException.class)
+    public ResponseEntity<ErrorResponseDto> handleTokenNotMatchException(TokenNotMatchException exception,
+                                                                                 WebRequest webRequest){
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+    }
 }
