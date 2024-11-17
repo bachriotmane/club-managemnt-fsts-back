@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,6 +34,10 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
 
+        if(email != null && !email.endsWith("@uhp.ac.ma")){
+            // in this part i should
+//            throw MethodArgumentNotValidException("email should end with @uhp.ac.ma");
+        }
         Optional<User> user = userService.findByEmail(email);
         if (user.isEmpty()) {
             Authority authority = authorityService.findByName("ROLE_USER")
@@ -54,6 +59,6 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
         // still in the test , not yet verified
         // any changes or bugs please contact abdelkarim
         response.setHeader("Authorization", "Bearer " + jwtToken);
-        response.sendRedirect(frontendUrl+"/home");
+        response.sendRedirect(frontendUrl);
     }
 }

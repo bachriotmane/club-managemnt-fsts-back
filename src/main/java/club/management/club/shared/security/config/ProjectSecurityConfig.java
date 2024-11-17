@@ -2,6 +2,7 @@ package club.management.club.shared.security.config;
 
 import club.management.club.shared.security.filters.JWTTokenValidatorFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +30,6 @@ public class ProjectSecurityConfig {
     private final CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler;
     @Value("${url.frontend}")
     private String frontendUrl;
-
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -47,9 +48,8 @@ public class ProjectSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtTokenValidatorFilter, OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/test/get").hasRole("USER")
+                        .requestMatchers("/user/test").hasRole("USER")
                         .requestMatchers("/test/post").hasAnyRole("ADMIN")
                         .requestMatchers( "/auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
 //                        .anyRequest().authenticated()

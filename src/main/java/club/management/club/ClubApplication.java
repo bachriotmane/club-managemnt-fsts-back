@@ -4,6 +4,7 @@ package club.management.club;
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.repositories.*;
+import club.management.club.features.services.auths.AuthorityService;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
+import java.util.Set;
 
 
 @OpenAPIDefinition(
@@ -58,6 +60,7 @@ public class ClubApplication {
     private final AuthorityRepo authorityRepo;
     private final PasswordEncoder passwordEncoder;
 
+    private final AuthorityService authorityService;
     public static void main(String[] args) {
         SpringApplication.run(ClubApplication.class, args);
     }
@@ -65,14 +68,16 @@ public class ClubApplication {
     @Bean
     public CommandLineRunner runner() {
         return args -> {
+
+            if (authorityRepo.findAuthorityByName("ROLE_USER").isEmpty()) {
+                authorityRepo.save(Authority.builder().name("ROLE_USER").build());
+            }
+
             Etudiant etudiant = etudiantRepository.findByEmail("bourich.sou.fst@uhp.ac.ma")
                     .orElseGet(() -> createEtudiant());
 
             createClubsAndIntegrations(etudiant);
 
-            if (authorityRepo.findAuthorityByName("ROLE_USER").isEmpty()) {
-                authorityRepo.save(Authority.builder().name("ROLE_USER").build());
-            }
             // Creating a new Etudiant
             Etudiant student = new Etudiant();
             student.setFirstName("SARAH");
@@ -190,6 +195,9 @@ public class ClubApplication {
         etudiant.setAccountLocked(false);
         etudiant.setAccountLEnabled(true);
         etudiant.setAccountCompleted(true);
+        Authority authority = authorityService.findByName("ROLE_USER")
+                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
+        etudiant.setAuthorities(Set.of(authority));
         etudiantRepository.save(etudiant);
         return etudiant;
     }
