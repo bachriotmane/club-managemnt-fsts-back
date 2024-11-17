@@ -51,14 +51,16 @@ public class ClubsController {
             @RequestParam(defaultValue = "10") int size) {
         var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return clubList.getClubsWhereUserAdmin(paging,uuid);
+        }
     @GetMapping("/club/{uuid}/members")
     @Operation(summary = "Get all members by UUID.")
-    public ListSuccessResponse<ClubListMembersResponse> getAllMembers(@PathVariable("uuid") String uuid,
+    public SuccessResponse<ClubListMembersResponse>  getAllMembers(@PathVariable("uuid") String uuid,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size,
                                                                       @RequestParam(required = false) String studentName
     ) {
-        var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        var paging = PageRequest.of(page, size, Sort.by("integrationDate").descending());
         return clubListMembers.getAllMembers(paging, studentName, uuid);
     }
 }
