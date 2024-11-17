@@ -1,11 +1,9 @@
 package club.management.club.features.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,14 +11,19 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Evenement {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String nom;
     private String description;
-    private Date date;
+    private LocalDateTime date;
     private String location;
     private Double budget;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "club_id")
+    private Club club;
 
 }
