@@ -3,10 +3,12 @@ package club.management.club.features.services.publications.impl;
 import club.management.club.features.Specifications.PublicationSpecifications;
 import club.management.club.features.dto.requests.PublicationsRequest;
 import club.management.club.features.dto.responses.PublicationDTO;
+import club.management.club.features.entities.Club;
 import club.management.club.features.entities.Etudiant;
 import club.management.club.features.entities.Integration;
 import club.management.club.features.entities.Publication;
 import club.management.club.features.mappers.PublicationMapper;
+import club.management.club.features.repositories.ClubRepository;
 import club.management.club.features.repositories.PublicationRepository;
 import club.management.club.features.repositories.UserRepo;
 import club.management.club.features.services.publications.PublicationsService;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 public class PublicationServiceImpl implements PublicationsService {
     private final PublicationRepository publicationRepository;
     private final PublicationMapper publicationMapper;
-    private UserRepo userRepo;
+    private final ClubRepository clubRepository;
 
 
     @Override
@@ -58,5 +60,26 @@ public class PublicationServiceImpl implements PublicationsService {
         Publication publication = publicationRepository.findById(id).orElseThrow(()-> new RuntimeException("Publication not found!"));
         return publicationMapper.convertToDTO(publication);
     }
+
+    @Override
+    public PublicationDTO create(PublicationDTO publicationDTO) {
+        if(publicationDTO.clubId() == null || publicationDTO.clubId().isEmpty()){
+            throw new RuntimeException("Club id is required!");
+        }
+
+        if(publicationDTO.title() == null || publicationDTO.title().isEmpty()){
+            throw new RuntimeException("Title is required!");
+        }
+
+        if(publicationDTO.description() == null || publicationDTO.description().isEmpty()){
+            throw new RuntimeException("Content is required!");
+        }
+        Club club = clubRepository.findById(publicationDTO.clubId()).orElseThrow(()-> new RuntimeException("Club not found!"));
+        Publication publication = publicationMapper.convertToPublication(publicationDTO);
+        publication.setClub(club);
+        publication.setDate(LocalDateTime.now());
+        return publicationMapper.convertToDTO(publicationRepository.save(publication));
+    }
+
 
 }
