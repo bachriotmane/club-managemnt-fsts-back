@@ -22,4 +22,10 @@ public class PublicationController {
     public PublicationDTO getPublicationById(@PathVariable String id){
         return publicationsService.get(id);
     }
+
+    @PostMapping
+    public PublicationDTO createPublication(@RequestBody PublicationDTO publicationDTO){
+        return publicationsService.create(publicationDTO);
+    }
+
 }

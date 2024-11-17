@@ -45,4 +45,16 @@ public class ClubList {
                 ))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
+    public ListSuccessResponse<ClubListResponse> getClubsWhereUserAdmin(Pageable pageable, String uid) {
+        var spec = ClubSpecifications.withAdminOrModeratorRole(uid);
+        var clubPage = clubRepository.findAll(spec, pageable);
+        var serviceResponses = getData(clubPage);
+        return new ListSuccessResponse<>(
+                serviceResponses,
+                clubPage.getTotalElements(),
+                clubPage.getTotalPages(),
+                clubPage.hasNext()
+        );
+    }
 }

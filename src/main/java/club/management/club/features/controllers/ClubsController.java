@@ -42,6 +42,15 @@ public class ClubsController {
     public SuccessResponse<ClubDetailsResponse> getDetails(@PathVariable("uuid") String uuid) {
         return clubDetails.get(uuid);
     }
+
+    @GetMapping("/{uuid}/admin")
+    @Operation(summary = "Get club where memeber is admin.")
+    public ListSuccessResponse<ClubListResponse> getClubAdmin(
+            @PathVariable("uuid") String uuid,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return clubList.getClubsWhereUserAdmin(paging,uuid);
     @GetMapping("/club/{uuid}/members")
     @Operation(summary = "Get all members by UUID.")
     public ListSuccessResponse<ClubListMembersResponse> getAllMembers(@PathVariable("uuid") String uuid,
