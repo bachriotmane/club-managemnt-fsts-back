@@ -18,8 +18,8 @@ import java.util.List;
 @Getter
 public class Demande {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private Date date;
     @Enumerated(EnumType.STRING)
     private StatutDemande statutDemande;
@@ -36,6 +36,6 @@ public class Demande {
     private List<Historique> historiques;
     @OneToOne
     private Evenement organisationEvenement;
-    //aymen
+
 }
 
