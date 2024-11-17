@@ -20,9 +20,15 @@ public class IntegrationSpecifications {
             if (StringUtils.hasText(studentName)) {
                 predicates = criteriaBuilder.and(
                         predicates,
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("etudiant").get("nom")),
-                                "%" + studentName.toLowerCase() + "%"
+                        criteriaBuilder.or(
+                                criteriaBuilder.like(
+                                        criteriaBuilder.lower(root.get("etudiant").get("firstName")),
+                                        "%" + studentName.toLowerCase() + "%"
+                                ),
+                                criteriaBuilder.like(
+                                        criteriaBuilder.lower(root.get("etudiant").get("lastName")),
+                                        "%" + studentName.toLowerCase() + "%"
+                                )
                         )
                 );
             }
