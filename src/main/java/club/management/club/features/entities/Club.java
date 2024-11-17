@@ -28,7 +28,10 @@ public class Club {
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Publication> publications;
-
     @OneToMany(fetch = FetchType.EAGER)
     private List<Evenement> evenements = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "club_activites", joinColumns = @JoinColumn(name = "club_id"))
+    @Column(name = "activite")
+    private List<String> activites;
 }

@@ -173,10 +173,7 @@ public class ClubApplication {
             newClub = clubRepository.save(newClub);
             pub5.setClub(newClub);
             publicationRepository.save(pub5);
-
             createEventsForClub(newClub);
-
-
         };
     }
 
@@ -221,7 +218,6 @@ public class ClubApplication {
             integrationRepository.save(integration);
         }
     }
-
     private void createEventsForClub(Club club) {
         club.setEvenements(new ArrayList<>());
         Stream.of("Event 1", "Event 2", "Event 3", "Event 4", "Event 5")
