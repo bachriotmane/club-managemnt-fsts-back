@@ -169,7 +169,6 @@ public class ClubApplication {
             pub5.setClub(newClub);
             publicationRepository.save(pub5);
 
-
         };
     }
 
@@ -214,4 +213,5 @@ public class ClubApplication {
             integrationRepository.save(integration);
         }
     }
+
 }
