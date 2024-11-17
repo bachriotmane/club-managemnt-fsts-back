@@ -3,6 +3,7 @@ package club.management.club.features.Specifications;
 import club.management.club.features.entities.Club;
 import club.management.club.features.entities.Etudiant;
 import club.management.club.features.entities.Integration;
+import club.management.club.features.enums.MemberRole;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,5 +31,20 @@ public class ClubSpecifications {
             return builder.equal(etudiantJoin.get("id"), etudiantId);
         };
     }
+
+    public static Specification<Club> withAdminOrModeratorRole(String etudiantId) {
+        return (root, query, builder) -> {
+            if (etudiantId == null || etudiantId.isEmpty()) {
+                return null;
+            }
+            Join<Club, Integration> integrationJoin = root.join("integrations", JoinType.INNER);
+            Join<Integration, Etudiant> etudiantJoin = integrationJoin.join("etudiant", JoinType.INNER);
+            return builder.and(
+                    builder.equal(etudiantJoin.get("id"), etudiantId),
+                    integrationJoin.get("memberRole").in(MemberRole.ADMIN, MemberRole.MODERATEUR)
+            );
+        };
+    }
+
 
 }

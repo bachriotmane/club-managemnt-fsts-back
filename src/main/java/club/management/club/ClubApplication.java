@@ -97,7 +97,7 @@ public class ClubApplication {
             Integration integration1 = Integration.builder()
                     .etudiant(student)
                     .club(newClub)
-                    .memberRole(MemberRole.MEMBER)
+                    .memberRole(MemberRole.ADMIN)
                     .roleName("President")
                     .build();
             integration1 = integrationRepository.save(integration1);

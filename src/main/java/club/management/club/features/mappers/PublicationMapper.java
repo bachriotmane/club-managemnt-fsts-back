@@ -14,6 +14,10 @@ public class PublicationMapper {
     public Publication convertToPublication(PublicationDTO dto) {
         Publication publication = new Publication();
         publication.setId(dto.id());
+        publication.setTitle(dto.title());
+        publication.setPubDesc(dto.description());
+        publication.setDate(dto.date());
+        publication.setPublic(dto.isPublic());
         return publication;
     }
 
