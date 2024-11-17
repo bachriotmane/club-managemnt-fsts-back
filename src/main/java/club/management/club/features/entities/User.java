@@ -41,7 +41,7 @@ public class User {
     private boolean accountLocked;
     private boolean accountLEnabled;
     private boolean accountCompleted;
-
+    private String imgProfile;
     @ManyToMany(fetch = EAGER)
     @JoinTable(
             name = "user_authorities",

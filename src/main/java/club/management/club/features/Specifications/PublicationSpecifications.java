@@ -7,6 +7,7 @@ import club.management.club.features.entities.Integration;
 import club.management.club.features.entities.Publication;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
@@ -40,4 +41,30 @@ public class PublicationSpecifications {
             }
         };
     }
+
+    public static Specification<Publication> privatePublicationsForUser(String etudiantId) {
+        return (root, query, builder) -> {
+            if (etudiantId == null || etudiantId.isEmpty()) {
+                return null;
+            }
+
+            // Join Publication -> Club
+            Join<Publication, Club> clubJoin = root.join("club", JoinType.INNER);
+
+            // Join Club -> Integration
+            Join<Club, Integration> integrationJoin = clubJoin.join("integrations", JoinType.INNER);
+
+            // Join Integration -> Etudiant
+            Join<Integration, Etudiant> etudiantJoin = integrationJoin.join("etudiant", JoinType.INNER);
+
+            // Filter for private publications
+            Predicate isPrivate = builder.isFalse(root.get("isPublic"));
+
+            // Filter for publications where the student is a member of the club
+            Predicate isMember = builder.equal(etudiantJoin.get("id"), etudiantId);
+
+            return builder.and(isPrivate, isMember);
+        };
+    }
+
 }

@@ -7,4 +7,6 @@ import org.springframework.data.domain.Page;
 
 public interface PublicationsService {
     Page<PublicationDTO> getAllPublications(PublicationsRequest publicationsRequest);
+    PublicationDTO get(String id);
+
 }

@@ -42,28 +42,21 @@ public class PublicationServiceImpl implements PublicationsService {
                         .and(PublicationSpecifications.withDateRange(parsedFromDate, parsedToDate));
             }
 
-            Pageable pageable =  PageRequest.of(publicationsRequest.page(), publicationsRequest.size(), Sort.by("date").descending());
-            Page<Publication> publicationList = publicationRepository.findAll(publicationSpecifications,pageable);
+
             if (!publicationsRequest.isPublic() && publicationsRequest.userId() != null) {
-                Etudiant etudiant = (Etudiant) userRepo.findById(publicationsRequest.userId()).orElseThrow(() -> new RuntimeException("User not found"));
-                List<Publication> filteredPublications = publicationList.stream()
-                        .filter(publication -> {
-                            if (publication.isPublic()) {
-                                return false;
-                            }
-                            return publication.getClub().getIntegrations().stream()
-                                    .anyMatch(integration -> integration.getEtudiant().equals(etudiant));
-                        })
-                        .toList();
-                int start = publicationsRequest.page() * publicationsRequest.size();
-                int end = Math.min(start + publicationsRequest.size(), filteredPublications.size());
-                List<PublicationDTO> publicationDTOList = filteredPublications.subList(start, end)
-                        .stream()
-                        .map(publicationMapper::convertToDTO)
-                        .collect(Collectors.toList());
-                return new PageImpl<>(publicationDTOList, pageable, filteredPublications.size());
+                publicationSpecifications = Specification.where(publicationSpecifications)
+                        .and(PublicationSpecifications.privatePublicationsForUser(publicationsRequest.userId()));
             }
+
+        Pageable pageable =  PageRequest.of(publicationsRequest.page(), publicationsRequest.size(), Sort.by("date").descending());
+        Page<Publication> publicationList = publicationRepository.findAll(publicationSpecifications,pageable);
             return publicationList.map(publicationMapper::convertToDTO);
+    }
+
+    @Override
+    public PublicationDTO get(String id) {
+        Publication publication = publicationRepository.findById(id).orElseThrow(()-> new RuntimeException("Publication not found!"));
+        return publicationMapper.convertToDTO(publication);
     }
 
 }

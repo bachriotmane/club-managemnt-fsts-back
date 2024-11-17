@@ -2,14 +2,15 @@ package club.management.club.features.dto.responses;
 
 import java.time.LocalDateTime;
 
-public record PublicationDTO(
+public record EventResponseDTO(
         String id,
-        String title,
+        String nom,
         String description,
         LocalDateTime date,
-        boolean isPublic,
         String publisher,
         long membersLength,
-        String clubId
+        String clubId,
+        String location,
+        String instagram
 ) {
 }

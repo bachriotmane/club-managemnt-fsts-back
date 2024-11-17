@@ -17,4 +17,9 @@ public class PublicationController {
     public Page<PublicationDTO> getPublications(@ModelAttribute PublicationsRequest publicationsRequest) {
         return publicationsService.getAllPublications(publicationsRequest);
     }
+
+    @GetMapping("/{id}")
+    public PublicationDTO getPublicationById(@PathVariable String id){
+        return publicationsService.get(id);
+    }
 }
