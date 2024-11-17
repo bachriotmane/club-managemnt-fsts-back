@@ -51,6 +51,7 @@ public class ClubsController {
             @RequestParam(defaultValue = "10") int size) {
         var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return clubList.getClubsWhereUserAdmin(paging,uuid);
+        }
     @GetMapping("/club/{uuid}/members")
     @Operation(summary = "Get all members by UUID.")
     public SuccessResponse<ClubListMembersResponse>  getAllMembers(@PathVariable("uuid") String uuid,
