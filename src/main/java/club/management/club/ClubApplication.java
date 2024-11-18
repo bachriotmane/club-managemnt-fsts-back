@@ -80,8 +80,12 @@ public class ClubApplication {
 
             // Creating a new Etudiant
             Etudiant student = new Etudiant();
-            student.setFirstName("SARAH");
+            student.setFirstName("OTMANE");
             student.setCne("K987654321");
+            student.setEmail("bachri.otm.fst@uhp.ac.ma");
+            student.setAccountLEnabled(true);
+            student.setAccountCompleted(true);
+            student.setPassword(passwordEncoder.encode("12345678"));
             student = userRepo.save(student);
 
 // Creating another Etudiant
@@ -120,7 +124,7 @@ public class ClubApplication {
             newClub.setIntegrations(new ArrayList<>());
             newClub.getIntegrations().add(integration1);
             newClub.getIntegrations().add(integration2);
-            clubRepository.save(newClub);
+            newClub = clubRepository.save(newClub);
 
 // Adding publications to the new club
             Publication pub1 = publicationRepository.save(Publication.builder()
