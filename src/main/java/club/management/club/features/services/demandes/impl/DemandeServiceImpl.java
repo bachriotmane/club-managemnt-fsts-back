@@ -3,6 +3,7 @@ package club.management.club.features.services.demandes.impl;
 import club.management.club.features.Specifications.DemandeSpecifications;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.Demande;
+import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.DemandeRepository;
@@ -25,7 +26,7 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Page<DemandeDTO> getAllDemandes(Pageable pageable) {
         return demandeRepository.findAll(pageable)
-                .map(DemandeMapper::toLiteDto); // Utilise une version simplifiée du DTO
+                .map(DemandeMapper::toLiteDto); // Utilisation de DemandeMapper pour inclure le CNE
     }
 
     @Override
@@ -39,15 +40,16 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Page<DemandeDTO> filterDemandesByType(TypeDemande type, Pageable pageable) {
         return demandeRepository.findAll(DemandeSpecifications.withType(type), pageable)
-                .map(DemandeMapper::toLiteDto);
+                .map(DemandeMapper::toLiteDto); // Utilisation de DemandeMapper pour inclure le CNE
     }
 
     @Override
     public List<DemandeDTO> getDemandesByEtudiant(String etudiantId) {
+        // Ici, nous récupérons toutes les demandes de l'étudiant, puis nous appliquons le DemandeMapper
         return demandeRepository.findAll(
                         (root, query, builder) -> builder.equal(root.get("etudiantDemandeur").get("id"), etudiantId)
                 ).stream()
-                .map(DemandeMapper::toLiteDto)
+                .map(DemandeMapper::toLiteDto) // Assurez-vous que DemandeMapper inclut le CNE
                 .collect(Collectors.toList());
     }
 
@@ -62,20 +64,14 @@ public class DemandeServiceImpl implements DemandeService {
                 .orElseThrow(() -> new RuntimeException("Demande introuvable avec l'ID : " + id));
     }
 
-    @Override
-    public Demande updateDemande(String id, Demande demande) {
-        Demande existingDemande = demandeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demande introuvable avec l'ID : " + id));
 
-        existingDemande.setDate(demande.getDate());
-        existingDemande.setStatutDemande(demande.getStatutDemande());
-        existingDemande.setType(demande.getType());
-        existingDemande.setEtudiantDemandeur(demande.getEtudiantDemandeur());
-        existingDemande.setClub(demande.getClub());
-        existingDemande.setIntegration(demande.getIntegration());
-        existingDemande.setHistoriques(demande.getHistoriques());
-        existingDemande.setOrganisationEvenement(demande.getOrganisationEvenement());
 
-        return demandeRepository.save(existingDemande);
+    public DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande) {
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
+        demande.setStatutDemande(statutDemande); // Mise à jour du statut
+        demandeRepository.save(demande); // Sauvegarder la demande mise à jour
+        return DemandeMapper.toLiteDto(demande); // Retourner le DemandeDTO après mise à jour
     }
+
 }

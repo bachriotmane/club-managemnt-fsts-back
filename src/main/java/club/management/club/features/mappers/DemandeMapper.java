@@ -10,7 +10,8 @@ public class DemandeMapper {
                 .id(demande.getId())
                 .date(demande.getDate())
                 .statutDemande(demande.getStatutDemande())
-                .etudiantDemandeurNom(demande.getEtudiantDemandeur() != null ? demande.getEtudiantDemandeur().getId() : null)
+                // Récupère le CNE de l'étudiant et l'ajoute dans le DTO
+                .cne(demande.getEtudiantDemandeur() != null ? demande.getEtudiantDemandeur().getCne() : null)
                 .build();
     }
 }

@@ -14,7 +14,8 @@ import java.util.Date;
 @Builder
 public class DemandeDTO {
     private String id;
-    private String etudiantDemandeurNom;
+    private String cne;
     private Date date;
     private StatutDemande statutDemande;
+
 }

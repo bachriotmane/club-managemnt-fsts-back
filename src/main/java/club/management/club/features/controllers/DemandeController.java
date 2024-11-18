@@ -2,6 +2,7 @@ package club.management.club.features.controllers;
 
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.Demande;
+import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.services.demandes.impl.DemandeService;
 import org.springframework.data.domain.Page;
@@ -49,13 +50,14 @@ public class DemandeController {
         return ResponseEntity.ok(demande);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Demande> updateDemande(
+    @PutMapping("/{id}/status")
+    public ResponseEntity<DemandeDTO> updateDemandeStatus(
             @PathVariable String id,
-            @RequestBody Demande demande
+            @RequestBody StatutDemande statutDemande
     ) {
-        Demande updatedDemande = demandeService.updateDemande(id, demande);
+        DemandeDTO updatedDemande = demandeService.updateDemandeStatus(id, statutDemande); // Utilisation du service pour la mise à jour et la conversion
         return ResponseEntity.ok(updatedDemande);
     }
+
 }
 
