@@ -3,6 +3,8 @@ package club.management.club;
 
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
+import club.management.club.features.enums.StatutDemande;
+import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.repositories.*;
 import club.management.club.features.services.auths.AuthorityService;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -55,6 +57,7 @@ public class ClubApplication {
     private final UserRepo userRepo;
     private final IntegrationRepository integrationRepository;
     private final EventRepository eventRepository;
+    private final DemandeRepository demandeRepository;
 
     private final EtudiantRepository etudiantRepository;
     private final AuthorityRepo authorityRepo;
@@ -94,6 +97,8 @@ public class ClubApplication {
             anotherStudent.setCne("K123987654");
             anotherStudent = userRepo.save(anotherStudent);
 
+
+
 // Creating a new club
             Club newClub = clubRepository.save(Club.builder()
                     .nom("TECH INNOVATORS")
@@ -125,6 +130,7 @@ public class ClubApplication {
             newClub.getIntegrations().add(integration1);
             newClub.getIntegrations().add(integration2);
             newClub = clubRepository.save(newClub);
+            demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
 
 // Adding publications to the new club
             Publication pub1 = publicationRepository.save(Publication.builder()
