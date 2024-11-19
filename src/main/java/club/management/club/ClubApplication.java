@@ -119,7 +119,7 @@ public class ClubApplication {
 
 // Adding publications to the new club
             Publication pub1 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("Welcome to Tech Innovators")
                     .pubDesc("We're excited to launch our new tech-focused club!")
                     .date(LocalDateTime.of(2024, Month.JANUARY, 10, 10, 0))
@@ -131,7 +131,7 @@ public class ClubApplication {
             publicationRepository.save(pub1);
 
             Publication pub2 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("Hackathon Announcement")
                     .pubDesc("Join us for an exciting 48-hour hackathon next month!")
                     .date(LocalDateTime.of(2024, Month.FEBRUARY, 15, 14, 0))
@@ -144,7 +144,7 @@ public class ClubApplication {
             Publication pub3 = publicationRepository.save(Publication.builder()
                     .isPublic(false)
                     .title("AI Workshop for Members")
-                    .pubDesc("An exclusive workshop on AI advancements for club members.")
+                    .pubDesc("An exclusive workshop on AI advancements .")
                     .date(LocalDateTime.of(2024, Month.MARCH, 20, 16, 0))
                     .build());
             newClub.getPublications().add(pub3);
@@ -153,9 +153,9 @@ public class ClubApplication {
             publicationRepository.save(pub3);
 
             Publication pub4 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("Tech Fair 2024")
-                    .pubDesc("Showcase your projects at our annual tech fair.")
+                    .pubDesc("Showcase your projects .")
                     .date(LocalDateTime.of(2024, Month.MAY, 5, 11, 30))
                     .build());
             newClub.getPublications().add(pub4);
@@ -164,7 +164,7 @@ public class ClubApplication {
             publicationRepository.save(pub4);
 
             Publication pub5 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("End of Year Celebration")
                     .pubDesc("Join us for our annual celebration to wrap up the year!")
                     .date(LocalDateTime.of(2024, Month.DECEMBER, 22, 18, 0))
@@ -220,7 +220,7 @@ public class ClubApplication {
     }
     private void createEventsForClub(Club club) {
         club.setEvenements(new ArrayList<>());
-        Stream.of("Event 1", "Event 2", "Event 3", "Event 4", "Event 5")
+        Stream.of("Event 1", "Event 2", "Event 3", "Event 4", "Event 5", "Event 6", "Event 7")
                 .forEach(eventName -> {
                     Evenement event = new Evenement();
                     event.setNom(eventName);

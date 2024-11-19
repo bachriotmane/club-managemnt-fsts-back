@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -47,5 +48,13 @@ public class EventsServiceImpl implements EventsService {
         Evenement publication = eventRepository.findById(id).orElseThrow(()-> new RuntimeException("Events not found!"));
         return eventsMapper.convertToDTO(publication);
     }
+    
+    @Override
+    public List<EventResponseDTO> getHomeEvents(int limit) {
+        Pageable pageable = PageRequest.of(0, limit, Sort.by("date").descending());
+        Page<Evenement> events = eventRepository.findAll(pageable);
+        return events.map(eventsMapper::convertToDTO).getContent();
+    }
+
 
 }
