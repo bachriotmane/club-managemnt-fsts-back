@@ -20,6 +20,7 @@ public class Club {
     private String nom;
     private String description;
     private Date createdAt;
+    private boolean isValid;
     private String logo; 
     private String instagramme;
 

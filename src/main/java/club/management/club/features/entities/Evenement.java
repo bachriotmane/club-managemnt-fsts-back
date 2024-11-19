@@ -21,6 +21,7 @@ public class Evenement {
     private LocalDateTime date;
     private String location;
     private Double budget;
+    private boolean isValid;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "club_id")
