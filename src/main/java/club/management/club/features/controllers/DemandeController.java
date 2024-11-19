@@ -9,11 +9,13 @@ import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.services.clubs.ClubService;
-import club.management.club.features.services.demandes.impl.DemandeService;
+import club.management.club.features.services.demandes.DemandeService;
 import club.management.club.features.services.events.EventsService;
 import club.management.club.features.services.historiques.HistoriqueService;
 import club.management.club.features.services.integration.IntegrationService;
 import club.management.club.features.services.users.UserService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -77,9 +79,10 @@ public class DemandeController {
     }
 
     @PostMapping("/integration/depose")
+    @Transactional
     public ResponseEntity<?> CreateIntegrationDemande(
             @RequestParam String clubId,
-            @RequestBody IntegrationCreationDTO integrationCreationDTO ,
+            @RequestBody @Valid  IntegrationCreationDTO integrationCreationDTO ,
             Authentication authentication
     ) {
         String userEmail = authentication.getPrincipal().toString();
@@ -96,6 +99,9 @@ public class DemandeController {
                 .club(savedClub)
                 .build();
         Integration savedIntegration = integrationService.save(integration);
+
+        savedClub.getIntegrations().add(integration);
+        clubService.save(savedClub);
 
         Historique historique = Historique.builder()
                 .date(LocalDateTime.now())
@@ -114,13 +120,13 @@ public class DemandeController {
                 .historiques(List.of(historique))
                 .integration(savedIntegration)
                 .build();
-
+        demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/creation/depose")
     public ResponseEntity<?> ClubCreationDemande(
-            @RequestBody ClubCreationDTO clubCreationDTO ,
+            @RequestBody @Valid ClubCreationDTO clubCreationDTO ,
             Authentication authentication
     ) {
         String userEmail = authentication.getPrincipal().toString();
@@ -153,6 +159,9 @@ public class DemandeController {
                 .build();
         Historique savedHistorique = historiqueService.save(historique);
 
+        savedClub.getIntegrations().add(integration);
+        clubService.save(savedClub);
+
         Demande demande =Demande.builder()
                 .date(new Date())
                 .statutDemande(StatutDemande.EN_COURS)
@@ -162,14 +171,14 @@ public class DemandeController {
                 .historiques(List.of(historique))
                 .integration(savedIntegration)
                 .build();
-
+        demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/organization/depose")
     public ResponseEntity<?> eventCreationDemande(
             @RequestParam String clubId,
-            @RequestBody EventCreationDTO eventCreationDTO ,
+            @RequestBody @Valid EventCreationDTO eventCreationDTO ,
             Authentication authentication
     ) {
         String userEmail = authentication.getPrincipal().toString();
@@ -201,10 +210,12 @@ public class DemandeController {
                 .type(TypeDemande.EVENEMENT)
                 .etudiantDemandeur(etudiant)
                 .club(savedClub)
+                .organisationEvenement(savedEvent)
+                .historiques(List.of(savedHistorique))
                 .historiques(List.of(historique))
                 .build();
-
+        demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
+    }
 }
 

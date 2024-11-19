@@ -6,6 +6,7 @@ import club.management.club.features.entities.Demande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.DemandeRepository;
+import club.management.club.features.services.demandes.DemandeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -77,5 +78,10 @@ public class DemandeServiceImpl implements DemandeService {
         existingDemande.setOrganisationEvenement(demande.getOrganisationEvenement());
 
         return demandeRepository.save(existingDemande);
+    }
+
+    @Override
+    public Demande save(Demande demande) {
+        return demandeRepository.save(demande);
     }
 }
