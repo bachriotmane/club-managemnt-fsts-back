@@ -7,6 +7,7 @@ import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.DemandeRepository;
 import club.management.club.features.services.demandes.DemandeService;
+import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class DemandeServiceImpl implements DemandeService {
     public Page<DemandeDTO> filterDemandesByType(TypeDemande type, Pageable pageable) {
         return demandeRepository.findAll(DemandeSpecifications.withType(type), pageable)
                 .map(DemandeMapper::toLiteDto);
-    }
+    } 
 
     @Override
     public List<DemandeDTO> getDemandesByEtudiant(String etudiantId) {
@@ -60,13 +61,13 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Demande getDemandeById(String id) {
         return demandeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demande introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Demande","DemandeId",id));
     }
 
     @Override
     public Demande updateDemande(String id, Demande demande) {
         Demande existingDemande = demandeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demande introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Demande","DemandeId",id));
 
         existingDemande.setDate(demande.getDate());
         existingDemande.setStatutDemande(demande.getStatutDemande());
@@ -84,4 +85,12 @@ public class DemandeServiceImpl implements DemandeService {
     public Demande save(Demande demande) {
         return demandeRepository.save(demande);
     }
+
+    @Override
+    public Demande findById(String id) {
+        return demandeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Demande","demandeId",id)
+        );
+    }
+
 }

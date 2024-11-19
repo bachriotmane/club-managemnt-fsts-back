@@ -125,6 +125,7 @@ public class DemandeController {
     }
 
     @PostMapping("/creation/depose")
+    @Transactional
     public ResponseEntity<?> ClubCreationDemande(
             @RequestBody @Valid ClubCreationDTO clubCreationDTO ,
             Authentication authentication
@@ -176,6 +177,7 @@ public class DemandeController {
     }
 
     @PostMapping("/organization/depose")
+    @Transactional
     public ResponseEntity<?> eventCreationDemande(
             @RequestParam String clubId,
             @RequestBody @Valid EventCreationDTO eventCreationDTO ,
@@ -216,6 +218,12 @@ public class DemandeController {
                 .build();
         demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/historique/{id}")
+    public ResponseEntity<List<Historique>> getDemandeHistorique(@PathVariable String id){
+        Demande savedDemande = demandeService.getDemandeById(id);
+        return ResponseEntity.ok(savedDemande.getHistoriques());
     }
 }
 

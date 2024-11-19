@@ -3,6 +3,7 @@ package club.management.club.features.dto.requests;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record EventCreationDTO(
@@ -21,5 +22,5 @@ public record EventCreationDTO(
         @NotEmpty(message = "un montant est  necessaire")
         @NotNull(message = "un montant est  necessaire")
         Double budget
-) {
+) implements Serializable {
 }

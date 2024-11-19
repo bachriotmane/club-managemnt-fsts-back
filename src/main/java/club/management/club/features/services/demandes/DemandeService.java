@@ -22,4 +22,5 @@ public interface DemandeService {
     Demande getDemandeById(String id);
     Demande updateDemande(String id, Demande demande);
     Demande save(Demande demande);
+    Demande findById(String id);
 }

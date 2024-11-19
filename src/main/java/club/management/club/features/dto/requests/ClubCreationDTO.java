@@ -3,6 +3,7 @@ package club.management.club.features.dto.requests;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 
 public record ClubCreationDTO(
@@ -16,5 +17,5 @@ public record ClubCreationDTO(
         @NotEmpty(message = "svp ajouter au moins une activite")
         @NotNull(message = "svp ajouter au moins une activite")
         List<String> activities
-) {
+) implements Serializable {
 }

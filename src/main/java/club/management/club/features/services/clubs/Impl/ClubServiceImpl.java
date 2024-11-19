@@ -1,5 +1,6 @@
 package club.management.club.features.services.clubs.Impl;
 
+import club.management.club.features.dto.responses.ClubSimpleDTO;
 import club.management.club.features.entities.Club;
 import club.management.club.features.repositories.ClubRepository;
 import club.management.club.features.services.clubs.ClubService;
