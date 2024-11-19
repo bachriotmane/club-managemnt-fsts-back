@@ -48,4 +48,9 @@ public class EventsServiceImpl implements EventsService {
         return eventsMapper.convertToDTO(publication);
     }
 
+    @Override
+    public Evenement save(Evenement event) {
+        return eventRepository.save(event);
+    }
+
 }

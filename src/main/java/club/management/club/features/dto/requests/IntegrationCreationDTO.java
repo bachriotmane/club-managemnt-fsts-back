@@ -1,6 +1,7 @@
 package club.management.club.features.dto.requests;
 
 public record IntegrationCreationDTO(
-        String clubId
+        String clubId,
+        String motivation
 ) {
 }

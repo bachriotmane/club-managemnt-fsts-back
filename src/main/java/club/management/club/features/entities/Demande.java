@@ -3,10 +3,7 @@ package club.management.club.features.entities;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class Demande {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
