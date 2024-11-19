@@ -1,8 +1,8 @@
 package club.management.club.features.controllers;
 
 import club.management.club.features.dto.requests.ClubCreationDTO;
-import club.management.club.features.dto.requests.DemandeCreationDTO;
 import club.management.club.features.dto.requests.EventCreationDTO;
+import club.management.club.features.dto.requests.IntegrationCreationDTO;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
@@ -76,128 +76,135 @@ public class DemandeController {
         return ResponseEntity.ok(updatedDemande);
     }
 
-    @PostMapping("/depose")
-    public ResponseEntity<?> CreateGeneralDemande(
-            @RequestBody DemandeCreationDTO demandeDTO ,
+    @PostMapping("/integration/depose")
+    public ResponseEntity<?> CreateIntegrationDemande(
+            @RequestParam String clubId,
+            @RequestBody IntegrationCreationDTO integrationCreationDTO ,
             Authentication authentication
     ) {
         String userEmail = authentication.getPrincipal().toString();
         Etudiant etudiant = (Etudiant) userService.findUserByEmail(userEmail);
 
-        if (demandeDTO.demandeType() == TypeDemande.INTEGRATION_CLUB){
-            String clubId = demandeDTO.integration().clubId();
-            Club savedClub = clubService.findById(clubId);
+        Club savedClub = clubService.findById(clubId);
 
-            Integration integration = Integration
-                    .builder()
-                    .etudiant(etudiant)
-                    .isValid(false)
-                    .roleName("member")
-                    .memberRole(MemberRole.MEMBER)
-                    .club(savedClub)
-                    .build();
-            Integration savedIntegration = integrationService.save(integration);
+        Integration integration = Integration
+                .builder()
+                .etudiant(etudiant)
+                .isValid(false)
+                .roleName("member")
+                .memberRole(MemberRole.MEMBER)
+                .club(savedClub)
+                .build();
+        Integration savedIntegration = integrationService.save(integration);
 
-            Historique historique = Historique.builder()
-                    .date(LocalDateTime.now())
-                    .titre("Demande d'integration")
-                    .description("Demande posée par l'étudiant "+userService.getFullName(etudiant))
-                    .build();
-            historiqueService.save(historique);
+        Historique historique = Historique.builder()
+                .date(LocalDateTime.now())
+                .titre("Demande d'integration")
+                .description("Demande posée par l'étudiant "+userService.getFullName(etudiant))
+                .build();
+        historiqueService.save(historique);
 
-            Demande demande =Demande.builder()
-                    .date(new Date())
-                    .statutDemande(StatutDemande.EN_COURS)
-                    .type(TypeDemande.INTEGRATION_CLUB)
-                    .motivation(demandeDTO.integration().motivation())
-                    .etudiantDemandeur(etudiant)
-                    .club(savedClub)
-                    .historiques(List.of(historique))
-                    .integration(savedIntegration)
-                    .build();
+        Demande demande =Demande.builder()
+                .date(new Date())
+                .statutDemande(StatutDemande.EN_COURS)
+                .type(TypeDemande.INTEGRATION_CLUB)
+                .motivation(integrationCreationDTO.motivation())
+                .etudiantDemandeur(etudiant)
+                .club(savedClub)
+                .historiques(List.of(historique))
+                .integration(savedIntegration)
+                .build();
 
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
-        } else if (demandeDTO.demandeType() == TypeDemande.CREATION_CLUB) {
-
-            ClubCreationDTO clubCreationDTO = demandeDTO.club();
-            Club club = Club.builder()
-                    .nom(clubCreationDTO.nomClub())
-                    .description(clubCreationDTO.description())
-                    .activites(clubCreationDTO.activities())
-                    .instagramme(clubCreationDTO.instagram())
-                    .isValid(false)
-                    .build();
-
-            Club savedClub = clubService.save(club);
-
-            Integration integration = Integration
-                    .builder()
-                    .etudiant(etudiant)
-                    .isValid(false)
-                    .roleName("Admin")
-                    .memberRole(MemberRole.ADMIN)
-                    .club(savedClub)
-                    .build();
-            Integration savedIntegration = integrationService.save(integration);
-
-            Historique historique = Historique.builder()
-                    .date(LocalDateTime.now())
-                    .titre("Demande de Creation d'un Club")
-                    .description("Demande posée par l'étudiant "+userService.getFullName(etudiant))
-                    .build();
-            Historique savedHistorique = historiqueService.save(historique);
-
-            Demande demande =Demande.builder()
-                    .date(new Date())
-                    .statutDemande(StatutDemande.EN_COURS)
-                    .type(TypeDemande.INTEGRATION_CLUB)
-                    .motivation(demandeDTO.integration().motivation())
-                    .etudiantDemandeur(etudiant)
-                    .club(savedClub)
-                    .historiques(List.of(historique))
-                    .integration(savedIntegration)
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
-        }else if (demandeDTO.demandeType() == TypeDemande.EVENEMENT) {
-
-            EventCreationDTO event = demandeDTO.event();
-            Club savedClub = clubService.findById(event.clubId());
-
-            Evenement evenement = Evenement.builder()
-                    .isValid(false)
-                    .club(savedClub)
-                    .nom(event.EventName())
-                    .description(event.description())
-                    .budget(event.budget())
-                    .date(event.eventDate())
-                    .location(event.location())
-                    .build();
-            Evenement savedEvent = eventsService.save(evenement);
-
-            Historique historique = Historique.builder()
-                    .date(LocalDateTime.now())
-                    .titre("Demande de Creation d'un Evenement")
-                    .description("Demande posée par l'étudiant "+userService.getFullName(etudiant))
-                    .build();
-            Historique savedHistorique = historiqueService.save(historique);
-
-            Demande demande =Demande.builder()
-                    .date(new Date())
-                    .statutDemande(StatutDemande.EN_COURS)
-                    .type(TypeDemande.EVENEMENT)
-                    .etudiantDemandeur(etudiant)
-                    .club(savedClub)
-                    .historiques(List.of(historique))
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-
-
-        return null;
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PostMapping("/creation/depose")
+    public ResponseEntity<?> ClubCreationDemande(
+            @RequestBody ClubCreationDTO clubCreationDTO ,
+            Authentication authentication
+    ) {
+        String userEmail = authentication.getPrincipal().toString();
+        Etudiant etudiant = (Etudiant) userService.findUserByEmail(userEmail);
+
+        Club club = Club.builder()
+                .nom(clubCreationDTO.nomClub())
+                .description(clubCreationDTO.description())
+                .activites(clubCreationDTO.activities())
+                .instagramme(clubCreationDTO.instagram())
+                .isValid(false)
+                .build();
+
+        Club savedClub = clubService.save(club);
+
+        Integration integration = Integration
+                .builder()
+                .etudiant(etudiant)
+                .isValid(false)
+                .roleName("Admin")
+                .memberRole(MemberRole.ADMIN)
+                .club(savedClub)
+                .build();
+        Integration savedIntegration = integrationService.save(integration);
+
+        Historique historique = Historique.builder()
+                .date(LocalDateTime.now())
+                .titre("Demande de Creation d'un Club")
+                .description("Demande posée par l'étudiant "+userService.getFullName(etudiant))
+                .build();
+        Historique savedHistorique = historiqueService.save(historique);
+
+        Demande demande =Demande.builder()
+                .date(new Date())
+                .statutDemande(StatutDemande.EN_COURS)
+                .type(TypeDemande.CREATION_CLUB)
+                .etudiantDemandeur(etudiant)
+                .club(savedClub)
+                .historiques(List.of(historique))
+                .integration(savedIntegration)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/organization/depose")
+    public ResponseEntity<?> eventCreationDemande(
+            @RequestParam String clubId,
+            @RequestBody EventCreationDTO eventCreationDTO ,
+            Authentication authentication
+    ) {
+        String userEmail = authentication.getPrincipal().toString();
+        Etudiant etudiant = (Etudiant) userService.findUserByEmail(userEmail);
+
+        Club savedClub = clubService.findById(clubId);
+
+        Evenement evenement = Evenement.builder()
+                .isValid(false)
+                .club(savedClub)
+                .nom(eventCreationDTO.EventName())
+                .description(eventCreationDTO.description())
+                .budget(eventCreationDTO.budget())
+                .date(eventCreationDTO.eventDate())
+                .location(eventCreationDTO.location())
+                .build();
+        Evenement savedEvent = eventsService.save(evenement);
+
+        Historique historique = Historique.builder()
+                .date(LocalDateTime.now())
+                .titre("Demande de Creation d'un Evenement")
+                .description("Demande posée par l'étudiant "+userService.getFullName(etudiant))
+                .build();
+        Historique savedHistorique = historiqueService.save(historique);
+
+        Demande demande =Demande.builder()
+                .date(new Date())
+                .statutDemande(StatutDemande.EN_COURS)
+                .type(TypeDemande.EVENEMENT)
+                .etudiantDemandeur(etudiant)
+                .club(savedClub)
+                .historiques(List.of(historique))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
 }
 
