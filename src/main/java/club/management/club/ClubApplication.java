@@ -3,6 +3,8 @@ package club.management.club;
 
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
+import club.management.club.features.enums.StatutDemande;
+import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.repositories.*;
 import club.management.club.features.services.auths.AuthorityService;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -11,11 +13,13 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -55,6 +59,7 @@ public class ClubApplication {
     private final UserRepo userRepo;
     private final IntegrationRepository integrationRepository;
     private final EventRepository eventRepository;
+    private final DemandeRepository demandeRepository;
 
     private final EtudiantRepository etudiantRepository;
     private final AuthorityRepo authorityRepo;
@@ -77,10 +82,11 @@ public class ClubApplication {
                     .orElseGet(() -> createEtudiant());
 
             createClubsAndIntegrations(etudiant);
-
             // Creating a new Etudiant
             Etudiant student = new Etudiant();
             student.setFirstName("OTMANE");
+            student.setLastName("BACHRI");
+            student.setFiliere("MIP (Maths Informatique, PC)");
             student.setCne("K987654321");
             student.setEmail("bachri.otm.fst@uhp.ac.ma");
             student.setAccountLEnabled(true);
@@ -93,6 +99,8 @@ public class ClubApplication {
             anotherStudent.setFirstName("AHMED");
             anotherStudent.setCne("K123987654");
             anotherStudent = userRepo.save(anotherStudent);
+
+
 
 // Creating a new club
             Club newClub = clubRepository.save(Club.builder()
@@ -125,10 +133,11 @@ public class ClubApplication {
             newClub.getIntegrations().add(integration1);
             newClub.getIntegrations().add(integration2);
             newClub = clubRepository.save(newClub);
+            demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
 
 // Adding publications to the new club
             Publication pub1 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("Welcome to Tech Innovators")
                     .pubDesc("We're excited to launch our new tech-focused club!")
                     .date(LocalDateTime.of(2024, Month.JANUARY, 10, 10, 0))
@@ -140,7 +149,7 @@ public class ClubApplication {
             publicationRepository.save(pub1);
 
             Publication pub2 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("Hackathon Announcement")
                     .pubDesc("Join us for an exciting 48-hour hackathon next month!")
                     .date(LocalDateTime.of(2024, Month.FEBRUARY, 15, 14, 0))
@@ -153,7 +162,7 @@ public class ClubApplication {
             Publication pub3 = publicationRepository.save(Publication.builder()
                     .isPublic(false)
                     .title("AI Workshop for Members")
-                    .pubDesc("An exclusive workshop on AI advancements for club members.")
+                    .pubDesc("An exclusive workshop on AI advancements .")
                     .date(LocalDateTime.of(2024, Month.MARCH, 20, 16, 0))
                     .build());
             newClub.getPublications().add(pub3);
@@ -162,9 +171,9 @@ public class ClubApplication {
             publicationRepository.save(pub3);
 
             Publication pub4 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("Tech Fair 2024")
-                    .pubDesc("Showcase your projects at our annual tech fair.")
+                    .pubDesc("Showcase your projects .")
                     .date(LocalDateTime.of(2024, Month.MAY, 5, 11, 30))
                     .build());
             newClub.getPublications().add(pub4);
@@ -173,7 +182,7 @@ public class ClubApplication {
             publicationRepository.save(pub4);
 
             Publication pub5 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
+                    .isPublic(false)
                     .title("End of Year Celebration")
                     .pubDesc("Join us for our annual celebration to wrap up the year!")
                     .date(LocalDateTime.of(2024, Month.DECEMBER, 22, 18, 0))
@@ -232,7 +241,7 @@ public class ClubApplication {
     }
     private void createEventsForClub(Club club) {
         club.setEvenements(new ArrayList<>());
-        Stream.of("Event 1", "Event 2", "Event 3", "Event 4", "Event 5")
+        Stream.of("Event 1", "Event 2", "Event 3", "Event 4", "Event 5", "Event 6", "Event 7")
                 .forEach(eventName -> {
                     Evenement event = new Evenement();
                     event.setNom(eventName);

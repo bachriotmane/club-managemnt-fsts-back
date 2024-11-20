@@ -2,6 +2,7 @@ package club.management.club.features.services.demandes;
 
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.Demande;
+import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public interface DemandeService {
 
     Demande addDemande(Demande demande);
     Demande getDemandeById(String id);
-    Demande updateDemande(String id, Demande demande);
+    DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande);
     Demande save(Demande demande);
     Demande findById(String id);
 }

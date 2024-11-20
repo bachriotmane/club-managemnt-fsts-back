@@ -3,6 +3,7 @@ package club.management.club.shared.security.filters;
 import club.management.club.features.entities.User;
 import club.management.club.features.services.auths.JwtTokenService;
 import club.management.club.features.services.users.UserService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,6 +23,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Handler;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -55,11 +58,13 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
             userEmail = jwtService.extractUsername(jwt);
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User validateUser = userService.findUserByEmail(userEmail);
-
+                var claims = jwtService.parseJwtClaims(jwt);
+                Map<String, String> credentials = new HashMap<>();
+                credentials.put("id", claims.get("id", String.class));
                     if (jwtService.isTokenValid(jwt, validateUser)) {
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                 userEmail,
-                                null,
+                                credentials,
                                 userService.getGrantedAuthorities(validateUser.getAuthorities())
                         );
                         authentication.setDetails(

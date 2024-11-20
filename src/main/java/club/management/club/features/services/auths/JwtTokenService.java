@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -84,4 +85,19 @@ public class JwtTokenService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
+
+    public Claims parseJwtClaims(String jwt) {
+        return Jwts.parser()
+                .verifyWith(this.getSignInKey())
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload();
+    }
+
+        public String getUserId(Authentication authentication) {
+        return ((Map<String, String>) authentication.getCredentials()).get("id");
+    }
+
 }

@@ -70,12 +70,12 @@ public class DemandeController {
         return ResponseEntity.ok(demande);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Demande> updateDemande(
+    @PutMapping("/{id}/status")
+    public ResponseEntity<DemandeDTO> updateDemandeStatus(
             @PathVariable String id,
-            @RequestBody Demande demande
+            @RequestBody StatutDemande statutDemande
     ) {
-        Demande updatedDemande = demandeService.updateDemande(id, demande);
+        DemandeDTO updatedDemande = demandeService.updateDemandeStatus(id, statutDemande); // Utilisation du service pour la mise à jour et la conversion
         return ResponseEntity.ok(updatedDemande);
     }
 

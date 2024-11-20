@@ -3,9 +3,11 @@ package club.management.club.features.services.demandes.impl;
 import club.management.club.features.Specifications.DemandeSpecifications;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.Demande;
+import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.DemandeRepository;
+import club.management.club.features.services.demandes.DemandeService;
 import club.management.club.features.services.demandes.DemandeService;
 import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -27,7 +29,7 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Page<DemandeDTO> getAllDemandes(Pageable pageable) {
         return demandeRepository.findAll(pageable)
-                .map(DemandeMapper::toLiteDto); // Utilise une version simplifiée du DTO
+                .map(DemandeMapper::toLiteDto);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class DemandeServiceImpl implements DemandeService {
     public Page<DemandeDTO> filterDemandesByType(TypeDemande type, Pageable pageable) {
         return demandeRepository.findAll(DemandeSpecifications.withType(type), pageable)
                 .map(DemandeMapper::toLiteDto);
-    } 
+    }
 
     @Override
     public List<DemandeDTO> getDemandesByEtudiant(String etudiantId) {
@@ -64,21 +66,14 @@ public class DemandeServiceImpl implements DemandeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Demande","DemandeId",id));
     }
 
-    @Override
-    public Demande updateDemande(String id, Demande demande) {
-        Demande existingDemande = demandeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Demande","DemandeId",id));
 
-        existingDemande.setDate(demande.getDate());
-        existingDemande.setStatutDemande(demande.getStatutDemande());
-        existingDemande.setType(demande.getType());
-        existingDemande.setEtudiantDemandeur(demande.getEtudiantDemandeur());
-        existingDemande.setClub(demande.getClub());
-        existingDemande.setIntegration(demande.getIntegration());
-        existingDemande.setHistoriques(demande.getHistoriques());
-        existingDemande.setOrganisationEvenement(demande.getOrganisationEvenement());
 
-        return demandeRepository.save(existingDemande);
+    public DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande) {
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
+        demande.setStatutDemande(statutDemande);
+        demandeRepository.save(demande);
+        return DemandeMapper.toLiteDto(demande);
     }
 
     @Override
