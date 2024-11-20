@@ -34,7 +34,7 @@ public class ClubsController {
                                                              @RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam(required = false) String nomClub,
-                                                             @RequestParam(name = "idMyClubs", required = false) boolean isMyClubs
+                                                             @RequestParam(required = false) boolean isMyClubs
     ) {
         var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return clubList.getAllClubs(authentication,paging, nomClub,isMyClubs);
