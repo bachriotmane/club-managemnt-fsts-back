@@ -24,26 +24,6 @@ public class UserController {
     private final UserMapper userMapper;
     private PasswordEncoder passwordEncoder;
     private UserService userService ;
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user){
-        User savedUser = null;
-        ResponseEntity<?> response =null;
-        try {
-            String hashPwd = passwordEncoder.encode(user.getPassword());
-            user.setPassword(hashPwd);
-            savedUser = userService.saveUser(user);
-            if (savedUser.getId() != null) {//please Abdelkrim  check your logic here Long to UUID (savedUser.getId()>0 ==>savedUser.getId() != null)
-                response = ResponseEntity
-                        .status(HttpStatus.CREATED)
-                        .body(savedUser);
-            }
-        } catch (Exception ex) {
-            response = ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An exception occured due to " + ex.getMessage());
-        }
-        return response;
-    }
     @GetMapping("/test")
     public String test( ){
         return "hello fom protected resources ";

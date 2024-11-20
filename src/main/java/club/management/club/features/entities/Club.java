@@ -25,7 +25,7 @@ public class Club {
     private String instagramme;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "club")
-    private List<Integration> integrations;
+    private List<Integration> integrations = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Publication> publications;

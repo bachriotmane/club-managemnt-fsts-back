@@ -25,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -160,9 +161,6 @@ public class DemandeController {
                 .build();
         Historique savedHistorique = historiqueService.save(historique);
 
-        savedClub.getIntegrations().add(integration);
-        clubService.save(savedClub);
-
         Demande demande =Demande.builder()
                 .date(new Date())
                 .statutDemande(StatutDemande.EN_COURS)
@@ -175,6 +173,8 @@ public class DemandeController {
         demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+
 
     @PostMapping("/organization/depose")
     @Transactional
@@ -191,7 +191,7 @@ public class DemandeController {
         Evenement evenement = Evenement.builder()
                 .isValid(false)
                 .club(savedClub)
-                .nom(eventCreationDTO.EventName())
+                .nom(eventCreationDTO.eventName())
                 .description(eventCreationDTO.description())
                 .budget(eventCreationDTO.budget())
                 .date(eventCreationDTO.eventDate())
@@ -214,7 +214,6 @@ public class DemandeController {
                 .club(savedClub)
                 .organisationEvenement(savedEvent)
                 .historiques(List.of(savedHistorique))
-                .historiques(List.of(historique))
                 .build();
         demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
