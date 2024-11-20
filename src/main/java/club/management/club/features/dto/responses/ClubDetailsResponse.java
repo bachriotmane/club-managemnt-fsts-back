@@ -1,6 +1,5 @@
 package club.management.club.features.dto.responses;
 
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
