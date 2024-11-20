@@ -19,9 +19,9 @@ public class Integration {
     private String roleName;
     private MemberRole memberRole;
     private Date integrationDate;
+    private boolean isValid;
     @ManyToOne(fetch = FetchType.LAZY)
     private Etudiant etudiant;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Club club;
 }

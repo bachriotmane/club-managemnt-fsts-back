@@ -49,11 +49,11 @@ public class ProjectSecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/user/test").hasRole("USER")
+                        .requestMatchers("/user/test","/demandes","/clubs").hasRole("USER")
                         .requestMatchers("/test/post").hasAnyRole("ADMIN")
-                        .requestMatchers( "/auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-//                        .anyRequest().authenticated()
-                                .requestMatchers("/**").permitAll()
+                        .requestMatchers( "auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated()
+//                                .requestMatchers("/**").permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("/login-success", true)

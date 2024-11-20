@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+.$fsts_club_db.drawio.bkp
+.$fsts_club_db.drawio.dtmp
 
 ### STS ###
 .apt_generated

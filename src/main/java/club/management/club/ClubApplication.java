@@ -217,7 +217,7 @@ public class ClubApplication {
 
     private void createClubsAndIntegrations(Etudiant etudiant) {
         // Créer 20 clubs
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 30; i++) {
             Club club = new Club();
             club.setNom("Club " + i);
             club.setDescription("Le Club Bac N" + i + " est un club dédié aux passionnés de développement backend et aux technologies qui façonnent l'architecture des applications web et mobiles");

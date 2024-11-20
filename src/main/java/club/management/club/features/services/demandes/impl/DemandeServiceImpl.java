@@ -8,6 +8,8 @@ import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.DemandeRepository;
 import club.management.club.features.services.demandes.DemandeService;
+import club.management.club.features.services.demandes.DemandeService;
+import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,7 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Demande getDemandeById(String id) {
         return demandeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demande introuvable avec l'ID : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Demande","DemandeId",id));
     }
 
 
@@ -72,6 +74,18 @@ public class DemandeServiceImpl implements DemandeService {
         demande.setStatutDemande(statutDemande);
         demandeRepository.save(demande);
         return DemandeMapper.toLiteDto(demande);
+    }
+
+    @Override
+    public Demande save(Demande demande) {
+        return demandeRepository.save(demande);
+    }
+
+    @Override
+    public Demande findById(String id) {
+        return demandeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Demande","demandeId",id)
+        );
     }
 
 }

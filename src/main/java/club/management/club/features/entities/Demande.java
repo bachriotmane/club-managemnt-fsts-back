@@ -23,7 +23,7 @@ public class Demande {
     private StatutDemande statutDemande;
     @Enumerated(EnumType.STRING)
     private TypeDemande type;
-
+    private String motivation;
     @ManyToOne
     private Etudiant etudiantDemandeur;
     @ManyToOne

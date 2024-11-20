@@ -1,11 +1,9 @@
 package club.management.club.features.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,11 +11,12 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Historique {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String titre;
     private String description;
-    private Date date;
+    private LocalDateTime date;
 }

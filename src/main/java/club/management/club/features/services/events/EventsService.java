@@ -8,12 +8,12 @@ import club.management.club.features.dto.responses.PublicationDTO;
 
 import java.util.List;
 
+import club.management.club.features.entities.Evenement;
 import org.springframework.data.domain.Page;
 
 public interface EventsService {
     Page<EventResponseDTO> getAllEvents(EventRequest eventResponseDTO);
     EventResponseDTO get(String id);
     List<EventResponseDTO> getHomeEvents(int limit);
-
-
+    public Evenement save(Evenement event);
 }
