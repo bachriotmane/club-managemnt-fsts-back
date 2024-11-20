@@ -7,6 +7,7 @@ import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.DemandeRepository;
+import club.management.club.features.services.demandes.DemandeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Page<DemandeDTO> getAllDemandes(Pageable pageable) {
         return demandeRepository.findAll(pageable)
-                .map(DemandeMapper::toLiteDto); // Utilisation de DemandeMapper pour inclure le CNE
+                .map(DemandeMapper::toLiteDto);
     }
 
     @Override
@@ -40,16 +41,15 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Page<DemandeDTO> filterDemandesByType(TypeDemande type, Pageable pageable) {
         return demandeRepository.findAll(DemandeSpecifications.withType(type), pageable)
-                .map(DemandeMapper::toLiteDto); // Utilisation de DemandeMapper pour inclure le CNE
+                .map(DemandeMapper::toLiteDto);
     }
 
     @Override
     public List<DemandeDTO> getDemandesByEtudiant(String etudiantId) {
-        // Ici, nous récupérons toutes les demandes de l'étudiant, puis nous appliquons le DemandeMapper
         return demandeRepository.findAll(
                         (root, query, builder) -> builder.equal(root.get("etudiantDemandeur").get("id"), etudiantId)
                 ).stream()
-                .map(DemandeMapper::toLiteDto) // Assurez-vous que DemandeMapper inclut le CNE
+                .map(DemandeMapper::toLiteDto)
                 .collect(Collectors.toList());
     }
 
@@ -69,9 +69,9 @@ public class DemandeServiceImpl implements DemandeService {
     public DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande) {
         Demande demande = demandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
-        demande.setStatutDemande(statutDemande); // Mise à jour du statut
-        demandeRepository.save(demande); // Sauvegarder la demande mise à jour
-        return DemandeMapper.toLiteDto(demande); // Retourner le DemandeDTO après mise à jour
+        demande.setStatutDemande(statutDemande);
+        demandeRepository.save(demande);
+        return DemandeMapper.toLiteDto(demande);
     }
 
 }

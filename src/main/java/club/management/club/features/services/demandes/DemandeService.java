@@ -1,4 +1,4 @@
-package club.management.club.features.services.demandes.impl;
+package club.management.club.features.services.demandes;
 
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.Demande;

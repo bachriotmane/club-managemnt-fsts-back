@@ -4,7 +4,7 @@ import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.Demande;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
-import club.management.club.features.services.demandes.impl.DemandeService;
+import club.management.club.features.services.demandes.DemandeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
