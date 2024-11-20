@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,13 +30,14 @@ public class ClubsController {
 
     @GetMapping
     @Operation(summary = "Get all clubs.")
-    public ListSuccessResponse<ClubListResponse> getAllClubs(@RequestParam(defaultValue = "0") int page,
+    public ListSuccessResponse<ClubListResponse> getAllClubs(Authentication authentication,
+                                                             @RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam(required = false) String nomClub,
-                                                             @RequestParam(defaultValue = "") String idUser
+                                                             @RequestParam(name = "idMyClubs", required = false) boolean isMyClubs
     ) {
         var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return clubList.getAllClubs(paging, nomClub,idUser);
+        return clubList.getAllClubs(authentication,paging, nomClub,isMyClubs);
     }
     @GetMapping("/club/{uuid}")
     @Operation(summary = "Get club  details by UUID.")
