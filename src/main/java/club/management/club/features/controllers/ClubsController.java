@@ -65,4 +65,11 @@ public class ClubsController {
         var paging = PageRequest.of(page, size, Sort.by("integrationDate").descending());
         return clubListMembers.getAllMembers(paging, studentName, uuid);
     }
+    
+    @GetMapping("/home-clubs")
+    @Operation(summary = "Get a limited number of clubs for the homepage carousel.")
+    public ListSuccessResponse<ClubListResponse> getHomeClubs(
+            @RequestParam(defaultValue = "7") int limit) {
+        return clubList.getCarouselClubs(limit);
+    }
 }
