@@ -93,4 +93,14 @@ public class ClubsController {
 
         return ResponseEntity.ok(clubSimpleDTOS);
     }
+
+    @GetMapping("/adminClub")
+    public ResponseEntity<List<ClubSimpleDTO>> getClubsWhereUserIsAdmin(Authentication authentication){
+        String userEmail = authentication.getPrincipal().toString();
+
+        List<ClubSimpleDTO> clubSimpleDTOS = clubService.findClubsWhereUserIsAdmin(userEmail)
+                .stream().map(clubsMapper::ToClubSimpleDTO).toList();
+
+        return ResponseEntity.ok(clubSimpleDTOS);
+    }
 }

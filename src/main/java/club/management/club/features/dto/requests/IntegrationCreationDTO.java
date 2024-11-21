@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public record IntegrationCreationDTO(
-//        @NotEmpty(message = "une motivation est necessaire")
+        @NotEmpty(message = "une motivation est necessaire")
         String motivation
 ){
 }

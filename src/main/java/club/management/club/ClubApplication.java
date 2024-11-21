@@ -229,11 +229,15 @@ public class ClubApplication {
 
         // Créer 5 intégrations pour l'étudiant Bourich
         List<Club> clubs = clubRepository.findAll();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             Club club = clubs.get(i);
             Integration integration = new Integration();
             integration.setRoleName("Membre");
-            integration.setMemberRole(MemberRole.MEMBER);
+            if(i>10){
+                integration.setMemberRole(MemberRole.ADMIN);
+            }else{
+                integration.setMemberRole(MemberRole.MEMBER);
+            }
             integration.setEtudiant(etudiant);
             integration.setClub(club);
             integrationRepository.save(integration);

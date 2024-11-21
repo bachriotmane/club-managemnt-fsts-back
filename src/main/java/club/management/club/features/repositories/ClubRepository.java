@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,5 +31,12 @@ public interface ClubRepository extends JpaRepository<Club, String> {
         """
     )
     List<Club> findAllClubsWhereUserNotJoined(String email);
+
+    @Query("SELECT c FROM Club c " +
+            "JOIN c.integrations i " +
+            "JOIN i.etudiant e " +
+            "WHERE e.email = ?1 AND i.memberRole = ?2")
+    List<Club> findClubsWhereUserIsAdmin(String email,MemberRole role);
+
 
 }
