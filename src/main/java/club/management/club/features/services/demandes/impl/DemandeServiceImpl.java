@@ -73,6 +73,17 @@ public class DemandeServiceImpl implements DemandeService {
                 .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
         demande.setStatutDemande(statutDemande);
         demandeRepository.save(demande);
+        // OTMANE : Complétez cette fonctionnalité
+        // 1. Créer un objet Historique avec un titre basé sur le statut :
+        //    - "Flan a accepté votre demande"
+        //    - "Flan a refusé votre demande"
+        //    (Remarque : Le titre 'Flan' sera récupéré depuis le Controller)
+        //
+        // 2. Après cela, il faut valider l'entité concernée (Club, Intégration ou Événement)
+        //    en fonction du statut :
+        //    - Si `Status == VALID`, définir `isValid = true`.
+        //    - Sinon, simplement supprimer le Club, l'Événement ou l'Intégration.
+
         return DemandeMapper.toLiteDto(demande);
     }
 
