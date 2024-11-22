@@ -57,7 +57,7 @@ public class ClubListMembers {
                         i.getEtudiant().getId(),
                         i.getEtudiant().getFirstName(),
                         i.getEtudiant().getLastName(),
-                        i.getEtudiant().getImgProfile().getId(),
+                        i.getEtudiant().getImgProfile()!= null ? i.getEtudiant().getImgProfile().getId() : null,
                         i.getIntegrationDate(),
                         i.getEtudiant().getFiliere(),
                         i.getMemberRole().name()
