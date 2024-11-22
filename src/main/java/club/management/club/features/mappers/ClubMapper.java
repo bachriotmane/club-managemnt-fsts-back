@@ -17,10 +17,12 @@ public interface ClubMapper {
     @Mapping(source = "id", target = "uuid")
     @Mapping(target = "nbrMembres", expression = "java(club.getIntegrations().size())")
     @Mapping(target = "profilsDetailsDto", expression = "java(mapProfilsDetails(club))")
+    @Mapping(target = "logo",expression = "java(club.getLogo()!= null ? club.getLogo().getId() : null)")
     ClubDetailsResponse toClubDetailsResponse(Club club);
 
     @Mapping(source = "id", target = "uuid")
     @Mapping(source = "firstName", target = "nom")
+    @Mapping(target = "imgProfile",expression = "java(etudiant.getImgProfile()!= null ? etudiant.getImgProfile().getId() : null)")
     ProfilsDetailsDto toProfilsDetailsDto(Etudiant etudiant);
 
     List<ProfilsDetailsDto> toProfilsDetailsDtoList(List<Etudiant> etudiants);

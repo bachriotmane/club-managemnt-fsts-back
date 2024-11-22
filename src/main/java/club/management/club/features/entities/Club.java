@@ -21,7 +21,9 @@ public class Club {
     private String description;
     private Date createdAt;
     private boolean isValid;
-    private String logo; 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_id")
+    private Image logo;
     private String instagramme;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "club")

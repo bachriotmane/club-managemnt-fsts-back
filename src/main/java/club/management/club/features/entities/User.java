@@ -41,7 +41,9 @@ public class User {
     private boolean accountLocked;
     private boolean accountLEnabled;
     private boolean accountCompleted;
-    private String imgProfile;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_id")
+    private Image imgProfile;
     @ManyToMany(fetch = EAGER)
     @JoinTable(
             name = "user_authorities",

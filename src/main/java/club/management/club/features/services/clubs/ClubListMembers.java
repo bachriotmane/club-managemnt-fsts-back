@@ -40,7 +40,7 @@ public class ClubListMembers {
 
         return new SuccessResponse<>(new ClubListMembersResponse(
                 club.getNom(),
-                club.getLogo(),
+                club.getLogo().getId().toString(),
                 club.getIntegrations().size(),
                 new ListSuccessResponse<>(
                         members,
@@ -57,7 +57,7 @@ public class ClubListMembers {
                         i.getEtudiant().getId(),
                         i.getEtudiant().getFirstName(),
                         i.getEtudiant().getLastName(),
-                        i.getEtudiant().getImgProfile(),
+                        i.getEtudiant().getImgProfile().getId(),
                         i.getIntegrationDate(),
                         i.getEtudiant().getFiliere(),
                         i.getMemberRole().name()
