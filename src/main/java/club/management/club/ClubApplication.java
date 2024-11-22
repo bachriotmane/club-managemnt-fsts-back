@@ -23,12 +23,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
-import java.util.Set;
 
 
 @OpenAPIDefinition(
@@ -77,15 +73,26 @@ public class ClubApplication {
             if (authorityRepo.findAuthorityByName("ROLE_USER").isEmpty()) {
                 authorityRepo.save(Authority.builder().name("ROLE_USER").build());
             }
+            if (authorityRepo.findAuthorityByName("ROLE_ADMIN").isEmpty()) {
+                authorityRepo.save(Authority.builder().name("ROLE_ADMIN").build());
+            }
 
             Etudiant etudiant = etudiantRepository.findByEmail("bourich.sou.fst@uhp.ac.ma")
-                    .orElseGet(() -> createEtudiant());
+                    .orElseGet(this::createEtudiant);
+            Authority adminAuth = authorityService.findByName("ROLE_ADMIN")
+                    .orElseThrow(() -> new IllegalStateException("ROLE ADMIN was not initiated"));
+
+            User admin = Etudiant.builder().firstName("Kaouthar").lastName("FSTS").cin("MD8978").authorities(Set.of(adminAuth)).accountCompleted(true).password(passwordEncoder.encode("12345678")).accountLEnabled(true).accountLocked(false).email("kaouthar@uhp.ac.ma").build();
+            userRepo.save(admin);
 
             createClubsAndIntegrations(etudiant);
+            Authority authority = authorityService.findByName("ROLE_USER")
+                    .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
             // Creating a new Etudiant
             Etudiant student = new Etudiant();
             student.setFirstName("OTMANE");
             student.setLastName("BACHRI");
+            student.setAuthorities(Set.of(authority));
             student.setFiliere("MIP (Maths Informatique, PC)");
             student.setCne("K987654321");
             student.setEmail("bachri.otm.fst@uhp.ac.ma");

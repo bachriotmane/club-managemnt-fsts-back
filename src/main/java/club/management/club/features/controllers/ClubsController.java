@@ -2,6 +2,7 @@ package club.management.club.features.controllers;
 
 import club.management.club.features.dto.responses.ClubDetailsResponse;
 import club.management.club.features.dto.responses.ClubListMembersResponse;
+import club.management.club.features.dto.responses.UserRolesInsideClubResponse;
 import club.management.club.features.services.clubs.ClubDetails;
 import club.management.club.features.services.clubs.ClubListMembers;
 import club.management.club.shared.dtos.ListSuccessResponse;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/clubs")
@@ -71,5 +74,10 @@ public class ClubsController {
     public ListSuccessResponse<ClubListResponse> getHomeClubs(
             @RequestParam(defaultValue = "7") int limit) {
         return clubList.getCarouselClubs(limit);
+    }
+
+    @GetMapping("/{userId}/roles")
+    public List<UserRolesInsideClubResponse> getUserRolesInsideClub(@PathVariable String userId){
+        return clubListMembers.userRolesInsideClubResponse(userId);
     }
 }
