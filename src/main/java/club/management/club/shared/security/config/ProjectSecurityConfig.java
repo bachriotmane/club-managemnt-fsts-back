@@ -49,7 +49,7 @@ public class ProjectSecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/user/test","/demandes","/clubs").hasRole("USER")
+//                        .requestMatchers("/user/test","/demandes","/clubs").hasRole("*")
                         .requestMatchers("/test/post").hasAnyRole("ADMIN")
                         .requestMatchers( "auth/**", "/login/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
