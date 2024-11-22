@@ -40,7 +40,7 @@ public class ClubListMembers {
 
         return new SuccessResponse<>(new ClubListMembersResponse(
                 club.getNom(),
-                club.getLogo().getId().toString(),
+                club.getLogo()!= null ? club.getLogo().getId() : null,
                 club.getIntegrations().size(),
                 new ListSuccessResponse<>(
                         members,
