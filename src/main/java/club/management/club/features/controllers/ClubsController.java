@@ -5,6 +5,7 @@ import club.management.club.features.dto.responses.ClubListMembersResponse;
 import club.management.club.features.dto.responses.ClubSimpleDTO;
 import club.management.club.features.entities.Club;
 import club.management.club.features.mappers.ClubsMapper;
+import club.management.club.features.dto.responses.UserRolesInsideClubResponse;
 import club.management.club.features.services.clubs.ClubDetails;
 import club.management.club.features.services.clubs.ClubListMembers;
 import club.management.club.features.services.clubs.ClubService;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/clubs")
@@ -76,7 +79,7 @@ public class ClubsController {
         var paging = PageRequest.of(page, size, Sort.by("integrationDate").descending());
         return clubListMembers.getAllMembers(paging, studentName, uuid);
     }
-
+    
     @GetMapping("/home-clubs")
     @Operation(summary = "Get a limited number of clubs for the homepage carousel.")
     public ListSuccessResponse<ClubListResponse> getHomeClubs(
@@ -102,5 +105,10 @@ public class ClubsController {
                 .stream().map(clubsMapper::ToClubSimpleDTO).toList();
 
         return ResponseEntity.ok(clubSimpleDTOS);
+    }
+
+    @GetMapping("/{userId}/roles")
+    public List<UserRolesInsideClubResponse> getUserRolesInsideClub(@PathVariable String userId){
+        return clubListMembers.userRolesInsideClubResponse(userId);
     }
 }
