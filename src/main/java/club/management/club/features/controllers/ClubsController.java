@@ -118,12 +118,12 @@ public class ClubsController {
     }
     @Operation(summary = "Delete Club by UUID.")
     @DeleteMapping("/club/delete/{uuid}")
-    public  SuccessResponse<Boolean>  deleteImage(@PathVariable String  uuid){
+    public  SuccessResponse<Boolean>  deleteClub(@PathVariable String  uuid){
         return clubService.deleteClub(uuid);
     }
     @Operation(summary = "Edit club by UUID.")
     @PatchMapping(path = "/club/{uuid}")
-    public  SuccessResponse<ClubDetailsResponse>  editImage(@RequestBody @Valid ClubEditRequest clubCreationDTO, @PathVariable String uuid){
+    public  SuccessResponse<ClubDetailsResponse>  editClub(@RequestBody @Valid ClubEditRequest clubCreationDTO, @PathVariable String uuid){
         return  clubService.editClub(clubCreationDTO,uuid);
     }
 
