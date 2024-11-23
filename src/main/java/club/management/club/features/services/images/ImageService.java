@@ -9,7 +9,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ImageService {
+    //use this methode in all services  for save your image
     Image saveImage(MultipartFile file)  throws IOException;
-    SuccessResponse<Boolean> storeImage(MultipartFile file) throws IOException;
+    Image editImage(MultipartFile file,String uuid) throws IOException;
+
+    SuccessResponse<String> storeImage(MultipartFile file) throws IOException;
     Image getImageById(String id);
+
+    SuccessResponse<Boolean> delete(String uuid);
 }

@@ -2,6 +2,8 @@ package club.management.club.features.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,8 +23,9 @@ public class Club {
     private String description;
     private Date createdAt;
     private boolean isValid;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Image logo;
     private String instagramme;
 

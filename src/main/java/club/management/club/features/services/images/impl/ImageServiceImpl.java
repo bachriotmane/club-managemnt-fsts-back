@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,10 +31,25 @@ public class ImageServiceImpl implements ImageService {
                 .data(file.getBytes())
                 .build();
 
-        return  imageRepository.save(image);
+        return imageRepository.save(image);
     }
+
+
     @Override
-    public SuccessResponse<Boolean> storeImage(MultipartFile file) throws IOException {
+    public Image editImage(MultipartFile file, String uuid) throws IOException {
+        imageValidator.validate(file);
+
+        var image = imageRepository.findById(uuid)
+                .orElseThrow(() -> new BadRequestException(ValidationConstants.IMAGE_NOT_FOUND));
+
+        image.setData(file.getBytes());
+        image.setFileName(file.getOriginalFilename());
+
+        return imageRepository.save(image);
+    }
+
+    @Override
+    public SuccessResponse<String> storeImage(MultipartFile file) throws IOException {
         imageValidator.validate(file);
 
         Image image = Image.builder()
@@ -41,8 +57,8 @@ public class ImageServiceImpl implements ImageService {
                 .data(file.getBytes())
                 .build();
 
-        imageRepository.save(image);
-        return new SuccessResponse<>(true);
+        var newImage = imageRepository.save(image);
+        return new SuccessResponse<>(newImage.getId());
     }
 
     @Override
@@ -50,4 +66,16 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException(ValidationConstants.IMAGE_NOT_FOUND));
     }
+
+    @Override
+    public SuccessResponse<Boolean> delete(String uuid) {
+        boolean exists = imageRepository.existsById(uuid);
+        if (!exists) {
+            throw new BadRequestException(ValidationConstants.IMAGE_NOT_FOUND);
+        }
+        imageRepository.deleteById(uuid);
+
+        return new SuccessResponse<>(true);
+    }
 }
+
