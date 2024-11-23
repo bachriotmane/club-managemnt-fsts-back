@@ -14,6 +14,7 @@ import club.management.club.features.services.events.EventsService;
 import club.management.club.features.services.historiques.HistoriqueService;
 import club.management.club.features.services.integration.IntegrationService;
 import club.management.club.features.services.users.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/demandes")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 public class DemandeController {
     private final DemandeService demandeService;
     private final UserService userService;
@@ -65,10 +67,11 @@ public class DemandeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Demande> getDemandeById(@PathVariable String id) {
-        Demande demande = demandeService.getDemandeById(id);
-        return ResponseEntity.ok(demande);
+    public ResponseEntity<DemandeDTO> getDemandeById(@PathVariable String id) {
+        DemandeDTO demandeDTO = demandeService.getDemandeById(id);
+        return ResponseEntity.ok(demandeDTO);
     }
+
 
     @PutMapping("/{id}/status")
     public ResponseEntity<DemandeDTO> updateDemandeStatus(
@@ -219,10 +222,6 @@ public class DemandeController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/historique/{id}")
-    public ResponseEntity<List<Historique>> getDemandeHistorique(@PathVariable String id){
-        Demande savedDemande = demandeService.getDemandeById(id);
-        return ResponseEntity.ok(savedDemande.getHistoriques());
-    }
+
 }
 
