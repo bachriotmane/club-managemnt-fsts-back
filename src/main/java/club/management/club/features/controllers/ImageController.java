@@ -1,5 +1,6 @@
 package club.management.club.features.controllers;
 
+import club.management.club.features.dto.requests.ImageEditRequest;
 import club.management.club.features.services.images.ImageService;
 import club.management.club.shared.Constants.ExtensionsConstants;
 import club.management.club.shared.dtos.SuccessResponse;
@@ -46,9 +47,9 @@ public class ImageController {
         return new ResponseEntity<>(image.getData(), headers, HttpStatus.OK);
     }
     @Operation(summary = "Edit image by UUID.")
-    @PutMapping(path = "/image/{uuid}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<byte[]> editImage(@RequestParam("file") MultipartFile file, @PathVariable String uuid) throws IOException {
-        var image = imageService.editImage(file, uuid);
+    @PutMapping(path = "/image", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<byte[]> editImage( @ModelAttribute ImageEditRequest dto, @RequestParam("file") MultipartFile file) throws IOException {
+        var image = imageService.editImage(dto,file);
         var headers = new HttpHeaders();
         String extension = image.getFileName().substring(image.getFileName().lastIndexOf(".") + 1).toLowerCase();
         String mimeType = ExtensionsConstants.EXTENSION_TO_MIME_TYPE.get(extension);
