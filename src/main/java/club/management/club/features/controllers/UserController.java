@@ -1,6 +1,7 @@
 package club.management.club.features.controllers;
 
 import club.management.club.features.dto.responses.EtudiantDto;
+import club.management.club.features.dto.responses.UserRolesInsideClubResponse;
 import club.management.club.features.entities.Etudiant;
 import club.management.club.features.entities.User;
 import club.management.club.features.mappers.EtudiantMapper;

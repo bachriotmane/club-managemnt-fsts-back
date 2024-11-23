@@ -47,7 +47,7 @@ public class ClubList {
                         club.getNom(),
                         club.getDescription(),
                         club.getCreatedAt(),
-                        club.getLogo(),
+                        club.getLogo()!= null ? club.getLogo().getId() : null,
                         club.getInstagramme()
                 ))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -77,7 +77,7 @@ public class ClubList {
                         club.getNom(),
                         club.getDescription(),
                         club.getCreatedAt(),
-                        club.getLogo(),
+                        club.getLogo()!= null ? club.getLogo().getId() : null,
                         club.getInstagramme()
                 ))
                 .collect(Collectors.toSet());
