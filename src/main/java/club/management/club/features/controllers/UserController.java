@@ -3,17 +3,22 @@ package club.management.club.features.controllers;
 import club.management.club.features.dto.responses.EtudiantDto;
 import club.management.club.features.dto.responses.UserRolesInsideClubResponse;
 import club.management.club.features.entities.Etudiant;
+import club.management.club.features.entities.Image;
 import club.management.club.features.entities.User;
 import club.management.club.features.mappers.EtudiantMapper;
 import club.management.club.features.mappers.UserMapper;
+import club.management.club.features.services.images.impl.ImageServiceImpl;
 import club.management.club.features.services.users.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -23,6 +28,7 @@ import java.util.UUID;
 public class UserController {
     private final EtudiantMapper etudiantMapper;
     private final UserMapper userMapper;
+    private final ImageServiceImpl imageServiceImpl;
     private PasswordEncoder passwordEncoder;
     private UserService userService ;
     @GetMapping("/test")
@@ -50,5 +56,61 @@ public class UserController {
                     .status(HttpStatus.NOT_FOUND)
                     .body("User not found");
         }
+    }
+
+
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<?> getUserProfile(@PathVariable String id) {
+        User user = userService.getUserById(id);
+
+        if (user != null) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(user.getImgProfile());
+        }
+        else{
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("User not found");
+        }
+    }
+
+    @PatchMapping(value = "/profile/{id}" ,consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+    public ResponseEntity<?> updateProfileImage(@PathVariable String id , @RequestPart("profile") MultipartFile imageProfile) throws IOException {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            Image profileImage = imageServiceImpl.saveImage(imageProfile);
+            user.setImgProfile(profileImage);
+            userService.saveUser(user);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body("Profile image updated successfully");
+        }
+        else{
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("User not found");
+        }
+
+    }
+
+
+    @PatchMapping(value = "/cover/{id}" ,consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+    public ResponseEntity<?> updateCoverImage(@PathVariable String id , @RequestPart("cover") MultipartFile imageCover) throws IOException {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            Image coverImage = imageServiceImpl.saveImage(imageCover);
+            user.setImgCover(coverImage);
+            userService.saveUser(user);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body("Profile image updated successfully");
+        }
+        else{
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("User not found");
+        }
+
     }
 }

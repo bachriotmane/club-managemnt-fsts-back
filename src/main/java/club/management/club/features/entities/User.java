@@ -36,14 +36,23 @@ public class User {
     @Column(unique = true)
     private String whatsapp;
 
+    @Column(unique = true)
+    private String cne;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private boolean accountLocked;
     private boolean accountLEnabled;
     private boolean accountCompleted;
+
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "image_profile_id")
     private Image imgProfile;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_cover_id")
+    private Image imgCover;
+
     @ManyToMany(fetch = EAGER)
     @JoinTable(
             name = "user_authorities",

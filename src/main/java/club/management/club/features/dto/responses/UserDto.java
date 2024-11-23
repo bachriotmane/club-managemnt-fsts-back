@@ -5,9 +5,11 @@ public record UserDto(
     String firstName,
     String lastName,
     String email,
-    String cin,
+    String cne,
     String facebook,
     String instagram,
-    String whatsapp
+    String whatsapp,
+    String imageProfile,
+    String imageCover
 ) {
 }

@@ -13,10 +13,13 @@ public class UserMapper {
             user.getFirstName(),
             user.getLastName(),
             user.getEmail(),
-            user.getCin(),
+            user.getCne(),
             user.getFacebook(),
             user.getInstagram(),
-            user.getWhatsapp()
+            user.getWhatsapp(),
+            user.getImgProfile() != null ? user.getImgProfile().getId() : null,
+            user.getImgCover() != null ? user.getImgCover().getId() : null
+
         );
     }
 }
