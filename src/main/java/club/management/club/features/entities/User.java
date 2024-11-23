@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.Set;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -43,6 +46,7 @@ public class User {
     private boolean accountCompleted;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "image_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Image imgProfile;
     @ManyToMany(fetch = EAGER)
     @JoinTable(

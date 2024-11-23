@@ -1,5 +1,7 @@
 package club.management.club.features.controllers;
 
+import club.management.club.features.dto.requests.ClubCreationDTO;
+import club.management.club.features.dto.requests.ClubEditRequest;
 import club.management.club.features.dto.responses.ClubDetailsResponse;
 import club.management.club.features.dto.responses.ClubListMembersResponse;
 import club.management.club.features.dto.responses.ClubSimpleDTO;
@@ -16,13 +18,16 @@ import club.management.club.shared.dtos.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,4 +116,15 @@ public class ClubsController {
     public List<UserRolesInsideClubResponse> getUserRolesInsideClub(@PathVariable String userId){
         return clubListMembers.userRolesInsideClubResponse(userId);
     }
+    @Operation(summary = "Delete Club by UUID.")
+    @DeleteMapping("/club/delete/{uuid}")
+    public  SuccessResponse<Boolean>  deleteImage(@PathVariable String  uuid){
+        return clubService.deleteClub(uuid);
+    }
+    @Operation(summary = "Edit club by UUID.")
+    @PatchMapping(path = "/club/{uuid}")
+    public  SuccessResponse<ClubDetailsResponse>  editImage(@RequestBody @Valid ClubEditRequest clubCreationDTO, @PathVariable String uuid){
+        return  clubService.editClub(clubCreationDTO,uuid);
+    }
+
 }
