@@ -28,6 +28,9 @@ public class RegistrationRequest {
 
     @NotEmpty(message = "CIN is mandatory")
     @NotNull(message = "CIN is mandatory")
-    @Pattern(regexp = "[A-Z]{1,2}[0-9]{4,9}", message = "CIN should be 2 Or 1 uppercase letters followed by 4 - 9 digits")
-    private String cin;
+    @Pattern(regexp = "[A-Z]{1,2}[0-9]{4,15}", message = "CNE should be 2 Or 1 uppercase letters followed by 4 - 15 digits")
+    private String cne;
+    private String facebook;
+    private String instagram;
+    private String whatsapp;
 }
