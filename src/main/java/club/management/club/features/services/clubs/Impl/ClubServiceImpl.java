@@ -2,7 +2,6 @@ package club.management.club.features.services.clubs.Impl;
 
 import club.management.club.features.dto.requests.ClubEditRequest;
 import club.management.club.features.dto.responses.ClubDetailsResponse;
-import club.management.club.features.dto.responses.ClubSimpleDTO;
 import club.management.club.features.entities.Club;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.mappers.ClubMapper;
@@ -14,6 +13,7 @@ import club.management.club.shared.exceptionHandler.BadRequestException;
 import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,6 +45,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Transactional
     public SuccessResponse<Boolean> deleteClub(String uuid) {
         var isFind =  clubRepository.existsById(uuid);
         if(! isFind) {
@@ -55,6 +56,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Transactional
     public SuccessResponse<ClubDetailsResponse> editClub(ClubEditRequest clubEditRequest, String uuid) {
         var oldClub = clubRepository.findById(uuid)
                 .orElseThrow(()-> new BadRequestException(ValidationConstants.CLUB_NOT_FOUND));
@@ -63,4 +65,5 @@ public class ClubServiceImpl implements ClubService {
 
         return new SuccessResponse<>(clubMapper.toClubDetailsResponse(clubResponse));
     }
+
 }

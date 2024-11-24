@@ -4,6 +4,7 @@ import club.management.club.features.dto.requests.ClubCreationDTO;
 import club.management.club.features.dto.requests.EventCreationDTO;
 import club.management.club.features.dto.requests.IntegrationCreationDTO;
 import club.management.club.features.dto.responses.DemandeDTO;
+import club.management.club.features.dto.responses.MembersListDTO;
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.StatutDemande;
@@ -14,6 +15,8 @@ import club.management.club.features.services.events.EventsService;
 import club.management.club.features.services.historiques.HistoriqueService;
 import club.management.club.features.services.integration.IntegrationService;
 import club.management.club.features.services.users.UserService;
+import club.management.club.shared.dtos.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -26,7 +29,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -220,6 +222,20 @@ public class DemandeController {
                 .build();
         demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @Operation(summary = "Edit Student Roles by integration UUID.")
+    @PutMapping("/edit-integration/{uuid}")
+    public SuccessResponse<MembersListDTO> editRoleStudent(
+            @PathVariable String uuid,
+            @RequestParam String roleName,
+            @RequestParam String memberRole) {
+        var role = MemberRole.valueOf(memberRole.toUpperCase());
+
+        return integrationService.editRoleStudent(uuid, roleName, role);
+    }
+    @DeleteMapping("/integration/delete/{uuid}")
+    public SuccessResponse<Boolean> deleteIntegration(@PathVariable String uuid){
+        return integrationService.deleteIntegration(uuid);
     }
 
 

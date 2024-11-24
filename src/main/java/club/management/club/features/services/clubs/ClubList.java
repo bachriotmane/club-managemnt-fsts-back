@@ -30,7 +30,9 @@ public class ClubList {
     ) {
         var idStudent = isMyClubs ? jwtTokenService.getUserId(authentication) : null;
         var spec = ClubSpecifications.withNom(nomClub)
-                .and(ClubSpecifications.withStudentId(idStudent));
+                .and(ClubSpecifications.withStudentId(idStudent))
+                .and(ClubSpecifications.withIsValid(true));
+
         var clubPage = clubRepository.findAll(spec, pageable);
         var serviceResponses = getData(clubPage);
         return new ListSuccessResponse<>(

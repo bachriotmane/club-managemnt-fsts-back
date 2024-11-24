@@ -13,6 +13,7 @@ import club.management.club.shared.dtos.SuccessResponse;
 import club.management.club.shared.exceptionHandler.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
+    @Transactional
     public Image editImage(ImageEditRequest dto, MultipartFile file) throws IOException {
         imageValidator.validate(file);
 
@@ -96,6 +98,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public SuccessResponse<Boolean> delete(String uuid) {
         boolean exists = imageRepository.existsById(uuid);
         if (!exists) {
