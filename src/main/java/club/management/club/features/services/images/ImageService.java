@@ -5,6 +5,7 @@ import club.management.club.shared.dtos.SuccessResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,4 +13,6 @@ public interface ImageService {
     Image saveImage(MultipartFile file)  throws IOException;
     SuccessResponse<Boolean> storeImage(MultipartFile file) throws IOException;
     Image getImageById(String id);
+    Image saveAlbumImage(MultipartFile image) throws IOException;
+
 }

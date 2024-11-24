@@ -1,9 +1,6 @@
 package club.management.club.features.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,8 +15,13 @@ import java.util.List;
 public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String albumId;
     private String location;
-    private LocalDateTime dte;
+    private LocalDateTime date;
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Club club;
+    @OneToMany(fetch = FetchType.EAGER)
+    List<Image> albumImages;
 }
