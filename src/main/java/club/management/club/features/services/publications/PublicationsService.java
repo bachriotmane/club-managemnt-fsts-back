@@ -14,4 +14,6 @@ public interface PublicationsService {
     PublicationDTO addImageToPublication(String publicationId, String imageId);
 
     void deletePublicationById(String id);
+
+    PublicationDTO update(String id, PublicationDTO publicationDTO);
 }

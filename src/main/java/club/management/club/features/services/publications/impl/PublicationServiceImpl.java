@@ -79,11 +79,17 @@ public class PublicationServiceImpl implements PublicationsService {
     }
 
     @Override
+    @Transactional
     public PublicationDTO addImageToPublication(String publicationId, String imageId) {
         Publication publication = publicationRepository.findById(publicationId)
                 .orElseThrow(() -> new IllegalArgumentException("Publication not found"));
         Image image = imageRepository.findById(imageId)
                 .orElseThrow(() -> new IllegalArgumentException("Image not found"));
+        if(publication.getImage() != null){
+            publication.setImage(null);
+            publicationRepository.save(publication);
+            imageRepository.deleteById(image.getId());
+        }
         publication.setImage(image);
         return publicationMapper.convertToDTO(publicationRepository.save(publication));
     }
@@ -100,5 +106,17 @@ public class PublicationServiceImpl implements PublicationsService {
         publication.setClub(null);
         publicationRepository.save(publication);
         publicationRepository.deleteById(id);
+    }
+
+    @Override
+    public PublicationDTO update(String id, PublicationDTO publicationDTO) {
+        Publication publication = publicationRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Publication with ID " + id + " not found."));
+        publication.setTitle(publicationDTO.title());
+        publication.setPubDesc(publicationDTO.description());
+        publication.setPublic(publicationDTO.isPublic());
+        if(publicationDTO.imageId() == null){
+            publication.setImage(null);
+        }
+        return publicationMapper.convertToDTO(publicationRepository.save(publication));
     }
 }

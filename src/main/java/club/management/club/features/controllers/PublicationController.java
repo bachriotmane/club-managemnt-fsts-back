@@ -70,4 +70,9 @@ public class PublicationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    public PublicationDTO updatePublication(@PathVariable String id, @RequestBody PublicationDTO publicationDTO){
+        return publicationsService.update(id, publicationDTO);
+    }
 }
