@@ -24,10 +24,10 @@ public class AlbumController {
     private final ImageService imageService;
     private final ClubService clubService;
     private final AlbumService albumService;
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/{clubId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void addAlbum(
             @RequestParam("images") List<MultipartFile> images,
-            String clubId,
+            @PathVariable String clubId,
             String location,
             String description,
             LocalDateTime date
@@ -41,7 +41,7 @@ public class AlbumController {
         Album album = Album.builder()
                 .albumImages(savedImages)
                 .date(date)
-                .description(description)
+                .title(description)
                 .location(location)
                 .club(club)
                 .build();
@@ -56,7 +56,7 @@ public class AlbumController {
                 .imagesUrl(album.getAlbumImages().stream().map(Image::getId).toList())
                 .location(album.getLocation())
                 .date(album.getDate())
-                .description(album.getDescription())
+                .title(album.getTitle())
                 .build()
             ).toList();
     }

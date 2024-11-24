@@ -18,7 +18,7 @@ public class Album {
     private String albumId;
     private String location;
     private LocalDateTime date;
-    private String description;
+    private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Club club;

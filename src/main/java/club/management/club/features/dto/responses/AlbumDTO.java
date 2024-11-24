@@ -10,7 +10,7 @@ public record AlbumDTO(
         String albumId,
         String location,
         LocalDateTime date,
-        String description,
+        String title,
         List<String> imagesUrl
 ) {
 }
