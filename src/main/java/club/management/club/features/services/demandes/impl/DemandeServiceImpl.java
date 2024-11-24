@@ -61,9 +61,19 @@ public class DemandeServiceImpl implements DemandeService {
     }
 
     @Override
-    public Demande getDemandeById(String id) {
-        return demandeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Demande","DemandeId",id));
+    public DemandeDTO getDemandeById(String id) {
+        // Récupérer la demande
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Demande", "DemandeId", id));
+
+        // Convertir en DemandeDTO
+        return DemandeDTO.builder()
+                .id(demande.getId())
+                .cne(demande.getEtudiantDemandeur().getCne()) // Vérifiez que le champ existe
+                .date(demande.getDate())
+                .description(demande.getDescription())
+                .statutDemande(demande.getStatutDemande())
+                .build();
     }
 
 

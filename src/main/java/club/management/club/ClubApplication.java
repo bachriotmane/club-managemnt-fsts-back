@@ -62,6 +62,7 @@ public class ClubApplication {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthorityService authorityService;
+
     public static void main(String[] args) {
         SpringApplication.run(ClubApplication.class, args);
     }

@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Etudiant extends User {
-    private String cne;
     private String filiere;
 
     @OneToMany(mappedBy = "etudiant")

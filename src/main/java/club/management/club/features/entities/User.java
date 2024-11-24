@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.Set;
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -36,14 +39,23 @@ public class User {
     @Column(unique = true)
     private String whatsapp;
 
+    @Column(unique = true)
+    private String cne;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private boolean accountLocked;
     private boolean accountLEnabled;
     private boolean accountCompleted;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "image_id")
     private Image imgProfile;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_cover_id")
+    private Image imgCover;
+
     @ManyToMany(fetch = EAGER)
     @JoinTable(
             name = "user_authorities",
