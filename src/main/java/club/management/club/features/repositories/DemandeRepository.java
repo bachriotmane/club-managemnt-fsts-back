@@ -16,6 +16,6 @@ public interface DemandeRepository extends JpaRepository<Demande, String>, JpaSp
     @Query("SELECT d.etudiantDemandeur FROM Demande d " +
             "WHERE d.club = :club AND d.type = 'CREATION_CLUB'")
     Etudiant findEtudiantDemandeurbyClub(Club club);
-
+    void deleteByClubId(String uuid);
 }
 
