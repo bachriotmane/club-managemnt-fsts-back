@@ -35,7 +35,5 @@ public class Demande {
     private List<Historique> historiques;
     @OneToOne
     private Evenement organisationEvenement;
-
-
 }
 

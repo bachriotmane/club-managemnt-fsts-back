@@ -1,4 +1,5 @@
 package club.management.club.features.entities;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class Etudiant extends User {
     private String filiere;
 
-    @OneToMany(mappedBy = "etudiant")
+    @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Integration> integrations;
 
     @OneToMany

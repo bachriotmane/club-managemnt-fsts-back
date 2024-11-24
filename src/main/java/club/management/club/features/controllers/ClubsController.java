@@ -1,18 +1,13 @@
 package club.management.club.features.controllers;
 
-import club.management.club.features.dto.requests.ClubCreationDTO;
 import club.management.club.features.dto.requests.ClubEditRequest;
-import club.management.club.features.dto.responses.ClubDetailsResponse;
-import club.management.club.features.dto.responses.ClubListMembersResponse;
-import club.management.club.features.dto.responses.ClubSimpleDTO;
-import club.management.club.features.entities.Club;
+import club.management.club.features.dto.responses.*;
+import club.management.club.features.enums.MemberRole;
 import club.management.club.features.mappers.ClubsMapper;
-import club.management.club.features.dto.responses.UserRolesInsideClubResponse;
 import club.management.club.features.services.clubs.ClubDetails;
 import club.management.club.features.services.clubs.ClubListMembers;
 import club.management.club.features.services.clubs.ClubService;
 import club.management.club.shared.dtos.ListSuccessResponse;
-import club.management.club.features.dto.responses.ClubListResponse;
 import club.management.club.features.services.clubs.ClubList;
 import club.management.club.shared.dtos.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,18 +17,14 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import java.util.List;
-
+import java.util.stream.Stream;
 @RestController
 @RequestMapping("/clubs")
 @AllArgsConstructor
@@ -46,6 +37,7 @@ public class ClubsController {
     private final ClubListMembers clubListMembers;
     private final ClubService clubService;
     private  final ClubsMapper clubsMapper;
+
 
     @GetMapping
     @Operation(summary = "Get all clubs.")
@@ -60,8 +52,10 @@ public class ClubsController {
     }
     @GetMapping("/club/{uuid}")
     @Operation(summary = "Get club  details by UUID.")
-    public SuccessResponse<ClubDetailsResponse> getDetails(@PathVariable("uuid") String uuid) {
-        return clubDetails.get(uuid);
+    public SuccessResponse<ClubDetailsResponse> getDetails(Authentication authentication,
+                                                           @PathVariable("uuid") String uuid)
+    {
+        return clubDetails.get(authentication,uuid);
     }
 
     @GetMapping("/{uuid}/admin")
@@ -125,6 +119,12 @@ public class ClubsController {
     @PatchMapping(path = "/club/{uuid}")
     public  SuccessResponse<ClubDetailsResponse>  editClub(@RequestBody @Valid ClubEditRequest clubCreationDTO, @PathVariable String uuid){
         return  clubService.editClub(clubCreationDTO,uuid);
+    }
+    @GetMapping("/member-roles")
+    public List<String> getMemberRoles() {
+        return Stream.of(MemberRole.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
     }
 
 }

@@ -116,6 +116,7 @@ public class ClubApplication {
                     .instagramme("https://instagram.com/techinnovators")
                     .createdAt(new Date())
                     .description("A club dedicated to exploring and innovating technology.")
+                    .isValid(true)
                     .build());
 
 // Adding first student to the new club
@@ -200,6 +201,20 @@ public class ClubApplication {
             pub5.setClub(newClub);
             publicationRepository.save(pub5);
             createEventsForClub(newClub);
+            //add une demande
+            Demande demande = Demande.builder()
+                    .date(new Date())
+                    .description("Demande d'intégration pour le club TECH INNOVATORS")
+                    .statutDemande(StatutDemande.ACCEPTE)
+                    .type(TypeDemande.CREATION_CLUB)
+                    .motivation("J'aimerais m'impliquer dans les activités du club TECH INNOVATORS")
+                    .etudiantDemandeur(student)
+                    .club(newClub)
+                    .integration(integration1)
+                    .historiques(null)
+                    .organisationEvenement(null)
+                    .build();
+
         };
     }
 
@@ -232,6 +247,7 @@ public class ClubApplication {
             club.setCreatedAt(new Date());
             club.setLogo(null);
             club.setInstagramme("https://instagram.com/club" + i);
+            club.setValid(true);
             clubRepository.save(club);
         }
 
