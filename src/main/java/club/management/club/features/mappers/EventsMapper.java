@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventsMapper {
     public EventResponseDTO convertToDTO(Evenement evenement) {
-        return new EventResponseDTO(evenement.getId(), evenement.getNom(), evenement.getDescription(),evenement.getDate(), evenement.getClub().getNom(),evenement.getClub().getIntegrations().size(),evenement.getClub().getId(),evenement.getLocation(),evenement.getClub().getInstagramme());
+        return new EventResponseDTO(evenement.getId(), evenement.getNom(), evenement.getDescription(),evenement.getDate(), evenement.getClub().getNom(),evenement.getClub().getIntegrations().size(),evenement.getClub().getId(),evenement.getLocation(),evenement.getClub().getInstagramme(), evenement.getImage() == null ? null : evenement.getImage().getId());
     }
 
     public Evenement convertToEvent(EventResponseDTO eventResponseDTO) {
