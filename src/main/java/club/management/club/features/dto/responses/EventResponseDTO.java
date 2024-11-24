@@ -11,6 +11,7 @@ public record EventResponseDTO(
         long membersLength,
         String clubId,
         String location,
-        String instagram
+        String instagram,
+        String imageId
 ) {
 }
