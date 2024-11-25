@@ -16,4 +16,13 @@ public interface EventsService {
     EventResponseDTO get(String id);
     List<EventResponseDTO> getHomeEvents(int limit);
     public Evenement save(Evenement event);
+
+    void deleteEvent(String id);
+
+    EventResponseDTO update(String id, EventResponseDTO eventResponseDTO);
+
+    EventResponseDTO addImageToEvent(String eventId, String imageId);
+    void deleteById(String id);
+
+    void accepterEvenement(String id);
 }

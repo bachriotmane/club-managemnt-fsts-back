@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 
 public class IntegrationSpecifications {
 
-    public static Specification<Integration> withStudentNameAndClubUuid(String studentName, String clubUuid) {
+    public static Specification<Integration>    withStudentNameAndClubUuid(String studentName, String clubUuid) {
         return (root, query, criteriaBuilder) -> {
             var predicates = criteriaBuilder.conjunction();
 

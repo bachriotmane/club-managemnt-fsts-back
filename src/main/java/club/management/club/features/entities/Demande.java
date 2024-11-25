@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
+@ToString
 public class Demande {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,7 +36,5 @@ public class Demande {
     private List<Historique> historiques;
     @OneToOne
     private Evenement organisationEvenement;
-
-
 }
 

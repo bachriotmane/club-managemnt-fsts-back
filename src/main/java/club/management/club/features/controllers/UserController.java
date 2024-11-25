@@ -31,7 +31,6 @@ public class UserController {
     private final EtudiantMapper etudiantMapper;
     private final UserMapper userMapper;
     private final ImageServiceImpl imageServiceImpl;
-    private PasswordEncoder passwordEncoder;
     private UserService userService ;
     @GetMapping("/test")
     public String test( ){
@@ -81,12 +80,14 @@ public class UserController {
     public ResponseEntity<?> updateProfileImage(@PathVariable String id , @RequestPart("profile") MultipartFile imageProfile , Principal principal) throws IOException {
 
         User user = userService.getUserById(id);
-        if(!principal.getName().equals(user.getEmail())){
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("You are not allowed to update this user profile");
-        }
         if (user != null) {
+
+            if(!principal.getName().equals(user.getEmail())){
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("You are not allowed to update this user profile");
+            }
+
             Image profileImage = imageServiceImpl.saveImage(imageProfile);
             user.setImgProfile(profileImage);
             userService.saveUser(user);
@@ -107,13 +108,15 @@ public class UserController {
     public ResponseEntity<?> updateCoverImage(@PathVariable String id , @RequestPart("cover") MultipartFile imageCover , Principal principal) throws IOException {
 
         User user = userService.getUserById(id);
-        if(!principal.getName().equals(user.getEmail())){
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("You are not allowed to update this user profile");
-        }
 
         if (user != null) {
+
+            if(!principal.getName().equals(user.getEmail())){
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("You are not allowed to update this user profile");
+            }
+
             Image coverImage = imageServiceImpl.saveImage(imageCover);
             user.setImgCover(coverImage);
             userService.saveUser(user);
@@ -132,16 +135,17 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable String id , @RequestBody UpdateUserRequest userRequest , Principal principal) {
 
-
         User userToUpdate = userService.getUserById(id);
 
-        if(!principal.getName().equals(userToUpdate.getEmail())){
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("You are not allowed to update this user profile");
-        }
 
         if (userToUpdate != null) {
+
+            if(!principal.getName().equals(userToUpdate.getEmail())){
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("You are not allowed to update this user profile");
+            }
+
             userToUpdate.setFirstName(userRequest.firstName());
             userToUpdate.setLastName(userRequest.lastName());
             userToUpdate.setCne(userRequest.cne());

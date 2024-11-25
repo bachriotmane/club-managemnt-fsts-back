@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EventRepository extends JpaRepository<Evenement, String> {
     Page<Evenement> findAll(Specification<Evenement> spec , Pageable pageable);
+    void deleteByClubId(String uuid);
 }

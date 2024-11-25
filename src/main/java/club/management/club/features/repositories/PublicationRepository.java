@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PublicationRepository extends JpaRepository<Publication, String> {
     Page<Publication> findAll(Specification<Publication> spec , Pageable pageable);
+    void deleteByClubId(String uuid);
 }

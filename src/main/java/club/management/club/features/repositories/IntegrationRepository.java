@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IntegrationRepository extends JpaRepository<Integration,String> , JpaSpecificationExecutor<Integration> {
     List<Integration> findAllByEtudiantId(String id);
+    Optional<Integration> findByEtudiantIdAndClubId(String etudiantId, String clubUuid);
 }

@@ -10,4 +10,11 @@ public class ValidationConstants {
     public static final String YOUR_IMAGE_CONTIENT_PROBLEME = "votre image  n'est pas validé.";
 
     public static final String STUDENT_NOT_FOUND = "L'étudiant spécifié n'existe pas." ;
+    public  static  final String INTEGRATION_NOT_FOUND = "Integrarion de cette etudiant n'existe pas .";
+    public static final String ROLE_NAME_IS_MANDATORY = "La fonction est obligatoire.";
+    public static final String MEMBER_ROLE_IS_MANDATORY = "Le rôle du membre est obligatoire.";
+    public static final String ROLE_NAME_IS_NOT_VALID = "Le rôle fourni n'est pas valide.";
+    public static final String NOT_AUTHORIZED_TO_DELETE_INTEGRATION = "Vous n'êtes pas autorisé à supprimer cette intégration car elle vous appartient.";
+    public static final String NOT_AUTHORIZED_TO_DELETE_ADMINISTRATEUR = "Vous ne pouvez pas supprimer une intégration d'administrateur.";
+
 }
