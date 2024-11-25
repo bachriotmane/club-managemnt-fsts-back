@@ -24,11 +24,11 @@ public class EtudiantMapper {
             etudiant.getEmail(),
             etudiant.getCne(),
             etudiant.getFiliere(),
-            etudiant.getImgProfile() != null ? etudiant.getImgProfile().getId() : null,
-            etudiant.getImgCover() != null ? etudiant.getImgCover().getId() : null,
             etudiant.getFacebook(),
             etudiant.getInstagram(),
             etudiant.getWhatsapp(),
+            etudiant.getImgProfile() != null ? etudiant.getImgProfile().getId() : null,
+            etudiant.getImgCover() != null ? etudiant.getImgCover().getId() : null,
             clubRepository.findByIntegrationsMemberRoleAndIntegrationsEtudiantId(
                     MemberRole.MEMBER,etudiant.getId()).stream().map(Club::getNom).toList(),
             clubRepository.findByIntegrationsMemberRoleAndIntegrationsEtudiantId(

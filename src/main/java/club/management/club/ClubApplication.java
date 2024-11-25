@@ -127,7 +127,7 @@ public class ClubApplication {
                     .roleName("President")
                     .build();
             integration1 = integrationRepository.save(integration1);
-
+//
 // Adding second student to the new club
             Integration integration2 = Integration.builder()
                     .etudiant(anotherStudent)
