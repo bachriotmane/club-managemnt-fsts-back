@@ -25,6 +25,7 @@ public interface DemandeService {
 
     Demande addDemande(Demande demande);
     DemandeDTO getDemandeById(String id);
+    Demande getDemandeById2(String id);
 
     DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande, String agent);
     Demande save(Demande demande);

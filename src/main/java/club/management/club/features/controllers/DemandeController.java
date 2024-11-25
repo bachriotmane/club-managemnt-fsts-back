@@ -259,6 +259,12 @@ public class DemandeController {
         return ResponseEntity.ok(demandeDTO2);
     }
 
+    @GetMapping("/historique/{id}")
+    public ResponseEntity<List<Historique>> getDemandeHistorique(@PathVariable String id){
+        Demande savedDemande = demandeService.getDemandeById2(id);
+        return ResponseEntity.ok(savedDemande.getHistoriques());
+    }
+
 }
 
 

@@ -224,6 +224,11 @@ public class DemandeServiceImpl implements DemandeService {
     }
 
     @Override
+    public Demande getDemandeById2(String id) {
+        return demandeRepository.findById(id).orElseThrow(()-> new RuntimeException("Demande not found"));
+    }
+
+    @Override
     public DemandeDTO2 findById(String id) {
         // Récupérer la demande
         Demande demande = demandeRepository.findById(id)
