@@ -26,7 +26,8 @@ public class ImageValidator {
         return contentType != null && contentType.startsWith("image/");
     }
     private void validateSize(MultipartFile file) throws BadRequestException {
-        if (file.getSize() >  1048576) { //default max in Mysql
+//        if (file.getSize() >  1048576) { //default max in Mysql
+        if (file.getSize() >  2097152) {
             throw new BadRequestException(ValidationConstants.IMAGE_SIZE_SHOULD_BE_UNDER_TWO_MB);
         }
     }
