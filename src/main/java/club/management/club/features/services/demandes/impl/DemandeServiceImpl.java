@@ -115,7 +115,13 @@ public class DemandeServiceImpl implements DemandeService {
                 Integration integration = integrationRepository.findById(demande.getIntegration().getId()).orElseThrow(
                         () -> new RuntimeException("integration not found")
                 );
-                System.out.println("Cas Refus : demandeId = "+ demande.getIntegration().getId() + " " + id + " " + statutDemande + " " + agent);
+                Club club = clubRepository.findById(integration.getClub().getId()).orElseThrow(
+                        () -> new RuntimeException("club not found")
+                );
+                final String s = integration.getId();
+                club.getIntegrations().removeIf((c)->c.getId().equals(s));
+                clubRepository.save(club);
+                System.out.println("Cas Refuse : demandeId = "+ demande.getIntegration().getId() + " " + id + " " + statutDemande + " " + agent);
                 demande.setIntegration(null);
                 demande = demandeRepository.save(demande);
                 integration.setClub(null);
@@ -183,8 +189,6 @@ public class DemandeServiceImpl implements DemandeService {
         demandeRepository.save(demande);
         return DemandeMapper.toLiteDto(demande);
     }
-
-    private void addHistoriqueToDemande (Historique historique, Demande demande){}
     @Override
     public Demande save(Demande demande) {
         return demandeRepository.save(demande);
