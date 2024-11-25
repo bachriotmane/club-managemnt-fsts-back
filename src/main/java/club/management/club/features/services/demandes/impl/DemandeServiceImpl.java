@@ -2,15 +2,17 @@ package club.management.club.features.services.demandes.impl;
 
 import club.management.club.features.Specifications.DemandeSpecifications;
 import club.management.club.features.dto.responses.DemandeDTO;
+import club.management.club.features.dto.responses.DemandeDTO2;
+import club.management.club.features.dto.responses.DemandeDTO3;
 import club.management.club.features.entities.Demande;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.DemandeRepository;
 import club.management.club.features.services.demandes.DemandeService;
-import club.management.club.features.services.demandes.DemandeService;
 import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +24,37 @@ public class DemandeServiceImpl implements DemandeService {
 
     private final DemandeRepository demandeRepository;
 
-    public DemandeServiceImpl(DemandeRepository demandeRepository) {
+    private DemandeMapper demandeMapper;
+
+    public DemandeServiceImpl(DemandeRepository demandeRepository , DemandeMapper demandeMapper) {
         this.demandeRepository = demandeRepository;
+
     }
 
+    @Override
+    public List<DemandeDTO3> getDemandesByDemandeurId(String demandeurId) {
+        System.out.println("enter service");
+        List<Demande> demandes = demandeRepository.findByEtudiantDemandeurId(demandeurId);
+        System.out.println(demandes);
+        return demandes.stream()
+                .map(this::toDemandeDTO3) // Utilisation de l'instance injectée
+                .collect(Collectors.toList());
+    }
+    public DemandeDTO3 toDemandeDTO3(Demande demande) {
+        System.out.println("to demandedto"+demande.getId()+  demande.getDescription() + demande.getEtudiantDemandeur().getId());
+        return DemandeDTO3.builder()
+                .id(demande.getId())
+                .description(demande.getDescription())
+                .idEtudiant(demande.getEtudiantDemandeur() != null ? demande.getEtudiantDemandeur().getId() : null)
+                .build();
+    }
+
+
+    @Override
+    public List<Demande> getAllDemandess() {
+        // Récupérer toutes les demandes depuis la base de données
+        return demandeRepository.findAll();
+    }
     @Override
     public Page<DemandeDTO> getAllDemandes(Pageable pageable) {
         return demandeRepository.findAll(pageable)
@@ -60,21 +89,7 @@ public class DemandeServiceImpl implements DemandeService {
         return demandeRepository.save(demande);
     }
 
-    @Override
-    public DemandeDTO getDemandeById(String id) {
-        // Récupérer la demande
-        Demande demande = demandeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Demande", "DemandeId", id));
 
-        // Convertir en DemandeDTO
-        return DemandeDTO.builder()
-                .id(demande.getId())
-                .cne(demande.getEtudiantDemandeur().getCne()) // Vérifiez que le champ existe
-                .date(demande.getDate())
-                .description(demande.getDescription())
-                .statutDemande(demande.getStatutDemande())
-                .build();
-    }
 
 
 
@@ -103,10 +118,37 @@ public class DemandeServiceImpl implements DemandeService {
     }
 
     @Override
-    public Demande findById(String id) {
-        return demandeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Demande","demandeId",id)
-        );
+    public DemandeDTO getDemandeById(String id) {
+        // Récupérer la demande
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Demande", "DemandeId", id));
+
+        // Convertir en DemandeDTO
+        return DemandeDTO.builder()
+                .id(demande.getId())
+                .cne(demande.getEtudiantDemandeur().getCne()) // Vérifiez que le champ existe
+                .date(demande.getDate())
+                .description(demande.getDescription())
+                .statutDemande(demande.getStatutDemande())
+                .build();
     }
+
+    @Override
+    public DemandeDTO2 findById(String id) {
+        // Récupérer la demande
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Demande", "DemandeId", id));
+
+        // Convertir en DemandeDTO2 avec des vérifications pour éviter les NullPointerExceptions
+        return DemandeDTO2.builder()
+                .id(demande.getId())
+                .statutDemande(demande.getStatutDemande())
+                .type(demande.getType())
+                .idClub(demande.getClub() != null ? demande.getClub().getId() : null)
+                .idEvent(demande.getOrganisationEvenement() != null ? demande.getOrganisationEvenement().getId() : null)
+                .idIntegration(demande.getIntegration() != null ? demande.getIntegration().getId() : null)
+                .build();
+    }
+
 
 }

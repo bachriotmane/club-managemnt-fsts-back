@@ -4,7 +4,9 @@ import club.management.club.features.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -24,4 +26,6 @@ public class Integration {
     private Etudiant etudiant;
     @ManyToOne(fetch = FetchType.LAZY)
     private Club club;
+
+
 }

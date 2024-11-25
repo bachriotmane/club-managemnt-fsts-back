@@ -4,6 +4,8 @@ import club.management.club.features.dto.requests.ClubCreationDTO;
 import club.management.club.features.dto.requests.EventCreationDTO;
 import club.management.club.features.dto.requests.IntegrationCreationDTO;
 import club.management.club.features.dto.responses.DemandeDTO;
+import club.management.club.features.dto.responses.DemandeDTO2;
+import club.management.club.features.dto.responses.DemandeDTO3;
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.StatutDemande;
@@ -26,7 +28,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,17 @@ public class DemandeController {
     private final HistoriqueService historiqueService;
     private final EventsService eventsService;
 
+    @GetMapping("/demandeur/{demandeurId}")
+    public List<DemandeDTO3> getDemandesByDemandeurId(@PathVariable String demandeurId) {
+        System.out.println(demandeurId);
+        return demandeService.getDemandesByDemandeurId(demandeurId);
+    }
+
+
+    @GetMapping("/dmd")
+    public List<Demande> getAllDemandes() {
+        return demandeService.getAllDemandess();
+    }
 
     @GetMapping
     public Page<DemandeDTO> getAllDemandes(
@@ -66,11 +78,7 @@ public class DemandeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDemande);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DemandeDTO> getDemandeById(@PathVariable String id) {
-        DemandeDTO demandeDTO = demandeService.getDemandeById(id);
-        return ResponseEntity.ok(demandeDTO);
-    }
+
 
 
     @PutMapping("/{id}/status")
@@ -221,7 +229,18 @@ public class DemandeController {
         demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<DemandeDTO> getDemandeById(@PathVariable String id) {
+        DemandeDTO demandeDTO = demandeService.getDemandeById(id);
+        return ResponseEntity.ok(demandeDTO);
+    }
 
+    @GetMapping("/demande/{id}")
+    public ResponseEntity<DemandeDTO2> findById(@PathVariable String id) {
+        DemandeDTO2 demandeDTO2 = demandeService.findById(id);
+        return ResponseEntity.ok(demandeDTO2);
+    }
 
 }
+
 

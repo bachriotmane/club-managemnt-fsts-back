@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
+@ToString
 public class Demande {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

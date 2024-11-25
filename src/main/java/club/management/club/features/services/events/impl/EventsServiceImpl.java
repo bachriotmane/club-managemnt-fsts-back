@@ -7,6 +7,7 @@ import club.management.club.features.entities.Evenement;
 import club.management.club.features.mappers.EventsMapper;
 import club.management.club.features.repositories.EventRepository;
 import club.management.club.features.services.events.EventsService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +24,18 @@ import java.util.List;
 public class EventsServiceImpl implements EventsService {
     private final EventRepository eventRepository;
     private final EventsMapper eventsMapper;
+    @Override
+    public void accepterEvenement(String id) {
+        // Récupérer l'événement par ID
+        Evenement evenement = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Événement non trouvé"));
 
+        // Mettre à jour l'état de l'événement (validé)
+        evenement.setValid(true);
+
+        // Sauvegarder l'événement mis à jour
+        eventRepository.save(evenement);
+    }
 
     @Override
     public Page<EventResponseDTO> getAllEvents(EventRequest eventRequest){
@@ -62,4 +74,12 @@ public class EventsServiceImpl implements EventsService {
         return eventRepository.save(event);
     }
 
+
+    @Override
+    public void deleteById(String id) {
+        if (!eventRepository.existsById(id)) {
+            throw new EntityNotFoundException("Événement avec ID " + id + " non trouvé");
+        }
+        eventRepository.deleteById(id);
+    }
 }
