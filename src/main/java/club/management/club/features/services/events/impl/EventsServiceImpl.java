@@ -61,6 +61,9 @@ public class EventsServiceImpl implements EventsService {
                         .and(EventsSpecifications.withDateRange(parsedFromDate, parsedToDate));
             }
 
+        eventsSpecifications = Specification.where(eventsSpecifications)
+                .and(EventsSpecifications.isValid());
+
         Pageable pageable =  PageRequest.of(eventRequest.page(), eventRequest.size(), Sort.by("date").descending());
         Page<Evenement> events = eventRepository.findAll(eventsSpecifications,pageable);
             return events.map(eventsMapper::convertToDTO);
@@ -68,8 +71,11 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     public EventResponseDTO get(String id) {
-        Evenement publication = eventRepository.findById(id).orElseThrow(()-> new RuntimeException("Events not found!"));
-        return eventsMapper.convertToDTO(publication);
+        Evenement evenement = eventRepository.findById(id).orElseThrow(()-> new RuntimeException("Events not found!"));
+        if(!evenement.isValid()){
+            throw new RuntimeException("The event is not valide");
+        }
+        return eventsMapper.convertToDTO(evenement);
     }
     
     @Override

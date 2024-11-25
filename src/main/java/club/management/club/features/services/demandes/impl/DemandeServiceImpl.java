@@ -135,16 +135,29 @@ public class DemandeServiceImpl implements DemandeService {
                         () -> new RuntimeException("Club not found")
                 );
                 demande.setClub(null);
-                clubRepository.deleteById(club.getId());
                 demande = demandeRepository.save(demande);
+                List<Integration> integrations = club.getIntegrations();
+                club.setIntegrations(null);
+                club = clubRepository.save(club);
+                integrations.forEach(
+                       ( i )->{
+                           i.setClub(null);
+                           i.setEtudiant(null);
+                           integrationRepository.deleteById(i.getId());
+                       }
+                );
+                clubRepository.deleteById(club.getId());
             }
             else if(demande.getType().equals(TypeDemande.EVENEMENT)){
                 Evenement evenement = eventRepository.findById(demande.getOrganisationEvenement().getId()).orElseThrow(
                         () -> new RuntimeException("Event not found")
                 );
                 demande.setOrganisationEvenement(null);
-                eventRepository.deleteById(evenement.getId());
                 demande = demandeRepository.save(demande);
+                Club club = evenement.getClub();
+                club.getEvenements().removeIf((e)->e.getId().equals(evenement.getId()));
+                clubRepository.save(club);
+                eventRepository.deleteById(evenement.getId());
             }
         }
 

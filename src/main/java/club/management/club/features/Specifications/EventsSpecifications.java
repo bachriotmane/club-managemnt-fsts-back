@@ -14,6 +14,11 @@ public class EventsSpecifications {
                         : builder.like(root.get("nom"), "%" + title + "%");
     }
 
+    public static Specification<Evenement> isValid() {
+        return (root, query, builder) ->
+                builder.isTrue(root.get("isValid"));
+    }
+
 
     public static Specification<Evenement> withDateRange(LocalDateTime fromDate, LocalDateTime toDate) {
         return (root, query, builder) -> {
