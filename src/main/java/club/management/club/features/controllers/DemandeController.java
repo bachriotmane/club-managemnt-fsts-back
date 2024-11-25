@@ -226,5 +226,20 @@ public class DemandeController {
         Demande savedDemande = demandeService.getDemandeById(id);
         return ResponseEntity.ok(savedDemande.getHistoriques());
     }
+
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countDemandesByEtudiant(@RequestParam String etudiantId) {
+        int count = demandeService.countDemandesByEtudiant(etudiantId);
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/count/integration")
+    public ResponseEntity<Integer> countIntegrationDemandesByEtudiant(@RequestParam String etudiantId) {
+        int count = demandeService.countIntegrationDemandesByEtudiant(etudiantId);
+        return ResponseEntity.ok(count);
+    }
+
+
 }
 

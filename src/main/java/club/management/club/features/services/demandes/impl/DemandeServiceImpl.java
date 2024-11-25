@@ -88,4 +88,15 @@ public class DemandeServiceImpl implements DemandeService {
         );
     }
 
+    @Override
+    public int countDemandesByEtudiant(String etudiantId) {
+        return demandeRepository.countByEtudiantDemandeur_Id(etudiantId);
+    }
+    @Override
+    public int countIntegrationDemandesByEtudiant(String etudiantId) {
+        return demandeRepository.countByEtudiantDemandeurIdAndType(etudiantId, TypeDemande.INTEGRATION_CLUB);
+    }
+
+
+
 }

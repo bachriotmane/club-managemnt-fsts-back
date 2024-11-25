@@ -24,4 +24,7 @@ public interface DemandeService {
     DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande);
     Demande save(Demande demande);
     Demande findById(String id);
+    int countDemandesByEtudiant(String etudiantId);
+    int countIntegrationDemandesByEtudiant(String etudiantId);
+
 }
