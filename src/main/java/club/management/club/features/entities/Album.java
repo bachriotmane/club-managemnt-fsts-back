@@ -3,7 +3,7 @@ package club.management.club.features.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,7 +17,7 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String albumId;
     private String location;
-    private LocalDateTime date;
+    private LocalDate date;
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)

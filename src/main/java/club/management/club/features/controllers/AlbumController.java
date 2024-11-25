@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +29,8 @@ public class AlbumController {
             @RequestParam("images") List<MultipartFile> images,
             @PathVariable String clubId,
             String location,
-            String description,
-            LocalDateTime date
+            String title,
+            LocalDate date
     ) throws IOException {
         Club club = clubService.findById(clubId);
         List<Image> savedImages = new ArrayList<>();
@@ -41,7 +41,7 @@ public class AlbumController {
         Album album = Album.builder()
                 .albumImages(savedImages)
                 .date(date)
-                .title(description)
+                .title(title)
                 .location(location)
                 .club(club)
                 .build();
