@@ -234,8 +234,8 @@ public class DemandeController {
         return integrationService.editRoleStudent(uuid, roleName, role);
     }
     @DeleteMapping("/integration/delete/{uuid}")
-    public SuccessResponse<Boolean> deleteIntegration(@PathVariable String uuid){
-        return integrationService.deleteIntegration(uuid);
+    public SuccessResponse<Boolean> deleteIntegration(Authentication authentication,@PathVariable String uuid){
+        return integrationService.deleteIntegration(authentication,uuid);
     }
 
 

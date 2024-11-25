@@ -1,6 +1,7 @@
 package club.management.club.features.services.clubs;
 
 import club.management.club.features.dto.responses.ClubDetailsResponse;
+import club.management.club.features.entities.Demande;
 import club.management.club.features.mappers.ClubMapper;
 import club.management.club.features.repositories.ClubRepository;
 import club.management.club.features.repositories.DemandeRepository;
@@ -29,9 +30,20 @@ public class ClubDetails {
 
         var uuidUser = jwtTokenService.getUserId(authentication);
 
-        var integrationOpt = integrationRepository.findByEtudiantIdAndClubId(uuidUser, club.getId());
-        var isIntegrated = integrationOpt.isPresent();
-        var roleName = integrationOpt.map(i -> i.getMemberRole().toString()).orElse("Aucun rôle");
+        String roleName = null;
+        String statusDemande = "";
+
+        var demandeOpt = demandeRepository.findIntegrationDemandeByEtudiantIdAndClubId(uuidUser, club.getId());
+        if (demandeOpt.isPresent()) {
+            var demande = demandeOpt.get();
+            statusDemande = demande.getStatutDemande().toString();
+
+            var integrationOpt = integrationRepository.findByEtudiantIdAndClubId(uuidUser, club.getId());
+            if (integrationOpt.isPresent()) {
+                var integration = integrationOpt.get();
+                roleName = integration.getMemberRole().toString();
+            }
+        }
 
         var etudiantDemandeur = demandeRepository.findEtudiantDemandeurbyClub(club);
         var nomFondateur = (etudiantDemandeur != null) ?
@@ -39,9 +51,10 @@ public class ClubDetails {
                 "Non spécifié";
 
         var clubDetailsResponse = clubMapper.toClubDetailsResponse(club)
-                .withUpdates(isIntegrated, roleName, nomFondateur);
+                .withUpdates(statusDemande, roleName, nomFondateur);
 
         return new SuccessResponse<>(clubDetailsResponse);
     }
+
 
 }

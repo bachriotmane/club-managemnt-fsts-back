@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 public record ClubDetailsResponse(
         String uuid,
-        boolean isIntegrated,
+        String statutDemande,
         String roleName,
         String nom,
         String description,
@@ -19,10 +19,10 @@ public record ClubDetailsResponse(
         List<String> activites,
         List<ProfilsDetailsDto> profilsDetailsDto
 ) implements Serializable {
-    public ClubDetailsResponse withUpdates(Boolean isIntegrated, String roleName, String nomFondateur) {
+    public ClubDetailsResponse withUpdates(String statutDemande, String roleName, String nomFondateur) {
         return new ClubDetailsResponse(
                 this.uuid,
-                isIntegrated != null ? isIntegrated : this.isIntegrated,
+                statutDemande != null ? statutDemande : this.statutDemande,
                 roleName != null ? roleName : this.roleName,
                 this.nom,
                 this.description,

@@ -4,11 +4,13 @@ import club.management.club.features.dto.responses.MembersListDTO;
 import club.management.club.features.entities.Integration;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.repositories.IntegrationRepository;
+import club.management.club.features.services.auths.JwtTokenService;
 import club.management.club.features.services.integration.IntegrationService;
 import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.dtos.SuccessResponse;
 import club.management.club.shared.exceptionHandler.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.EnumSet;
 @RequiredArgsConstructor
 public class IntegrationServiceImpl implements IntegrationService {
     private final IntegrationRepository integrationRepo ;
+    private final JwtTokenService jwtTokenService;
 
     @Override
     public Integration save(Integration integration) {
@@ -67,11 +70,22 @@ public class IntegrationServiceImpl implements IntegrationService {
 
     @Override
     @Transactional
-    public SuccessResponse<Boolean> deleteIntegration(String uuid) {
-        if (!integrationRepo.existsById(uuid)) {
-            throw new BadRequestException(ValidationConstants.INTEGRATION_NOT_FOUND);
+    public SuccessResponse<Boolean> deleteIntegration(Authentication authentication, String uuid) {
+        var integration = integrationRepo.findById(uuid)
+                .orElseThrow(() -> new BadRequestException(ValidationConstants.INTEGRATION_NOT_FOUND));
+
+        var uuidStudent = jwtTokenService.getUserId(authentication);
+
+        if (integration.getEtudiant().getId().equals(uuidStudent)) {
+            throw new BadRequestException(ValidationConstants.NOT_AUTHORIZED_TO_DELETE_INTEGRATION);
         }
+
+        if (integration.getMemberRole() == MemberRole.ADMIN) {
+            throw new BadRequestException(ValidationConstants.NOT_AUTHORIZED_TO_DELETE_ADMINISTRATEUR);
+        }
+
         integrationRepo.deleteById(uuid);
         return new SuccessResponse<>(true);
     }
+
 }
