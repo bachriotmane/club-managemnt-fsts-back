@@ -10,6 +10,7 @@ public record PublicationDTO(
         boolean isPublic,
         String publisher,
         long membersLength,
-        String clubId
+        String clubId,
+        String imageId
 ) {
 }

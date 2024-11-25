@@ -8,12 +8,13 @@ public record EtudiantDto(
     String firstName,
     String lastName,
     String email,
-    String cin,
     String cne,
     String filiere,
     String facebook,
     String instagram,
     String whatsapp,
+    String imageProfile,
+    String imageCover,
     List<String> memberClubs,
     List<String> adminClubs
 ) {

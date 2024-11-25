@@ -31,7 +31,14 @@ public class ClubSpecifications {
             return builder.equal(etudiantJoin.get("id"), etudiantId);
         };
     }
-
+    public static Specification<Club> withIsValid(Boolean isValid) {
+        return (root, query, builder) -> {
+            if (isValid == null) {
+                return null;
+            }
+            return builder.equal(root.get("isValid"), isValid);
+        };
+    }
     public static Specification<Club> withAdminOrModeratorRole(String etudiantId) {
         return (root, query, builder) -> {
             if (etudiantId == null || etudiantId.isEmpty()) {

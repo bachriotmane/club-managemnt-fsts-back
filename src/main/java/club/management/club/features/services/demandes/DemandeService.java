@@ -20,7 +20,8 @@ public interface DemandeService {
     List<DemandeDTO> getDemandesByEtudiant(String etudiantId);
 
     Demande addDemande(Demande demande);
-    Demande getDemandeById(String id);
+    DemandeDTO getDemandeById(String id);
+
     DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande);
     Demande save(Demande demande);
     Demande findById(String id);

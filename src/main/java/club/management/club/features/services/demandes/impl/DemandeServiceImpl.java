@@ -61,9 +61,19 @@ public class DemandeServiceImpl implements DemandeService {
     }
 
     @Override
-    public Demande getDemandeById(String id) {
-        return demandeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Demande","DemandeId",id));
+    public DemandeDTO getDemandeById(String id) {
+        // Récupérer la demande
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Demande", "DemandeId", id));
+
+        // Convertir en DemandeDTO
+        return DemandeDTO.builder()
+                .id(demande.getId())
+                .cne(demande.getEtudiantDemandeur().getCne()) // Vérifiez que le champ existe
+                .date(demande.getDate())
+                .description(demande.getDescription())
+                .statutDemande(demande.getStatutDemande())
+                .build();
     }
 
 
@@ -73,6 +83,17 @@ public class DemandeServiceImpl implements DemandeService {
                 .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
         demande.setStatutDemande(statutDemande);
         demandeRepository.save(demande);
+        // OTMANE : Complétez cette fonctionnalité
+        // 1. Créer un objet Historique avec un titre basé sur le statut :
+        //    - "Flan a accepté votre demande"
+        //    - "Flan a refusé votre demande"
+        //    (Remarque : Le titre 'Flan' sera récupéré depuis le Controller)
+        //
+        // 2. Après cela, il faut valider l'entité concernée (Club, Intégration ou Événement)
+        //    en fonction du statut :
+        //    - Si `Status == VALID`, définir `isValid = true`.
+        //    - Sinon, simplement supprimer le Club, l'Événement ou l'Intégration.
+
         return DemandeMapper.toLiteDto(demande);
     }
 

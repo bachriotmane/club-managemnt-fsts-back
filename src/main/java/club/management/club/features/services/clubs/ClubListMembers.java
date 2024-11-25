@@ -40,7 +40,7 @@ public class ClubListMembers {
 
         return new SuccessResponse<>(new ClubListMembersResponse(
                 club.getNom(),
-                club.getLogo(),
+                club.getLogo()!= null ? club.getLogo().getId() : null,
                 club.getIntegrations().size(),
                 new ListSuccessResponse<>(
                         members,
@@ -54,13 +54,15 @@ public class ClubListMembers {
     private Set<MembersListDTO> getData(Page<Integration> integrations) {
         return integrations.getContent().stream()
                 .map(i -> new MembersListDTO(
+                        i.getId(),
                         i.getEtudiant().getId(),
                         i.getEtudiant().getFirstName(),
                         i.getEtudiant().getLastName(),
-                        i.getEtudiant().getImgProfile(),
+                        i.getEtudiant().getImgProfile()!= null ? i.getEtudiant().getImgProfile().getId() : null,
                         i.getIntegrationDate(),
                         i.getEtudiant().getFiliere(),
-                        i.getMemberRole().name()
+                        i.getRoleName(),
+                        i.getMemberRole()
                 ))
                 .collect(Collectors.toSet());
     }

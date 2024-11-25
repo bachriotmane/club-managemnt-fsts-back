@@ -3,11 +3,13 @@ package club.management.club.features.services.auths;
 import club.management.club.features.dto.requests.AuthenticationRequest;
 import club.management.club.features.dto.requests.RegistrationRequest;
 import club.management.club.features.dto.responses.AuthenticationResponse;
+import club.management.club.features.entities.Image;
 import club.management.club.features.services.email.EmailService;
 import club.management.club.features.services.email.EmailTemplateName;
 import club.management.club.features.entities.Authority;
 import club.management.club.features.entities.MailToken;
 import club.management.club.features.entities.User;
+import club.management.club.features.services.images.impl.ImageServiceImpl;
 import club.management.club.features.services.users.UserService;
 import club.management.club.shared.exceptionHandler.MailDontValidateException;
 import club.management.club.shared.exceptions.AccountAlreadyActivated;
@@ -22,7 +24,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -40,18 +44,29 @@ public class AuthenticationService {
     private final AuthorityService authorityService;
     private final EmailService emailService;
     private final MailTokenService mailTokenService;
+    private final ImageServiceImpl imageServiceImpl;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public void register(RegistrationRequest request) throws MessagingException {
+    public void register(RegistrationRequest request , MultipartFile coverImage , MultipartFile profileImage) throws MessagingException, IOException {
         Authority authority = authorityService.findByName("ROLE_USER")
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
+
+        Image cover = imageServiceImpl.saveImage(coverImage);
+        Image profile = imageServiceImpl.saveImage(profileImage);
+
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
+                .cne(request.getCne())
+                .facebook(request.getFacebook())
+                .instagram(request.getInstagram())
+                .whatsapp(request.getWhatsapp())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .imgCover(cover)
+                .imgProfile(profile)
                 .accountLocked(false)
                 .accountLEnabled(false)
                 .authorities(Set.of(authority))

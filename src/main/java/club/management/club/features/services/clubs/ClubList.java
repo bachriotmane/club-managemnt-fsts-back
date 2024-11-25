@@ -30,7 +30,9 @@ public class ClubList {
     ) {
         var idStudent = isMyClubs ? jwtTokenService.getUserId(authentication) : null;
         var spec = ClubSpecifications.withNom(nomClub)
-                .and(ClubSpecifications.withStudentId(idStudent));
+                .and(ClubSpecifications.withStudentId(idStudent))
+                .and(ClubSpecifications.withIsValid(true));
+
         var clubPage = clubRepository.findAll(spec, pageable);
         var serviceResponses = getData(clubPage);
         return new ListSuccessResponse<>(
@@ -47,7 +49,7 @@ public class ClubList {
                         club.getNom(),
                         club.getDescription(),
                         club.getCreatedAt(),
-                        club.getLogo(),
+                        club.getLogo()!= null ? club.getLogo().getId() : null,
                         club.getInstagramme()
                 ))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -77,7 +79,7 @@ public class ClubList {
                         club.getNom(),
                         club.getDescription(),
                         club.getCreatedAt(),
-                        club.getLogo(),
+                        club.getLogo()!= null ? club.getLogo().getId() : null,
                         club.getInstagramme()
                 ))
                 .collect(Collectors.toSet());

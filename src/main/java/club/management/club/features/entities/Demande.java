@@ -19,6 +19,7 @@ public class Demande {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private Date date;
+    private String description ;
     @Enumerated(EnumType.STRING)
     private StatutDemande statutDemande;
     @Enumerated(EnumType.STRING)
@@ -34,7 +35,5 @@ public class Demande {
     private List<Historique> historiques;
     @OneToOne
     private Evenement organisationEvenement;
-
-
 }
 

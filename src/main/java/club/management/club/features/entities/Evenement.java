@@ -2,6 +2,8 @@ package club.management.club.features.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -26,5 +28,10 @@ public class Evenement {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "club_id")
     private Club club;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private Image image;
 
 }

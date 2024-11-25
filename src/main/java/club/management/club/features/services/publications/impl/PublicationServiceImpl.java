@@ -3,24 +3,20 @@ package club.management.club.features.services.publications.impl;
 import club.management.club.features.Specifications.PublicationSpecifications;
 import club.management.club.features.dto.requests.PublicationsRequest;
 import club.management.club.features.dto.responses.PublicationDTO;
-import club.management.club.features.entities.Club;
-import club.management.club.features.entities.Etudiant;
-import club.management.club.features.entities.Integration;
-import club.management.club.features.entities.Publication;
+import club.management.club.features.entities.*;
 import club.management.club.features.mappers.PublicationMapper;
 import club.management.club.features.repositories.ClubRepository;
+import club.management.club.features.repositories.ImageRepository;
 import club.management.club.features.repositories.PublicationRepository;
-import club.management.club.features.repositories.UserRepo;
 import club.management.club.features.services.publications.PublicationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +24,7 @@ public class PublicationServiceImpl implements PublicationsService {
     private final PublicationRepository publicationRepository;
     private final PublicationMapper publicationMapper;
     private final ClubRepository clubRepository;
+    private final ImageRepository imageRepository;
 
 
     @Override
@@ -81,5 +78,45 @@ public class PublicationServiceImpl implements PublicationsService {
         return publicationMapper.convertToDTO(publicationRepository.save(publication));
     }
 
+    @Override
+    @Transactional
+    public PublicationDTO addImageToPublication(String publicationId, String imageId) {
+        Publication publication = publicationRepository.findById(publicationId)
+                .orElseThrow(() -> new IllegalArgumentException("Publication not found"));
+        Image image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new IllegalArgumentException("Image not found"));
+        if(publication.getImage() != null){
+            publication.setImage(null);
+            publicationRepository.save(publication);
+            imageRepository.deleteById(image.getId());
+        }
+        publication.setImage(image);
+        return publicationMapper.convertToDTO(publicationRepository.save(publication));
+    }
 
+
+    @Override
+    @Transactional
+    public void deletePublicationById(String id) {
+        Publication publication = publicationRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Publication with ID " + id + " not found."));
+        String clubId = publication.getClub().getId();
+        Club club = clubRepository.findById(clubId).orElseThrow(()->new IllegalArgumentException("Club with ID " + clubId + " not found."));
+        club.getPublications().removeIf((c)-> Objects.equals(c.getId(), id));
+        clubRepository.save(club);
+        publication.setClub(null);
+        publicationRepository.save(publication);
+        publicationRepository.deleteById(id);
+    }
+
+    @Override
+    public PublicationDTO update(String id, PublicationDTO publicationDTO) {
+        Publication publication = publicationRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Publication with ID " + id + " not found."));
+        publication.setTitle(publicationDTO.title());
+        publication.setPubDesc(publicationDTO.description());
+        publication.setPublic(publicationDTO.isPublic());
+        if(publicationDTO.imageId() == null){
+            publication.setImage(null);
+        }
+        return publicationMapper.convertToDTO(publicationRepository.save(publication));
+    }
 }
