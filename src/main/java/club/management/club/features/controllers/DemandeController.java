@@ -3,6 +3,7 @@ package club.management.club.features.controllers;
 import club.management.club.features.dto.requests.ClubCreationDTO;
 import club.management.club.features.dto.requests.EventCreationDTO;
 import club.management.club.features.dto.requests.IntegrationCreationDTO;
+import club.management.club.features.dto.requests.UpdateDemandeStatusDTO;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.dto.responses.MembersListDTO;
 import club.management.club.features.dto.responses.DemandeDTO2;
@@ -91,9 +92,9 @@ public class DemandeController {
     @PutMapping("/{id}/status")
     public ResponseEntity<DemandeDTO> updateDemandeStatus(
             @PathVariable String id,
-            @RequestBody StatutDemande statutDemande
+            @RequestBody UpdateDemandeStatusDTO statutDemande
     ) {
-        DemandeDTO updatedDemande = demandeService.updateDemandeStatus(id, statutDemande); // Utilisation du service pour la mise à jour et la conversion
+        DemandeDTO updatedDemande = demandeService.updateDemandeStatus(id, statutDemande.statutDemande(), statutDemande.agent()); // Utilisation du service pour la mise à jour et la conversion
         return ResponseEntity.ok(updatedDemande);
     }
 

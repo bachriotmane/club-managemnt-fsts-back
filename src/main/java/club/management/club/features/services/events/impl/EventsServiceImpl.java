@@ -132,6 +132,12 @@ public class EventsServiceImpl implements EventsService {
         evenement.setImage(image);
         return eventsMapper.convertToDTO(eventRepository.save(evenement));
     }
-    
 
+    @Override
+    public void deleteById(String id) {
+        if (!eventRepository.existsById(id)) {
+            throw new EntityNotFoundException("Événement avec ID " + id + " non trouvé");
+        }
+        eventRepository.deleteById(id);
+    }
 }

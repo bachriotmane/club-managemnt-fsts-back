@@ -73,9 +73,9 @@ public class EventsController {
         );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvenementById(@PathVariable String id) {
-        eventsService.deleteById(id);
-        return ResponseEntity.noContent().build(); // Retourne un statut 204 No Content
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteEvenementById(@PathVariable String id) {
+//        eventsService.deleteById(id);
+//        return ResponseEntity.noContent().build(); // Retourne un statut 204 No Content
+//    }
 }

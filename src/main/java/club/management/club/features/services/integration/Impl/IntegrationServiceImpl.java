@@ -24,8 +24,8 @@ public class IntegrationServiceImpl implements IntegrationService {
     private final IntegrationRepository integrationRepo ;
     private final DemandeRepository demandeRepo;
     private final JwtTokenService jwtTokenService;
-    public void deleteById(String id) {
 
+    public void deleteById(String id) {
         integrationRepo.deleteById(id);
     }
     @Override
