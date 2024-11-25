@@ -22,4 +22,7 @@ public interface EventsService {
     EventResponseDTO update(String id, EventResponseDTO eventResponseDTO);
 
     EventResponseDTO addImageToEvent(String eventId, String imageId);
+    void deleteById(String id);
+
+    void accepterEvenement(String id);
 }

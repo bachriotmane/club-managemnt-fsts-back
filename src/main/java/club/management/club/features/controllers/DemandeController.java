@@ -5,6 +5,8 @@ import club.management.club.features.dto.requests.EventCreationDTO;
 import club.management.club.features.dto.requests.IntegrationCreationDTO;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.dto.responses.MembersListDTO;
+import club.management.club.features.dto.responses.DemandeDTO2;
+import club.management.club.features.dto.responses.DemandeDTO3;
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.StatutDemande;
@@ -44,6 +46,17 @@ public class DemandeController {
     private final HistoriqueService historiqueService;
     private final EventsService eventsService;
 
+    @GetMapping("/demandeur/{demandeurId}")
+    public List<DemandeDTO3> getDemandesByDemandeurId(@PathVariable String demandeurId) {
+        System.out.println(demandeurId);
+        return demandeService.getDemandesByDemandeurId(demandeurId);
+    }
+
+
+    @GetMapping("/dmd")
+    public List<Demande> getAllDemandes() {
+        return demandeService.getAllDemandess();
+    }
 
     @GetMapping
     public Page<DemandeDTO> getAllDemandes(
@@ -223,6 +236,7 @@ public class DemandeController {
         demandeService.save(demande);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     @Operation(summary = "Edit Student Roles by integration UUID.")
     @PutMapping("/edit-integration/{uuid}")
     public SuccessResponse<MembersListDTO> editRoleStudent(
@@ -238,6 +252,12 @@ public class DemandeController {
         return integrationService.deleteIntegration(authentication,uuid);
     }
 
+    @GetMapping("/demande/{id}")
+    public ResponseEntity<DemandeDTO2> findById(@PathVariable String id) {
+        DemandeDTO2 demandeDTO2 = demandeService.findById(id);
+        return ResponseEntity.ok(demandeDTO2);
+    }
 
 }
+
 

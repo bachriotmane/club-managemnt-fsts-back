@@ -13,6 +13,7 @@ import club.management.club.features.repositories.ClubRepository;
 import club.management.club.features.repositories.EventRepository;
 import club.management.club.features.repositories.ImageRepository;
 import club.management.club.features.services.events.EventsService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,19 @@ public class EventsServiceImpl implements EventsService {
     private final EventsMapper eventsMapper;
     private final ClubRepository clubRepository;
     private final ImageRepository imageRepository;
+    
+    @Override
+    public void accepterEvenement(String id) {
+        // Récupérer l'événement par ID
+        Evenement evenement = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Événement non trouvé"));
 
+        // Mettre à jour l'état de l'événement (validé)
+        evenement.setValid(true);
+
+        // Sauvegarder l'événement mis à jour
+        eventRepository.save(evenement);
+    }
 
     @Override
     public Page<EventResponseDTO> getAllEvents(EventRequest eventRequest){
@@ -119,5 +132,6 @@ public class EventsServiceImpl implements EventsService {
         evenement.setImage(image);
         return eventsMapper.convertToDTO(eventRepository.save(evenement));
     }
+    
 
 }

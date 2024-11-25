@@ -120,11 +120,28 @@ public class ClubsController {
     public  SuccessResponse<ClubDetailsResponse>  editClub(@RequestBody @Valid ClubEditRequest clubCreationDTO, @PathVariable String uuid){
         return  clubService.editClub(clubCreationDTO,uuid);
     }
+
     @GetMapping("/member-roles")
     public List<String> getMemberRoles() {
         return Stream.of(MemberRole.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClubById(@PathVariable String id) {
+        clubService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 
+    @PutMapping("/{id}/accepter")
+    public ResponseEntity<String> accepterClub(@PathVariable String id) {
+        try {
+            // Appel du service pour accepter le club
+            clubService.accepterClub(id);
+            return ResponseEntity.ok("Club accepté avec succès");
+        } catch (Exception e) {
+            // Gestion des erreurs
+            return ResponseEntity.status(500).body("Erreur lors de l'acceptation du club");
+        }
+    }
 }

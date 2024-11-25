@@ -15,4 +15,8 @@ public interface ClubService {
     List<Club> findClubsWhereUserIsAdmin(String email);
     SuccessResponse<Boolean>  deleteClub(String uuid);
     SuccessResponse<ClubDetailsResponse> editClub(ClubEditRequest clubEditRequest,String uuid);
+
+    void deleteById(String id);
+
+    void accepterClub(String id);
 }

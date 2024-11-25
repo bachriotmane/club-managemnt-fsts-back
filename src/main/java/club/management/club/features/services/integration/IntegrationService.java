@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 public interface IntegrationService {
     Integration save(Integration integration);
     SuccessResponse<MembersListDTO> editRoleStudent(String uuidIntegration , String roleName, MemberRole memberRole);
-
     SuccessResponse<Boolean> deleteIntegration(Authentication authentication,String uuid);
+    void deleteById(String id);
+    void accepterIntegration(String id);
 }

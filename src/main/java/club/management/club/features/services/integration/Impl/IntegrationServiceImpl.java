@@ -3,12 +3,14 @@ package club.management.club.features.services.integration.Impl;
 import club.management.club.features.dto.responses.MembersListDTO;
 import club.management.club.features.entities.Integration;
 import club.management.club.features.enums.MemberRole;
+import club.management.club.features.repositories.DemandeRepository;
 import club.management.club.features.repositories.IntegrationRepository;
 import club.management.club.features.services.auths.JwtTokenService;
 import club.management.club.features.services.integration.IntegrationService;
 import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.dtos.SuccessResponse;
 import club.management.club.shared.exceptionHandler.BadRequestException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,24 @@ import java.util.EnumSet;
 @RequiredArgsConstructor
 public class IntegrationServiceImpl implements IntegrationService {
     private final IntegrationRepository integrationRepo ;
+    private final DemandeRepository demandeRepo;
     private final JwtTokenService jwtTokenService;
+    public void deleteById(String id) {
 
+        integrationRepo.deleteById(id);
+    }
+    @Override
+    public void accepterIntegration(String id) {
+        // Récupérer l'intégration par ID
+        Integration integration = integrationRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Integration non trouvée"));
+
+        // Mettre à jour l'état de l'intégration (valide)
+        integration.setValid(true);
+
+        // Sauvegarder l'intégration mise à jour
+        integrationRepo.save(integration);
+    }
     @Override
     public Integration save(Integration integration) {
         return integrationRepo.save(integration);

@@ -11,6 +11,7 @@ import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.dtos.SuccessResponse;
 import club.management.club.shared.exceptionHandler.BadRequestException;
 import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,18 @@ public class ClubServiceImpl implements ClubService {
                 new ResourceNotFoundException("Club","Id",id)
         );
     }
+    @Override
+    public void accepterClub(String id) {
+        // Récupérer le club par ID
+        Club club = clubRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Club non trouvé"));
 
+        // Mettre à jour l'état du club (actif)
+        club.setValid(true);
+
+        // Sauvegarder le club mis à jour
+        clubRepository.save(club);
+    }
     @Override
     public Club save(Club club) {
         return clubRepository.save(club);
@@ -76,4 +88,11 @@ public class ClubServiceImpl implements ClubService {
         return new SuccessResponse<>(clubMapper.toClubDetailsResponse(clubResponse));
     }
 
+    @Override
+    public void deleteById(String id) {
+        if (!clubRepository.existsById(id)) {
+            throw new EntityNotFoundException("Club avec ID " + id + " non trouvé");
+        }
+        clubRepository.deleteById(id);
+    }
 }
