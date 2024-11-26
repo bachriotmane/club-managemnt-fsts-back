@@ -1,10 +1,13 @@
 package club.management.club.features.repositories;
 
 import club.management.club.features.entities.Integration;
+import club.management.club.features.enums.MemberRole;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +17,7 @@ import java.util.Optional;
 public interface IntegrationRepository extends JpaRepository<Integration,String> , JpaSpecificationExecutor<Integration> {
     List<Integration> findAllByEtudiantId(String id);
     Optional<Integration> findByEtudiantIdAndClubId(String etudiantId, String clubUuid);
+    @Query("SELECT i.club.id FROM Integration i WHERE i.etudiant.id = :adminId AND i.memberRole = :role")
+    List<String> findClubIdsByEtudiantIdAndMemberRole(@Param("adminId") String adminId, @Param("role") MemberRole role);
+
 }

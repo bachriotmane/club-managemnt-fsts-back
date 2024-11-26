@@ -3,10 +3,15 @@ package club.management.club.features.services.demandes.impl;
 import club.management.club.features.Specifications.DemandeSpecifications;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.entities.Demande;
+import club.management.club.features.entities.Integration;
+import club.management.club.features.entities.Club;
+import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
+import club.management.club.features.repositories.ClubRepository;
 import club.management.club.features.repositories.DemandeRepository;
+import club.management.club.features.repositories.IntegrationRepository;
 import club.management.club.features.services.demandes.DemandeService;
 import club.management.club.features.services.demandes.DemandeService;
 import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
@@ -21,9 +26,12 @@ import java.util.stream.Collectors;
 public class DemandeServiceImpl implements DemandeService {
 
     private final DemandeRepository demandeRepository;
+    private final IntegrationRepository integrationRepository;
 
-    public DemandeServiceImpl(DemandeRepository demandeRepository) {
+    public DemandeServiceImpl(DemandeRepository demandeRepository, IntegrationRepository integrationRepository) {
+
         this.demandeRepository = demandeRepository;
+        this.integrationRepository = integrationRepository;
     }
 
     @Override
@@ -77,7 +85,6 @@ public class DemandeServiceImpl implements DemandeService {
     }
 
 
-
     public DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande) {
         Demande demande = demandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
@@ -105,7 +112,7 @@ public class DemandeServiceImpl implements DemandeService {
     @Override
     public Demande findById(String id) {
         return demandeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Demande","demandeId",id)
+                () -> new ResourceNotFoundException("Demande", "demandeId", id)
         );
     }
 
@@ -113,11 +120,21 @@ public class DemandeServiceImpl implements DemandeService {
     public int countDemandesByEtudiant(String etudiantId) {
         return demandeRepository.countByEtudiantDemandeur_Id(etudiantId);
     }
+
+
     @Override
-    public int countIntegrationDemandesByEtudiant(String etudiantId) {
-        return demandeRepository.countByEtudiantDemandeurIdAndType(etudiantId, TypeDemande.INTEGRATION_CLUB);
+    public int countIntegrationDemandesByAdmin(String adminId) {
+        // Récupérer les ID des clubs administrés directement depuis la base
+        List<String> adminClubIds = integrationRepository.findClubIdsByEtudiantIdAndMemberRole(adminId, MemberRole.ADMIN);
+
+        if (adminClubIds.isEmpty()) {
+            return 0; // Aucun club administré
+        }
+
+        // Compter les demandes d'intégration liées à ces clubs
+        return demandeRepository.countByTypeAndClubIdIn(TypeDemande.INTEGRATION_CLUB, adminClubIds);
     }
 
 
-
 }
+

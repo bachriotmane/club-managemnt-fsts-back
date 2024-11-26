@@ -38,5 +38,4 @@ public interface ClubRepository extends JpaRepository<Club, String> {
             "WHERE e.email = ?1 AND i.memberRole = ?2")
     List<Club> findClubsWhereUserIsAdmin(String email,MemberRole role);
 
-
 }

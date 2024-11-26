@@ -26,6 +26,6 @@ public interface DemandeService {
     Demande save(Demande demande);
     Demande findById(String id);
     int countDemandesByEtudiant(String etudiantId);
-    int countIntegrationDemandesByEtudiant(String etudiantId);
+    int countIntegrationDemandesByAdmin(String adminId);
 
 }

@@ -248,8 +248,8 @@ public class DemandeController {
     }
 
     @GetMapping("/count/integration")
-    public ResponseEntity<Integer> countIntegrationDemandesByEtudiant(@RequestParam String etudiantId) {
-        int count = demandeService.countIntegrationDemandesByEtudiant(etudiantId);
+    public ResponseEntity<Integer> countIntegrationDemandesByAdmin(@RequestParam String adminId) {
+        int count = demandeService.countIntegrationDemandesByAdmin(adminId);
         return ResponseEntity.ok(count);
     }
 
