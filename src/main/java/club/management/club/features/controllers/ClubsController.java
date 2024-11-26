@@ -146,8 +146,8 @@ public class ClubsController {
         }
     }
     @GetMapping("/clubs-name")
-    public ResponseEntity<List<clubNameDTO>> getAllClubs() {
-        List<clubNameDTO> clubs = clubService.getAllClubs();
+    public ResponseEntity<List<ClubNameDTO>> getAllClubs(Authentication authentication) {
+        List<ClubNameDTO> clubs = clubService.getAllClubs(authentication);
         return new ResponseEntity<>(clubs, HttpStatus.OK);
     }
 }

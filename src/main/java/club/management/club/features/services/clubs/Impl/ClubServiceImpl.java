@@ -2,11 +2,12 @@ package club.management.club.features.services.clubs.Impl;
 
 import club.management.club.features.dto.requests.ClubEditRequest;
 import club.management.club.features.dto.responses.ClubDetailsResponse;
-import club.management.club.features.dto.responses.clubNameDTO;
+import club.management.club.features.dto.responses.ClubNameDTO;
 import club.management.club.features.entities.Club;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.mappers.ClubMapper;
 import club.management.club.features.repositories.*;
+import club.management.club.features.services.auths.JwtTokenService;
 import club.management.club.features.services.clubs.ClubService;
 import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.dtos.SuccessResponse;
@@ -14,11 +15,13 @@ import club.management.club.shared.exceptionHandler.BadRequestException;
 import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,9 @@ public class ClubServiceImpl implements ClubService {
     private final EventRepository eventRepository;
     private final PublicationRepository publicationRepository;
     private final IntegrationRepository integrationRepository;
+    private final JwtTokenService jwtTokenService;
+    private  final UserRepo userRepo;
+
     @Override
     public Club findById(String id) {
         return clubRepository.findById(id).orElseThrow(() ->
@@ -49,10 +55,37 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public List<clubNameDTO> getAllClubs() {
-        return clubRepository.findAll().stream()
-                .map(club -> new clubNameDTO(club.getNom(), club.getId()))
-                .collect(Collectors.toList());
+    public List<ClubNameDTO> getAllClubs(Authentication authentication) {
+        var idUser = jwtTokenService.getUserId(authentication);
+        var studentOpt = userRepo.findById(idUser);
+        if (studentOpt.isEmpty()) {
+            throw new BadRequestException(ValidationConstants.USER_NOT_FOUND);
+        }
+        var student = studentOpt.get();
+
+        boolean isUser = student.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_USER".equals(auth.getName()));
+        if (isUser) {
+            var clubsFromDemandes = demandeRepository.findAllByEtudiantDemandeur(student).stream()
+                    .map(demande -> new ClubNameDTO(demande.getClub().getNom(), demande.getClub().getId()))
+                    .distinct()
+                    .toList();
+
+            var clubsAsAdmin = clubRepository.findAll().stream()
+                    .filter(club -> club.getIntegrations().stream()
+                            .anyMatch(integration -> integration.getEtudiant().equals(student) &&
+                                    integration.getMemberRole() == MemberRole.ADMIN))
+                    .map(club -> new ClubNameDTO(club.getNom(), club.getId()))
+                    .toList();
+
+            return Stream.concat(clubsFromDemandes.stream(), clubsAsAdmin.stream())
+                    .distinct()
+                    .collect(Collectors.toList());
+        } else {
+            return clubRepository.findAll().stream()
+                    .map(club -> new ClubNameDTO(club.getNom(), club.getId()))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
