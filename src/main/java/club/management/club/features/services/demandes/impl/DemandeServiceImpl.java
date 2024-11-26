@@ -36,21 +36,19 @@ public class DemandeServiceImpl implements DemandeService {
     private final EventRepository eventRepository;
     private final HistoriqueRepo historiqueRepo;
     private final JwtTokenService jwtTokenService;
-    private final EtudiantRepository etudiantRepository;
-    private final AuthorityService authorityService;
+    private final  UserRepo userRepo;
 
     private DemandeMapper demandeMapper;
 
-    public DemandeServiceImpl(DemandeRepository demandeRepository , DemandeMapper demandeMapper, IntegrationRepository integrationRepository, ClubRepository clubRepository, EventRepository eventRepository, HistoriqueRepo historiqueRepo, JwtTokenService jwtTokenService, EtudiantRepository etudiantRepository, AuthorityService authorityService) {
+    public DemandeServiceImpl(DemandeRepository demandeRepository , DemandeMapper demandeMapper, IntegrationRepository integrationRepository, ClubRepository clubRepository, EventRepository eventRepository, HistoriqueRepo historiqueRepo, JwtTokenService jwtTokenService, EtudiantRepository etudiantRepository, AuthorityService authorityService, UserRepo userRepo) {
         this.demandeRepository = demandeRepository;
         this.integrationRepository = integrationRepository;
         this.clubRepository = clubRepository;
         this.eventRepository = eventRepository;
         this.historiqueRepo = historiqueRepo;
         this.jwtTokenService = jwtTokenService;
+        this.userRepo = userRepo;
 
-        this.etudiantRepository = etudiantRepository;
-        this.authorityService = authorityService;
     }
 
     @Override
@@ -102,7 +100,7 @@ public class DemandeServiceImpl implements DemandeService {
     ) {
         var idStudent = jwtTokenService.getUserId(authentication);
 
-        var studentOpt = etudiantRepository.findById(idStudent);
+        var studentOpt = userRepo.findById(idStudent);
         if (studentOpt.isEmpty()) {
             throw new BadRequestException(ValidationConstants.USER_NOT_FOUND);
         }
@@ -122,7 +120,7 @@ public class DemandeServiceImpl implements DemandeService {
             spec = spec.and(!isMyDemandes ?
                             DemandeSpecifications.withStudentAsAdminInClub(idStudent)
                             :DemandeSpecifications.withStudentId(idStudent))
-                    .and(DemandeSpecifications.includeOnlyTypeIntegrationClub());
+                    .and(!isMyDemandes ?DemandeSpecifications.includeOnlyTypeIntegrationClub() : null);
         } else { //admin
             spec = spec.and(DemandeSpecifications.excludeTypeIntegrationClub());
         }

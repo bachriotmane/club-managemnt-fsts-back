@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public interface ClubMapper {
 
     @Mapping(source = "id", target = "uuid")
-    @Mapping(target = "nbrMembres", expression = "java(club.getIntegrations().size())")
+    @Mapping(target = "nbrMembres", expression = "java((int) club.getIntegrations().stream().filter(integration -> integration.isValid()).count())")
     @Mapping(target = "profilsDetailsDto", expression = "java(mapProfilsDetails(club))")
     @Mapping(target = "logo", expression = "java(club.getLogo()!= null ? club.getLogo().getId() : null)")
     ClubDetailsResponse toClubDetailsResponse(Club club);
@@ -30,11 +30,13 @@ public interface ClubMapper {
 
     default List<ProfilsDetailsDto> mapProfilsDetails(Club club) {
         return club.getIntegrations().stream()
+                .filter(Integration::isValid)
                 .map(Integration::getEtudiant)
                 .limit(6)
                 .map(this::toProfilsDetailsDto)
                 .collect(Collectors.toList());
     }
+
 
     @Mapping(target = "id", expression = "java(oldClub.getId())")
     @Mapping(target = "nom", source = "dto.nom")
