@@ -17,4 +17,5 @@ public class ValidationConstants {
     public static final String NOT_AUTHORIZED_TO_DELETE_INTEGRATION = "Vous n'êtes pas autorisé à supprimer cette intégration car elle vous appartient.";
     public static final String NOT_AUTHORIZED_TO_DELETE_ADMINISTRATEUR = "Vous ne pouvez pas supprimer une intégration d'administrateur.";
 
+    public static final String USER_NOT_FOUND = "L'utilisateur n'est pas connecté pour le moment.";
 }

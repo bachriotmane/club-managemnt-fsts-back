@@ -2,6 +2,7 @@ package club.management.club.features.services.clubs.Impl;
 
 import club.management.club.features.dto.requests.ClubEditRequest;
 import club.management.club.features.dto.responses.ClubDetailsResponse;
+import club.management.club.features.dto.responses.clubNameDTO;
 import club.management.club.features.entities.Club;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.mappers.ClubMapper;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,14 @@ public class ClubServiceImpl implements ClubService {
         // Sauvegarder le club mis à jour
         clubRepository.save(club);
     }
+
+    @Override
+    public List<clubNameDTO> getAllClubs() {
+        return clubRepository.findAll().stream()
+                .map(club -> new clubNameDTO(club.getNom(), club.getId()))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public Club save(Club club) {
         return clubRepository.save(club);

@@ -9,16 +9,22 @@ import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.*;
+import club.management.club.features.entities.Demande;
+import club.management.club.features.repositories.DemandeRepository;
+import club.management.club.features.services.auths.AuthorityService;
+import club.management.club.features.services.auths.JwtTokenService;
 import club.management.club.features.services.demandes.DemandeService;
+import club.management.club.shared.Constants.ValidationConstants;
+import club.management.club.shared.exceptionHandler.BadRequestException;
 import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,15 +35,22 @@ public class DemandeServiceImpl implements DemandeService {
     private final ClubRepository clubRepository;
     private final EventRepository eventRepository;
     private final HistoriqueRepo historiqueRepo;
+    private final JwtTokenService jwtTokenService;
+    private final EtudiantRepository etudiantRepository;
+    private final AuthorityService authorityService;
 
     private DemandeMapper demandeMapper;
 
-    public DemandeServiceImpl(DemandeRepository demandeRepository , DemandeMapper demandeMapper, IntegrationRepository integrationRepository, ClubRepository clubRepository, EventRepository eventRepository, HistoriqueRepo historiqueRepo) {
+    public DemandeServiceImpl(DemandeRepository demandeRepository , DemandeMapper demandeMapper, IntegrationRepository integrationRepository, ClubRepository clubRepository, EventRepository eventRepository, HistoriqueRepo historiqueRepo, JwtTokenService jwtTokenService, EtudiantRepository etudiantRepository, AuthorityService authorityService) {
         this.demandeRepository = demandeRepository;
         this.integrationRepository = integrationRepository;
         this.clubRepository = clubRepository;
         this.eventRepository = eventRepository;
         this.historiqueRepo = historiqueRepo;
+        this.jwtTokenService = jwtTokenService;
+
+        this.etudiantRepository = etudiantRepository;
+        this.authorityService = authorityService;
     }
 
     @Override
@@ -79,10 +92,46 @@ public class DemandeServiceImpl implements DemandeService {
     }
 
     @Override
-    public Page<DemandeDTO> filterDemandesByType(TypeDemande type, Pageable pageable) {
-        return demandeRepository.findAll(DemandeSpecifications.withType(type), pageable)
+    public Page<DemandeDTO> filterDemandesByType(
+            Authentication authentication,
+            String type,
+            Pageable pageable,
+            String nom,
+            boolean isMyDemandes,
+            String  uuidClub
+    ) {
+        var idStudent = jwtTokenService.getUserId(authentication);
+
+        var studentOpt = etudiantRepository.findById(idStudent);
+        if (studentOpt.isEmpty()) {
+            throw new BadRequestException(ValidationConstants.USER_NOT_FOUND);
+        }
+        var student = studentOpt.get();
+
+        boolean isUser = student.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_USER".equals(auth.getName()));
+
+        var studentIdToFilter = isMyDemandes ? idStudent : null;
+
+        var typeDemande = "ALL".equalsIgnoreCase(type) ? null : TypeDemande.valueOf(type.toUpperCase());
+
+        var spec = DemandeSpecifications.withType(typeDemande)
+                .and(DemandeSpecifications.withNom(nom))
+                .and(DemandeSpecifications.withClubId(uuidClub));
+
+
+        if (isUser) { //student
+            spec = spec.and(DemandeSpecifications.withStudentAsAdminInClub(idStudent))
+                    .and(DemandeSpecifications.includeOnlyTypeIntegrationClub());
+        } else { //admin
+            spec = spec.and(DemandeSpecifications.withStudentId(studentIdToFilter))
+                    .and(DemandeSpecifications.excludeTypeIntegrationClub());
+        }
+
+        return demandeRepository.findAll(spec, pageable)
                 .map(DemandeMapper::toLiteDto);
     }
+
 
     @Override
     public List<DemandeDTO> getDemandesByEtudiant(String etudiantId) {

@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -143,5 +144,10 @@ public class ClubsController {
             // Gestion des erreurs
             return ResponseEntity.status(500).body("Erreur lors de l'acceptation du club");
         }
+    }
+    @GetMapping("/clubs-name")
+    public ResponseEntity<List<clubNameDTO>> getAllClubs() {
+        List<clubNameDTO> clubs = clubService.getAllClubs();
+        return new ResponseEntity<>(clubs, HttpStatus.OK);
     }
 }

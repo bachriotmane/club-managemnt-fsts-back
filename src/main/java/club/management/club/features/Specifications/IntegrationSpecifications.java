@@ -36,4 +36,12 @@ public class IntegrationSpecifications {
             return predicates;
         };
     }
+    public static Specification<Integration> withIsValid(Boolean isValid) {
+        return (root, query, builder) -> {
+            if (isValid == null) {
+                return null;
+            }
+            return builder.equal(root.get("isValid"), isValid);
+        };
+    }
 }

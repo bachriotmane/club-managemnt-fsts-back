@@ -31,6 +31,22 @@ public class ClubSpecifications {
             return builder.equal(etudiantJoin.get("id"), etudiantId);
         };
     }
+    public static Specification<Club> withStudentIdForMyClub(String etudiantId) {
+        return (root, query, builder) -> {
+            if (etudiantId == null || etudiantId.isEmpty()) {
+                return null;
+            }
+
+            Join<Club, Integration> integrationJoin = root.join("integrations", JoinType.INNER);
+
+            Join<Integration, Etudiant> etudiantJoin = integrationJoin.join("etudiant", JoinType.INNER);
+
+            return builder.and(
+                    builder.equal(etudiantJoin.get("id"), etudiantId),
+                    builder.isTrue(integrationJoin.get("isValid"))
+            );
+        };
+    }
     public static Specification<Club> withIsValid(Boolean isValid) {
         return (root, query, builder) -> {
             if (isValid == null) {

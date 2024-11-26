@@ -1,5 +1,6 @@
 package club.management.club.features.services.clubs;
 
+import club.management.club.features.Specifications.ClubSpecifications;
 import club.management.club.features.Specifications.IntegrationSpecifications;
 import club.management.club.features.dto.responses.ClubListMembersResponse;
 import club.management.club.features.dto.responses.MembersListDTO;
@@ -33,7 +34,9 @@ public class ClubListMembers {
         var club = clubRepository.findById(clubUuid)
                 .orElseThrow(() -> new BadRequestException(ValidationConstants.CLUB_NOT_FOUND));
 
-        var spec = IntegrationSpecifications.withStudentNameAndClubUuid(studentName, clubUuid);
+        var spec = IntegrationSpecifications.withStudentNameAndClubUuid(studentName, clubUuid)
+                .and(IntegrationSpecifications.withIsValid(true));
+
         var integrations = integrationRepository.findAll(spec, paging);
 
         var members = getData(integrations);

@@ -69,11 +69,16 @@ public class DemandeController {
 
     @GetMapping("/filter")
     public Page<DemandeDTO> filterDemandesByType(
-            @RequestParam TypeDemande type,
+            Authentication authentication,
+            @RequestParam(required = false) String type,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String nom,
+            @RequestParam(required = false) boolean isMyDemandes,
+            @RequestParam(required = false) String uuidClub
     ) {
-        return demandeService.filterDemandesByType(type, PageRequest.of(page, size));
+        System.out.println("------------------------------"+isMyDemandes);
+        return demandeService.filterDemandesByType(authentication,type, PageRequest.of(page, size),nom,isMyDemandes,uuidClub);
     }
 
     @PostMapping
