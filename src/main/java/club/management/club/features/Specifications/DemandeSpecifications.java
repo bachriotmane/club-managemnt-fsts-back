@@ -1,6 +1,5 @@
 package club.management.club.features.Specifications;
 
-import club.management.club.features.entities.Club;
 import club.management.club.features.entities.Demande;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.TypeDemande;
@@ -31,8 +30,6 @@ public class DemandeSpecifications {
             );
         };
     }
-
-
 
 
     public static Specification<Demande> withStudentId(String idStudent) {

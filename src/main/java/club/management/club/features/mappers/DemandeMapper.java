@@ -16,6 +16,7 @@ public class DemandeMapper {
                 .statutDemande(demande.getStatutDemande())
                 // Récupère le CNE de l'étudiant et l'ajoute dans le DTO
                 .cne(demande.getEtudiantDemandeur() != null ? demande.getEtudiantDemandeur().getCne() : null)
+                .fullName(demande.getEtudiantDemandeur().getLastName()+" "+demande.getEtudiantDemandeur().getFirstName())
                 .build();
     }
 

@@ -18,5 +18,6 @@ public class DemandeDTO {
     private Date date;
     private String description ;
     private StatutDemande statutDemande;
+    private String fullName ;
 
 }

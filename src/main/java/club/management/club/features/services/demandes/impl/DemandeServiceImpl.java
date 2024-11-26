@@ -111,8 +111,6 @@ public class DemandeServiceImpl implements DemandeService {
         boolean isUser = student.getAuthorities().stream()
                 .anyMatch(auth -> "ROLE_USER".equals(auth.getName()));
 
-        var studentIdToFilter = isMyDemandes ? idStudent : null;
-
         var typeDemande = "ALL".equalsIgnoreCase(type) ? null : TypeDemande.valueOf(type.toUpperCase());
 
         var spec = DemandeSpecifications.withType(typeDemande)
@@ -121,11 +119,12 @@ public class DemandeServiceImpl implements DemandeService {
 
 
         if (isUser) { //student
-            spec = spec.and(DemandeSpecifications.withStudentAsAdminInClub(idStudent))
+            spec = spec.and(!isMyDemandes ?
+                            DemandeSpecifications.withStudentAsAdminInClub(idStudent)
+                            :DemandeSpecifications.withStudentId(idStudent))
                     .and(DemandeSpecifications.includeOnlyTypeIntegrationClub());
         } else { //admin
-            spec = spec.and(DemandeSpecifications.withStudentId(studentIdToFilter))
-                    .and(DemandeSpecifications.excludeTypeIntegrationClub());
+            spec = spec.and(DemandeSpecifications.excludeTypeIntegrationClub());
         }
 
         return demandeRepository.findAll(spec, pageable)
