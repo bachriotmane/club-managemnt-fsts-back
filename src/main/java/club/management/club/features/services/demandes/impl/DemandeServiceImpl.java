@@ -222,6 +222,10 @@ public class DemandeServiceImpl implements DemandeService {
                 Club club = clubRepository.findById(demande.getClub().getId()).orElseThrow(
                         () -> new RuntimeException("Club not found")
                 );
+                Integration integration = integrationRepository.findById(demande.getIntegration().getId()).orElseThrow(
+                        () -> new RuntimeException("integration not found")
+                );
+                integration.setValid(true);
                 club.setValid(true);
                 clubRepository.save(club);
             }

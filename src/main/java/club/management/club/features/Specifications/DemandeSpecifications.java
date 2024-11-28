@@ -59,7 +59,8 @@ public class DemandeSpecifications {
 
             return builder.and(
                     builder.equal(integrationJoin.get("etudiant").get("id"), idStudent),
-                    builder.equal(integrationJoin.get("memberRole"), MemberRole.ADMIN)
+                    builder.equal(integrationJoin.get("memberRole"), MemberRole.ADMIN),
+                    builder.notEqual(root.get("etudiantDemandeur").get("id"),idStudent)
             );
         };
     }
