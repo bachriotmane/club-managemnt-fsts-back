@@ -120,13 +120,13 @@ public class DemandeServiceImpl implements DemandeService {
                 .and(DemandeSpecifications.withClubId(uuidClub));
 
 
-        if (isUser) { //student
-            spec = spec.and(DemandeSpecifications.withStudentAsAdminInClub(idStudent))
-                    .and(DemandeSpecifications.includeOnlyTypeIntegrationClub());
-        } else { //admin
-            spec = spec.and(DemandeSpecifications.withStudentId(studentIdToFilter))
-                    .and(DemandeSpecifications.excludeTypeIntegrationClub());
-        }
+//        if (isUser) { //student
+//            spec = spec.and(DemandeSpecifications.withStudentAsAdminInClub(idStudent))
+//                    .and(DemandeSpecifications.includeOnlyTypeIntegrationClub());
+//        } else { //admin
+//            spec = spec.and(DemandeSpecifications.withStudentId(studentIdToFilter))
+//                    .and(DemandeSpecifications.excludeTypeIntegrationClub());
+//        }
 
         return demandeRepository.findAll(spec, pageable)
                 .map(DemandeMapper::toLiteDto);
