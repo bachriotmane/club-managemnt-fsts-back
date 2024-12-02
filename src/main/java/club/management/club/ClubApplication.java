@@ -133,6 +133,7 @@ public class ClubApplication {
             Integration integration2 = Integration.builder()
                     .etudiant(anotherStudent)
                     .club(newClub)
+                    .isValid(true)
                     .memberRole(MemberRole.MEMBER)
                     .roleName("Member")
                     .build();
@@ -275,6 +276,7 @@ public class ClubApplication {
                     Evenement event = new Evenement();
                     event.setNom(eventName);
                     event.setDescription("Description for " + eventName);
+                    event.setValid(true);
                     event.setDate(LocalDateTime.now().minusDays((new Random()).nextInt(300) + 1));
                     event.setLocation("Location for " + eventName);
                     event.setClub(club);
