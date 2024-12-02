@@ -104,6 +104,7 @@ public class DemandeController {
 
     @PostMapping("/integration/depose")
     @Transactional
+    // Before save  an  creation  club  request, it is necessary to check uniqueness because it may be duplicated for this user.
     public ResponseEntity<?> CreateIntegrationDemande(
             @RequestParam String clubId,
             @RequestBody @Valid  IntegrationCreationDTO integrationCreationDTO ,
@@ -150,6 +151,7 @@ public class DemandeController {
 
     @PostMapping("/creation/depose")
     @Transactional
+    // Before save  an  creation  club  request  it is necessary to check uniqueness because it may be duplicated for this user
     public ResponseEntity<?> ClubCreationDemande(
             @RequestBody @Valid ClubCreationDTO clubCreationDTO ,
             Authentication authentication

@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -226,8 +227,11 @@ public class DemandeServiceImpl implements DemandeService {
                         () -> new RuntimeException("integration not found")
                 );
                 integration.setValid(true);
+                integration.setIntegrationDate(new Date());
                 club.setValid(true);
                 clubRepository.save(club);
+                integrationRepository.save(integration);
+
             }
             else if(demande.getType().equals(TypeDemande.EVENEMENT)){
                 Evenement evenement = eventRepository.findById(demande.getOrganisationEvenement().getId()).orElseThrow(

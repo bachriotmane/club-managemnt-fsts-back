@@ -63,6 +63,11 @@ public class IntegrationServiceImpl implements IntegrationService {
         if (!isValidRole) {
             throw new BadRequestException(ValidationConstants.ROLE_NAME_IS_NOT_VALID);
         }
+        var nbrAdmin = integrationRepo.countAdminsInClub(integration.getClub().getId(),MemberRole.ADMIN);
+
+        if (nbrAdmin <= 1 && !memberRole.equals(MemberRole.ADMIN)) {
+            throw new BadRequestException(ValidationConstants.UN_SEUL_ADMIN_AUTORISE);
+        }
 
         integration.setRoleName(roleName);
         integration.setMemberRole(memberRole);

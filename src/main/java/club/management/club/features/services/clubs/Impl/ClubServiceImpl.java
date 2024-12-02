@@ -65,7 +65,6 @@ public class ClubServiceImpl implements ClubService {
 
         boolean isUser = student.getAuthorities().stream()
                 .anyMatch(auth -> "ROLE_USER".equals(auth.getName()));
-        //probleme liste in My  demandes  link club
         if (isUser) {
             var clubsFromDemandes = demandeRepository.findAllByEtudiantDemandeur(student).stream()
                     .map(demande -> new ClubNameDTO(demande.getClub().getNom(), demande.getClub().getId()))

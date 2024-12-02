@@ -116,7 +116,7 @@ public class ClubApplication {
                     .instagramme("https://instagram.com/techinnovators")
                     .createdAt(new Date())
                     .description("A club dedicated to exploring and innovating technology.")
-                    .isValid(true)
+                    .isValid(false)
                     .build());
 
 // Adding first student to the new club
