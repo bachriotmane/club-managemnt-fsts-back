@@ -4,6 +4,7 @@ import club.management.club.features.Specifications.DemandeSpecifications;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.dto.responses.DemandeDTO2;
 import club.management.club.features.dto.responses.DemandeDTO3;
+import club.management.club.features.dto.responses.DemandeDetailsDTO;
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
@@ -21,11 +22,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,10 +40,11 @@ public class DemandeServiceImpl implements DemandeService {
     private final HistoriqueRepo historiqueRepo;
     private final JwtTokenService jwtTokenService;
     private final  UserRepo userRepo;
+    private final EtudiantRepository etudiantRepository;
 
     private DemandeMapper demandeMapper;
 
-    public DemandeServiceImpl(DemandeRepository demandeRepository , DemandeMapper demandeMapper, IntegrationRepository integrationRepository, ClubRepository clubRepository, EventRepository eventRepository, HistoriqueRepo historiqueRepo, JwtTokenService jwtTokenService, EtudiantRepository etudiantRepository, AuthorityService authorityService, UserRepo userRepo) {
+    public DemandeServiceImpl(DemandeRepository demandeRepository , DemandeMapper demandeMapper, IntegrationRepository integrationRepository, ClubRepository clubRepository, EventRepository eventRepository, HistoriqueRepo historiqueRepo, JwtTokenService jwtTokenService, AuthorityService authorityService, UserRepo userRepo, EtudiantRepository etudiantRepository) {
         this.demandeRepository = demandeRepository;
         this.integrationRepository = integrationRepository;
         this.clubRepository = clubRepository;
@@ -49,6 +52,7 @@ public class DemandeServiceImpl implements DemandeService {
         this.historiqueRepo = historiqueRepo;
         this.jwtTokenService = jwtTokenService;
         this.userRepo = userRepo;
+        this.etudiantRepository = etudiantRepository;
 
     }
 
@@ -61,6 +65,33 @@ public class DemandeServiceImpl implements DemandeService {
                 .map(this::toDemandeDTO3) // Utilisation de l'instance injectée
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public DemandeDetailsDTO getDemandeDetails(String id) {
+        Demande demande = demandeRepository.findById(id).orElseThrow(()-> new RuntimeException("Demande not found"));
+        return  new DemandeDetailsDTO(
+                demande.getId(),
+                demande.getType(),
+                demande.getStatutDemande(),
+                demande.getEtudiantDemandeur().getFirstName() + " " + demande.getEtudiantDemandeur().getLastName(),
+                demande.getEtudiantDemandeur().getId(),
+                demande.getClub() == null ? null : demande.getClub().getNom(),
+                demande.getClub() == null ? null : demande.getClub().getId(),
+                demande.getMotivation(),
+                demande.getClub() == null ? null : demande.getClub().getInstagramme(),
+                demande.getDescription(),
+                demande.getClub() == null ? null:demande.getClub().getActivites(),
+                demande.getOrganisationEvenement() == null ? null : demande.getOrganisationEvenement().getNom(),
+                demande.getOrganisationEvenement() == null ? null :  demande.getOrganisationEvenement().getLocation(),
+                demande.getOrganisationEvenement() == null ? 0.0 :  demande.getOrganisationEvenement().getBudget(),
+                demande.getOrganisationEvenement() == null ? null :  demande.getOrganisationEvenement().getDate(),
+                demande.getOrganisationEvenement() == null ? null :  demande.getOrganisationEvenement().getDescription()
+
+
+        );
+
+    }
+
     public DemandeDTO3 toDemandeDTO3(Demande demande) {
         System.out.println("to demandedto"+demande.getId()+  demande.getDescription() + demande.getEtudiantDemandeur().getId());
         return DemandeDTO3.builder()
@@ -149,11 +180,14 @@ public class DemandeServiceImpl implements DemandeService {
 
 
     @Override
-    public DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande, String agent) {
+    @Transactional
+    public DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande, String agent, String commentaire) {
         Demande demande = demandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
+        System.out.println(commentaire);
         demande.setStatutDemande(statutDemande);
         Historique historique = Historique.builder().date(LocalDateTime.now()).build();
+        historique.setRaison(commentaire);
         if(statutDemande.equals(StatutDemande.REFUSE)){
             historique.setTitre("Votre demande a ete refuse");
             historique.setDescription("La demande a ete refuse par " + agent);
@@ -181,18 +215,34 @@ public class DemandeServiceImpl implements DemandeService {
                 Club club = clubRepository.findById(demande.getClub().getId()).orElseThrow(
                         () -> new RuntimeException("Club not found")
                 );
+
+                // Nullify the reference in Demande
                 demande.setClub(null);
-                demande = demandeRepository.save(demande);
+                demandeRepository.save(demande);
+
+                // Get the list of integrations associated with the club
                 List<Integration> integrations = club.getIntegrations();
+
+                // Nullify club reference
                 club.setIntegrations(null);
-                club = clubRepository.save(club);
-                integrations.forEach(
-                       ( i )->{
-                           i.setClub(null);
-                           i.setEtudiant(null);
-                           integrationRepository.deleteById(i.getId());
-                       }
-                );
+                clubRepository.save(club);
+
+                // Handle each Integration
+                integrations.forEach(integration -> {
+                    // Nullify the reference in Demande for each Integration
+                    List<Demande> demandes = demandeRepository.findByIntegrationId(integration.getId());
+                    demandes.forEach(d -> {
+                        d.setIntegration(null);
+                        demandeRepository.save(d);
+                    });
+
+                    // Nullify references in Integration and delete it
+                    integration.setClub(null);
+                    integration.setEtudiant(null);
+                    integrationRepository.deleteById(integration.getId());
+                });
+
+                // Finally, delete the club
                 clubRepository.deleteById(club.getId());
             }
             else if(demande.getType().equals(TypeDemande.EVENEMENT)){
@@ -217,7 +267,24 @@ public class DemandeServiceImpl implements DemandeService {
                         () -> new RuntimeException("integration not found")
                 );
                 integration.setValid(true);
-                integrationRepository.save(integration);
+                integration = integrationRepository.save(integration);
+                Etudiant etudiant = etudiantRepository.findById(integration.getEtudiant().getId()).orElseThrow(
+                        () -> new RuntimeException("etudiant not found")
+                );
+                if(etudiant.getIntegrations() == null){
+                    etudiant.setIntegrations(new ArrayList<>());
+                }
+                assert etudiant.getIntegrations() != null;
+                etudiant.getIntegrations().add(integration);
+                etudiantRepository.save(etudiant);
+                Club club = clubRepository.findById(integration.getClub().getId()).orElseThrow(
+                        () -> new RuntimeException("club not found")
+                );
+                if(club.getIntegrations() == null){
+                    club.setIntegrations(new ArrayList<>());
+                }
+                club.getIntegrations().add(integration);
+                clubRepository.save(club);
             }
             else if(demande.getType().equals(TypeDemande.CREATION_CLUB)){
                 Club club = clubRepository.findById(demande.getClub().getId()).orElseThrow(
@@ -238,19 +305,15 @@ public class DemandeServiceImpl implements DemandeService {
                         () -> new RuntimeException("Event not found")
                 );
                 evenement.setValid(true);
-                eventRepository.save(evenement);
+                Club club = clubRepository.findById(evenement.getClub().getId()).orElseThrow(()->
+                        new RuntimeException("Club not found")
+                );
+                evenement = eventRepository.save(evenement);
+                club.getEvenements().add(evenement);
+                clubRepository.save(club);
             }
         }
-        // OTMANE : Complétez cette fonctionnalité
-        // 1. Créer un objet Historique avec un titre basé sur le statut :
-        //    - "Flan a accepté votre demande"
-        //    - "Flan a refusé votre demande"
-        //    (Remarque : Le titre 'Flan' sera récupéré depuis le Controller)
-        //
-        // 2. Après cela, il faut valider l'entité concernée (Club, Intégration ou Événement)
-        //    en fonction du statut :
-        //    - Si `Status == VALID`, définir `isValid = true`.
-        //    - Sinon, simplement supprimer le Club, l'Événement ou l'Intégration.
+        historique.setRaison(commentaire);
         historique = historiqueRepo.save(historique);
         demande.getHistoriques().add(historique);
         demandeRepository.save(demande);

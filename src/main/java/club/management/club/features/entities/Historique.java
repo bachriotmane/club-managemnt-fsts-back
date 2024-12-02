@@ -19,4 +19,5 @@ public class Historique {
     private String titre;
     private String description;
     private LocalDateTime date;
+    private String raison;
 }

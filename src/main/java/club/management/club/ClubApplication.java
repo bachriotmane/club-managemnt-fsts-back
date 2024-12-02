@@ -113,6 +113,7 @@ public class ClubApplication {
 // Creating a new club
             Club newClub = clubRepository.save(Club.builder()
                     .nom("TECH INNOVATORS")
+                            .isValid(true)
                     .instagramme("https://instagram.com/techinnovators")
                     .createdAt(new Date())
                     .description("A club dedicated to exploring and innovating technology.")

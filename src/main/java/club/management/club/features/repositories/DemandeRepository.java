@@ -27,5 +27,6 @@ public interface DemandeRepository extends JpaRepository<Demande, String>, JpaSp
     List<Demande> findByEtudiantDemandeurId(String demandeurId);
 
     Collection<Demande> findAllByEtudiantDemandeur(User student);
+    List<Demande> findByIntegrationId(String integration_id);
 }
 

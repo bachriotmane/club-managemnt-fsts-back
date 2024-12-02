@@ -3,6 +3,7 @@ package club.management.club.features.services.demandes;
 import club.management.club.features.dto.responses.DemandeDTO;
 import club.management.club.features.dto.responses.DemandeDTO2;
 import club.management.club.features.dto.responses.DemandeDTO3;
+import club.management.club.features.dto.responses.DemandeDetailsDTO;
 import club.management.club.features.entities.Demande;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
@@ -28,10 +29,11 @@ public interface DemandeService {
     DemandeDTO getDemandeById(String id);
     Demande getDemandeById2(String id);
 
-    DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande, String agent);
+    DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande, String agent, String c);
     Demande save(Demande demande);
     DemandeDTO2 findById(String id);
 
     List<DemandeDTO3> getDemandesByDemandeurId(String demandeurId);
+    DemandeDetailsDTO getDemandeDetails(String id);
 
 }

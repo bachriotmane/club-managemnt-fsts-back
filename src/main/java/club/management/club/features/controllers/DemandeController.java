@@ -4,10 +4,7 @@ import club.management.club.features.dto.requests.ClubCreationDTO;
 import club.management.club.features.dto.requests.EventCreationDTO;
 import club.management.club.features.dto.requests.IntegrationCreationDTO;
 import club.management.club.features.dto.requests.UpdateDemandeStatusDTO;
-import club.management.club.features.dto.responses.DemandeDTO;
-import club.management.club.features.dto.responses.MembersListDTO;
-import club.management.club.features.dto.responses.DemandeDTO2;
-import club.management.club.features.dto.responses.DemandeDTO3;
+import club.management.club.features.dto.responses.*;
 import club.management.club.features.entities.*;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.StatutDemande;
@@ -24,6 +21,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -40,6 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
 public class DemandeController {
+    private static final Logger log = LoggerFactory.getLogger(DemandeController.class);
     private final DemandeService demandeService;
     private final UserService userService;
     private final ClubService clubService;
@@ -98,13 +98,13 @@ public class DemandeController {
             @PathVariable String id,
             @RequestBody UpdateDemandeStatusDTO statutDemande
     ) {
-        DemandeDTO updatedDemande = demandeService.updateDemandeStatus(id, statutDemande.statutDemande(), statutDemande.agent()); // Utilisation du service pour la mise à jour et la conversion
+        System.out.println(statutDemande);
+        DemandeDTO updatedDemande = demandeService.updateDemandeStatus(id, statutDemande.statutDemande(), statutDemande.agent(), statutDemande.comment());
         return ResponseEntity.ok(updatedDemande);
     }
 
     @PostMapping("/integration/depose")
     @Transactional
-    // Before save  an  creation  club  request, it is necessary to check uniqueness because it may be duplicated for this user.
     public ResponseEntity<?> CreateIntegrationDemande(
             @RequestParam String clubId,
             @RequestBody @Valid  IntegrationCreationDTO integrationCreationDTO ,
@@ -151,7 +151,6 @@ public class DemandeController {
 
     @PostMapping("/creation/depose")
     @Transactional
-    // Before save  an  creation  club  request  it is necessary to check uniqueness because it may be duplicated for this user
     public ResponseEntity<?> ClubCreationDemande(
             @RequestBody @Valid ClubCreationDTO clubCreationDTO ,
             Authentication authentication
@@ -269,6 +268,11 @@ public class DemandeController {
     public ResponseEntity<List<Historique>> getDemandeHistorique(@PathVariable String id){
         Demande savedDemande = demandeService.getDemandeById2(id);
         return ResponseEntity.ok(savedDemande.getHistoriques());
+    }
+
+    @GetMapping("/demande-details/{id}")
+    public DemandeDetailsDTO getDemandeDetails(@PathVariable String id){
+        return demandeService.getDemandeDetails(id);
     }
 
 }

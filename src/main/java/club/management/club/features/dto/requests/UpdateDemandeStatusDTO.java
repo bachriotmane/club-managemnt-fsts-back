@@ -9,6 +9,7 @@ import java.util.Objects;
 
 public record UpdateDemandeStatusDTO(
         StatutDemande statutDemande,
-        String agent
+        String agent,
+        String comment
 ) {
 }
