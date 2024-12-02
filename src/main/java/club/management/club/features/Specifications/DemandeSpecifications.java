@@ -1,6 +1,5 @@
 package club.management.club.features.Specifications;
 
-import club.management.club.features.entities.Club;
 import club.management.club.features.entities.Demande;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.TypeDemande;
@@ -33,8 +32,6 @@ public class DemandeSpecifications {
     }
 
 
-
-
     public static Specification<Demande> withStudentId(String idStudent) {
         return (root, query, builder) -> {
             if (idStudent == null || idStudent.isEmpty()) {
@@ -62,7 +59,8 @@ public class DemandeSpecifications {
 
             return builder.and(
                     builder.equal(integrationJoin.get("etudiant").get("id"), idStudent),
-                    builder.equal(integrationJoin.get("memberRole"), MemberRole.ADMIN)
+                    builder.equal(integrationJoin.get("memberRole"), MemberRole.ADMIN),
+                    builder.notEqual(root.get("etudiantDemandeur").get("id"),idStudent)
             );
         };
     }

@@ -77,7 +77,6 @@ public class DemandeController {
             @RequestParam(required = false) boolean isMyDemandes,
             @RequestParam(required = false) String uuidClub
     ) {
-        System.out.println("------------------------------"+isMyDemandes);
         return demandeService.filterDemandesByType(authentication,type, PageRequest.of(page, size),nom,isMyDemandes,uuidClub);
     }
 

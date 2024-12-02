@@ -44,7 +44,7 @@ public class ClubListMembers {
         return new SuccessResponse<>(new ClubListMembersResponse(
                 club.getNom(),
                 club.getLogo()!= null ? club.getLogo().getId() : null,
-                club.getIntegrations().size(),
+                (int) club.getIntegrations().stream().filter(Integration::isValid).count(),
                 new ListSuccessResponse<>(
                         members,
                         integrations.getTotalElements(),

@@ -125,6 +125,7 @@ public class ClubApplication {
                     .club(newClub)
                     .memberRole(MemberRole.ADMIN)
                     .roleName("President")
+                    .isValid(true)
                     .build();
             integration1 = integrationRepository.save(integration1);
 //
@@ -143,7 +144,7 @@ public class ClubApplication {
             newClub.getIntegrations().add(integration1);
             newClub.getIntegrations().add(integration2);
             newClub = clubRepository.save(newClub);
-            demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
+          //  demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
 
 // Adding publications to the new club
             Publication pub1 = publicationRepository.save(Publication.builder()
@@ -202,11 +203,10 @@ public class ClubApplication {
             pub5.setClub(newClub);
             publicationRepository.save(pub5);
             createEventsForClub(newClub);
-            //add une demande
             Demande demande = Demande.builder()
                     .date(new Date())
                     .description("Demande d'intégration pour le club TECH INNOVATORS")
-                    .statutDemande(StatutDemande.ACCEPTE)
+                    .statutDemande(StatutDemande.EN_COURS)
                     .type(TypeDemande.CREATION_CLUB)
                     .motivation("J'aimerais m'impliquer dans les activités du club TECH INNOVATORS")
                     .etudiantDemandeur(student)
@@ -215,6 +215,7 @@ public class ClubApplication {
                     .historiques(null)
                     .organisationEvenement(null)
                     .build();
+            demandeRepository.save(demande);
 
         };
     }

@@ -2,9 +2,10 @@ package club.management.club.features.services.clubs;
 
 import club.management.club.features.dto.requests.ClubEditRequest;
 import club.management.club.features.dto.responses.ClubDetailsResponse;
-import club.management.club.features.dto.responses.clubNameDTO;
+import club.management.club.features.dto.responses.ClubNameDTO;
 import club.management.club.features.entities.Club;
 import club.management.club.shared.dtos.SuccessResponse;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface ClubService {
     void deleteById(String id);
 
     void accepterClub(String id);
-    List<clubNameDTO> getAllClubs() ;
+    List<ClubNameDTO> getAllClubs(Authentication authentication) ;
 }

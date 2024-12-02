@@ -55,6 +55,4 @@ public class ClubDetails {
 
         return new SuccessResponse<>(clubDetailsResponse);
     }
-
-
 }
