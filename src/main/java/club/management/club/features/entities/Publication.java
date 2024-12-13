@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.UUID;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -33,4 +34,5 @@ public class Publication {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "club_id")
     private Club club;
+
 }

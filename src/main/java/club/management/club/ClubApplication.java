@@ -89,7 +89,6 @@ public class ClubApplication {
             createClubsAndIntegrations(etudiant);
             Authority authority = authorityService.findByName("ROLE_USER")
                     .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
-            // Creating a new Etudiant
             Etudiant student = new Etudiant();
             student.setFirstName("OTMANE");
             student.setLastName("BACHRI");

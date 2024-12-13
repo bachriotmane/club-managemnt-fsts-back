@@ -20,4 +20,7 @@ public class ValidationConstants {
     public static final String USER_NOT_FOUND = "L'utilisateur n'est pas connecté pour le moment.";
     public static final String UN_SEUL_ADMIN_AUTORISE = "Il ne peut y avoir qu'un seul administrateur dans ce club. Vous ne pouvez pas modifier ce rôle.";
 
+    public static final String PUBLICATION_NOT_FOUND = "Publication not found";
+    public static final String COMMENT_NOT_EXIST = "User not authorized to delete this comment or comment does not exist";
+    public static final String UNAUTHORIZED_ACTION = "Vous n'êtes pas autorisé à effectuer cette action.";
 }
