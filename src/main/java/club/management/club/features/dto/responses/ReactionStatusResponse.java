@@ -5,7 +5,7 @@ import club.management.club.features.enums.ReactionType;
 import java.io.Serializable;
 
 public record ReactionStatusResponse(
-        int totalReactions,
+        ReactionCounts reactionCounts,
         ReactionType userReaction
 )
 implements Serializable {

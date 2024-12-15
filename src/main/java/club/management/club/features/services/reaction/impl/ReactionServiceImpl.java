@@ -1,6 +1,7 @@
 package club.management.club.features.services.reaction.impl;
 
 import club.management.club.features.dto.requests.ReactionRequest;
+import club.management.club.features.dto.responses.ReactionCounts;
 import club.management.club.features.dto.responses.ReactionStatusResponse;
 import club.management.club.features.entities.Reaction;
 import club.management.club.features.enums.ReactionType;
@@ -65,14 +66,22 @@ public class ReactionServiceImpl implements ReactionService {
     }
     @Override
     public SuccessResponse<ReactionStatusResponse> getReactionsStatus(Authentication authentication, String publicationId) {
-        int totalReactions = (int) reactionRepository.countByPublicationId(publicationId);
+        int totalLOVE = (int) reactionRepository.countByPublicationIdAndType(publicationId, ReactionType.LOVE);
+        int totalLIKE = (int) reactionRepository.countByPublicationIdAndType(publicationId, ReactionType.LIKE);
+        int totalWOW = (int) reactionRepository.countByPublicationIdAndType(publicationId, ReactionType.WOW);
+        int totalSAD = (int) reactionRepository.countByPublicationIdAndType(publicationId, ReactionType.SAD);
+        int totalANGRY = (int) reactionRepository.countByPublicationIdAndType(publicationId, ReactionType.ANGRY);
 
         String userId = jwtTokenService.getUserId(authentication);
 
-        var userReaction = reactionRepository.findReactionTypeByPublicationIdAndUserId(publicationId, userId)
+        ReactionType userReaction = reactionRepository.findReactionTypeByPublicationIdAndUserId(publicationId, userId)
                 .orElse(null);
 
-        ReactionStatusResponse response = new ReactionStatusResponse(totalReactions, userReaction);
+        int totalReactions = totalLOVE + totalLIKE + totalWOW + totalSAD + totalANGRY;
+
+        ReactionStatusResponse response = new ReactionStatusResponse(
+                new ReactionCounts(totalReactions, totalLOVE, totalLIKE, totalWOW, totalSAD, totalANGRY)
+                , userReaction);
 
         return new SuccessResponse<>(response);
     }

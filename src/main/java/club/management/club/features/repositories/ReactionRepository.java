@@ -19,4 +19,6 @@ public interface ReactionRepository extends JpaRepository<Reaction, String> {
 
     @Query("SELECT r FROM Reaction r WHERE r.publication.id = :publicationId AND r.user.id = :userId")
     Optional<Reaction> findByPublicationIdAndUserId(@Param("publicationId") String publicationId, @Param("userId") String userId);
+
+    long countByPublicationIdAndType(String publicationId, ReactionType type);
 }
