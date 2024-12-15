@@ -275,6 +275,21 @@ public class DemandeController {
         return demandeService.getDemandeDetails(id);
     }
 
+
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countDemandesByEtudiant(@RequestParam String etudiantId) {
+        int count = demandeService.countDemandesByEtudiant(etudiantId);
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/count/integration")
+    public ResponseEntity<Integer> countIntegrationDemandesByAdmin(@RequestParam String adminId) {
+        int count = demandeService.countIntegrationDemandesByAdmin(adminId);
+        return ResponseEntity.ok(count);
+    }
+
+
 }
 
 

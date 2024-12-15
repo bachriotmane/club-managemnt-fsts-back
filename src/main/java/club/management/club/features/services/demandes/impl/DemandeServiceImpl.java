@@ -6,14 +6,20 @@ import club.management.club.features.dto.responses.DemandeDTO2;
 import club.management.club.features.dto.responses.DemandeDTO3;
 import club.management.club.features.dto.responses.DemandeDetailsDTO;
 import club.management.club.features.entities.*;
+import club.management.club.features.entities.Demande;
+import club.management.club.features.entities.Integration;
+import club.management.club.features.entities.Club;
+import club.management.club.features.enums.MemberRole;
 import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.*;
 import club.management.club.features.entities.Demande;
+import club.management.club.features.repositories.ClubRepository;
 import club.management.club.features.repositories.DemandeRepository;
 import club.management.club.features.services.auths.AuthorityService;
 import club.management.club.features.services.auths.JwtTokenService;
+import club.management.club.features.repositories.IntegrationRepository;
 import club.management.club.features.services.demandes.DemandeService;
 import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.exceptionHandler.BadRequestException;
@@ -362,5 +368,23 @@ public class DemandeServiceImpl implements DemandeService {
                 .build();
     }
 
+    @Override
+    public int countDemandesByEtudiant(String etudiantId) {
+        return demandeRepository.countByEtudiantDemandeur_Id(etudiantId);
+    }
+
+
+    @Override
+    public int countIntegrationDemandesByAdmin(String adminId) {
+        // Récupérer les ID des clubs administrés directement depuis la base
+        List<String> adminClubIds = integrationRepository.findClubIdsByEtudiantIdAndMemberRole(adminId, MemberRole.ADMIN);
+
+        if (adminClubIds.isEmpty()) {
+            return 0; // Aucun club administré
+        }
+
+        // Compter les demandes d'intégration liées à ces clubs
+        return demandeRepository.countByTypeAndClubIdIn(TypeDemande.INTEGRATION_CLUB, adminClubIds);
+    }
 
 }

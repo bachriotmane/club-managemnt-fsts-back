@@ -101,6 +101,7 @@ public class ClubApplication {
             student.setPassword(passwordEncoder.encode("12345678"));
             student = userRepo.save(student);
 
+
 // Creating another Etudiant
             Etudiant anotherStudent = new Etudiant();
             anotherStudent.setFirstName("AHMED");
@@ -148,7 +149,7 @@ public class ClubApplication {
 
 // Adding publications to the new club
             Publication pub1 = publicationRepository.save(Publication.builder()
-                    .isPublic(false)
+                    .isPublic(true)
                     .title("Welcome to Tech Innovators")
                     .pubDesc("We're excited to launch our new tech-focused club!")
                     .date(LocalDateTime.of(2024, Month.JANUARY, 10, 10, 0))
@@ -160,7 +161,7 @@ public class ClubApplication {
             publicationRepository.save(pub1);
 
             Publication pub2 = publicationRepository.save(Publication.builder()
-                    .isPublic(false)
+                    .isPublic(true)
                     .title("Hackathon Announcement")
                     .pubDesc("Join us for an exciting 48-hour hackathon next month!")
                     .date(LocalDateTime.of(2024, Month.FEBRUARY, 15, 14, 0))
@@ -171,7 +172,7 @@ public class ClubApplication {
             publicationRepository.save(pub2);
 
             Publication pub3 = publicationRepository.save(Publication.builder()
-                    .isPublic(false)
+                    .isPublic(true)
                     .title("AI Workshop for Members")
                     .pubDesc("An exclusive workshop on AI advancements .")
                     .date(LocalDateTime.of(2024, Month.MARCH, 20, 16, 0))
@@ -182,7 +183,7 @@ public class ClubApplication {
             publicationRepository.save(pub3);
 
             Publication pub4 = publicationRepository.save(Publication.builder()
-                    .isPublic(false)
+                    .isPublic(true)
                     .title("Tech Fair 2024")
                     .pubDesc("Showcase your projects .")
                     .date(LocalDateTime.of(2024, Month.MAY, 5, 11, 30))

@@ -2,6 +2,9 @@ package club.management.club.features.repositories;
 
 import club.management.club.features.entities.Integration;
 import club.management.club.features.enums.MemberRole;
+import club.management.club.features.enums.MemberRole;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +20,6 @@ public interface IntegrationRepository extends JpaRepository<Integration,String>
     Optional<Integration> findByEtudiantIdAndClubId(String etudiantId, String clubUuid);
     @Query("SELECT COUNT(i) FROM Integration i WHERE i.memberRole = :role AND i.club.id = :clubId")
     long countAdminsInClub(@Param("clubId") String clubId, @Param("role") MemberRole role);
+    @Query("SELECT i.club.id FROM Integration i WHERE i.etudiant.id = :adminId AND i.memberRole = :role")
+    List<String> findClubIdsByEtudiantIdAndMemberRole(@Param("adminId") String adminId, @Param("role") MemberRole role);
 }

@@ -41,7 +41,7 @@ public class PublicationController {
                 0,  // Page 0 (première page)
                 7,  // Taille de la page = 7 publications
                 null, // Pas de filtre pour le mot-clé
-                null, // Pas de filtre pour le statut public
+                true, // Pas de filtre pour le statut public
                 null, // Pas de filtre pour la date de début
                 null, // Pas de filtre pour la date de fin
                 null  // Pas de filtre pour l'ID utilisateur
