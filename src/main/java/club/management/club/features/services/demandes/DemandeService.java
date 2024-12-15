@@ -31,7 +31,7 @@ public interface DemandeService {
 
     DemandeDTO updateDemandeStatus(String id, StatutDemande statutDemande, String agent, String c);
     Demande save(Demande demande);
-    Demande findById(String id);
+    DemandeDTO2 findById(String id);
     List<DemandeDTO3> getDemandesByDemandeurId(String demandeurId);
     DemandeDetailsDTO getDemandeDetails(String id);
     int countDemandesByEtudiant(String etudiantId);

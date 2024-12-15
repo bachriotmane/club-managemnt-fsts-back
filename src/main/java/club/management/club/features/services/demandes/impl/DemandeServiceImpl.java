@@ -14,7 +14,6 @@ import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.mappers.DemandeMapper;
 import club.management.club.features.repositories.*;
-import club.management.club.features.entities.Demande;
 import club.management.club.features.repositories.ClubRepository;
 import club.management.club.features.repositories.DemandeRepository;
 import club.management.club.features.services.auths.AuthorityService;
