@@ -369,7 +369,8 @@ public class DemandeServiceImpl implements DemandeService {
 
     @Override
     public int countDemandesByEtudiant(String etudiantId) {
-        return demandeRepository.countByEtudiantDemandeur_Id(etudiantId);
+       // return demandeRepository.countByEtudiantDemandeur_Id(etudiantId);
+        return demandeRepository.countByEtudiantDemandeur_IdAndStatutDemande(etudiantId, StatutDemande.EN_COURS);
     }
 
 
@@ -383,7 +384,25 @@ public class DemandeServiceImpl implements DemandeService {
         }
 
         // Compter les demandes d'intégration liées à ces clubs
-        return demandeRepository.countByTypeAndClubIdIn(TypeDemande.INTEGRATION_CLUB, adminClubIds);
+        //return demandeRepository.countByTypeAndClubIdIn(TypeDemande.INTEGRATION_CLUB, adminClubIds);
+        return demandeRepository.countByTypeAndClubIdInAndStatutDemande(
+                TypeDemande.INTEGRATION_CLUB,
+                adminClubIds,
+                StatutDemande.EN_COURS
+        );
     }
+
+    @Override
+    public int countCreationDemandesEnCours() {
+        return demandeRepository.countByTypeAndStatutDemande(TypeDemande.CREATION_CLUB, StatutDemande.EN_COURS);
+    }
+
+
+    @Override
+    public int countEvenementDemandesEnCours() {
+        return demandeRepository.countByTypeAndStatutDemande(TypeDemande.EVENEMENT, StatutDemande.EN_COURS);
+    }
+
+
 
 }

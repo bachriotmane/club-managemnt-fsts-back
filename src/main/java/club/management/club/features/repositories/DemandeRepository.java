@@ -7,6 +7,7 @@ import club.management.club.features.entities.Etudiant;
 
 import club.management.club.features.entities.User;
 import club.management.club.features.entities.Historique;
+import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,13 @@ public interface DemandeRepository extends JpaRepository<Demande, String>, JpaSp
 
     List<Demande> findByEtudiantDemandeurId(String demandeurId);
 
+
     Collection<Demande> findAllByEtudiantDemandeur(User student);
     List<Demande> findByIntegrationId(String integration_id);
+    int countByTypeAndStatutDemande(TypeDemande type, StatutDemande statutDemande);
+    int countByEtudiantDemandeur_IdAndStatutDemande(String etudiantId, StatutDemande statutDemande);
+    int countByTypeAndClubIdInAndStatutDemande(TypeDemande type, List<String> clubIds, StatutDemande statutDemande);
+
+
 }
 

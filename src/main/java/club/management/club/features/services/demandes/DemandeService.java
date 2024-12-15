@@ -36,4 +36,6 @@ public interface DemandeService {
     DemandeDetailsDTO getDemandeDetails(String id);
     int countDemandesByEtudiant(String etudiantId);
     int countIntegrationDemandesByAdmin(String adminId);
+    int countCreationDemandesEnCours();
+    int countEvenementDemandesEnCours();
 }

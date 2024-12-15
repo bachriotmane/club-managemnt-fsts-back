@@ -289,6 +289,20 @@ public class DemandeController {
         return ResponseEntity.ok(count);
     }
 
+    @GetMapping("/count/creation-en-cours")
+    public ResponseEntity<Integer> countCreationDemandesEnCours() {
+        int count = demandeService.countCreationDemandesEnCours();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/count/evenement-en-cours")
+    public ResponseEntity<Integer> countEvenementDemandesEnCours() {
+        int count = demandeService.countEvenementDemandesEnCours();
+        return ResponseEntity.ok(count);
+    }
+
+
+
 
 }
 
