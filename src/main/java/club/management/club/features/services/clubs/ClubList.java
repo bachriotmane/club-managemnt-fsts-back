@@ -12,6 +12,7 @@ import club.management.club.features.Specifications.ClubSpecifications;
 import club.management.club.features.services.auths.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +76,8 @@ public class ClubList {
     public ListSuccessResponse<ClubListResponse> getCarouselClubs(int limit) {
         var pageable = PageRequest.of(0, limit, Sort.by("createdAt").descending());
 
-        var clubPage = clubRepository.findAll(pageable);
+        Specification<Club> specification = ClubSpecifications.withIsValid(true);
+        var clubPage = clubRepository.findAll(specification, pageable);
 
         var serviceResponses = clubPage.getContent().stream()
                 .map(club -> new ClubListResponse(
