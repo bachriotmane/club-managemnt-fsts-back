@@ -86,7 +86,7 @@ public class ClubApplication {
             User admin = Etudiant.builder().firstName("Kaouthar").lastName("FSTS").cin("MD8978").authorities(Set.of(adminAuth)).accountCompleted(true).password(passwordEncoder.encode("12345678")).accountLEnabled(true).accountLocked(false).email("kaouthar@uhp.ac.ma").build();
             userRepo.save(admin);
 
-            createClubsAndIntegrations(etudiant);
+//            createClubsAndIntegrations(etudiant);
             Authority authority = authorityService.findByName("ROLE_USER")
                     .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
             Etudiant student = new Etudiant();
@@ -111,112 +111,112 @@ public class ClubApplication {
 
 
 // Creating a new club
-            Club newClub = clubRepository.save(Club.builder()
-                    .nom("TECH INNOVATORS")
-                            .isValid(true)
-                    .instagramme("https://instagram.com/techinnovators")
-                    .createdAt(new Date())
-                    .description("A club dedicated to exploring and innovating technology.")
-                    .isValid(false)
-                    .build());
-
-// Adding first student to the new club
-            Integration integration1 = Integration.builder()
-                    .etudiant(student)
-                    .club(newClub)
-                    .memberRole(MemberRole.ADMIN)
-                    .roleName("President")
-                    .isValid(true)
-                    .build();
-            integration1 = integrationRepository.save(integration1);
+//            Club newClub = clubRepository.save(Club.builder()
+//                    .nom("TECH INNOVATORS")
+//                            .isValid(true)
+//                    .instagramme("https://instagram.com/techinnovators")
+//                    .createdAt(new Date())
+//                    .description("A club dedicated to exploring and innovating technology.")
+//                    .isValid(false)
+//                    .build());
 //
-// Adding second student to the new club
-            Integration integration2 = Integration.builder()
-                    .etudiant(anotherStudent)
-                    .club(newClub)
-                    .isValid(true)
-                    .memberRole(MemberRole.MEMBER)
-                    .roleName("Member")
-                    .build();
-            integration2 = integrationRepository.save(integration2);
-
-// Associating integrations with the new club
-            newClub.setIntegrations(new ArrayList<>());
-            newClub.getIntegrations().add(integration1);
-            newClub.getIntegrations().add(integration2);
-            newClub = clubRepository.save(newClub);
-          //  demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
-
-// Adding publications to the new club
-            Publication pub1 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
-                    .title("Welcome to Tech Innovators")
-                    .pubDesc("We're excited to launch our new tech-focused club!")
-                    .date(LocalDateTime.of(2024, Month.JANUARY, 10, 10, 0))
-                    .build());
-            newClub.setPublications(new ArrayList<>());
-            newClub.getPublications().add(pub1);
-            newClub = clubRepository.save(newClub);
-            pub1.setClub(newClub);
-            publicationRepository.save(pub1);
-
-            Publication pub2 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
-                    .title("Hackathon Announcement")
-                    .pubDesc("Join us for an exciting 48-hour hackathon next month!")
-                    .date(LocalDateTime.of(2024, Month.FEBRUARY, 15, 14, 0))
-                    .build());
-            newClub.getPublications().add(pub2);
-            newClub = clubRepository.save(newClub);
-            pub2.setClub(newClub);
-            publicationRepository.save(pub2);
-
-            Publication pub3 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
-                    .title("AI Workshop for Members")
-                    .pubDesc("An exclusive workshop on AI advancements .")
-                    .date(LocalDateTime.of(2024, Month.MARCH, 20, 16, 0))
-                    .build());
-            newClub.getPublications().add(pub3);
-            newClub = clubRepository.save(newClub);
-            pub3.setClub(newClub);
-            publicationRepository.save(pub3);
-
-            Publication pub4 = publicationRepository.save(Publication.builder()
-                    .isPublic(true)
-                    .title("Tech Fair 2024")
-                    .pubDesc("Showcase your projects .")
-                    .date(LocalDateTime.of(2024, Month.MAY, 5, 11, 30))
-                    .build());
-            newClub.getPublications().add(pub4);
-            newClub = clubRepository.save(newClub);
-            pub4.setClub(newClub);
-            publicationRepository.save(pub4);
-
-            Publication pub5 = publicationRepository.save(Publication.builder()
-                    .isPublic(false)
-                    .title("End of Year Celebration")
-                    .pubDesc("Join us for our annual celebration to wrap up the year!")
-                    .date(LocalDateTime.of(2024, Month.DECEMBER, 22, 18, 0))
-                    .build());
-            newClub.getPublications().add(pub5);
-            newClub = clubRepository.save(newClub);
-            pub5.setClub(newClub);
-            publicationRepository.save(pub5);
-            createEventsForClub(newClub);
-            Demande demande = Demande.builder()
-                    .date(new Date())
-                    .description("Demande d'intégration pour le club TECH INNOVATORS")
-                    .statutDemande(StatutDemande.EN_COURS)
-                    .type(TypeDemande.CREATION_CLUB)
-                    .motivation("J'aimerais m'impliquer dans les activités du club TECH INNOVATORS")
-                    .etudiantDemandeur(student)
-                    .club(newClub)
-                    .integration(integration1)
-                    .historiques(null)
-                    .organisationEvenement(null)
-                    .build();
-            demandeRepository.save(demande);
+//// Adding first student to the new club
+//            Integration integration1 = Integration.builder()
+//                    .etudiant(student)
+//                    .club(newClub)
+//                    .memberRole(MemberRole.ADMIN)
+//                    .roleName("President")
+//                    .isValid(true)
+//                    .build();
+//            integration1 = integrationRepository.save(integration1);
+////
+//// Adding second student to the new club
+//            Integration integration2 = Integration.builder()
+//                    .etudiant(anotherStudent)
+//                    .club(newClub)
+//                    .isValid(true)
+//                    .memberRole(MemberRole.MEMBER)
+//                    .roleName("Member")
+//                    .build();
+//            integration2 = integrationRepository.save(integration2);
+//
+//// Associating integrations with the new club
+//            newClub.setIntegrations(new ArrayList<>());
+//            newClub.getIntegrations().add(integration1);
+//            newClub.getIntegrations().add(integration2);
+//            newClub = clubRepository.save(newClub);
+//          //  demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
+//
+//        // Adding publications to the new club
+//            Publication pub1 = publicationRepository.save(Publication.builder()
+//                    .isPublic(true)
+//                    .title("Welcome to Tech Innovators")
+//                    .pubDesc("We're excited to launch our new tech-focused club!")
+//                    .date(LocalDateTime.of(2024, Month.JANUARY, 10, 10, 0))
+//                    .build());
+//            newClub.setPublications(new ArrayList<>());
+//            newClub.getPublications().add(pub1);
+//            newClub = clubRepository.save(newClub);
+//            pub1.setClub(newClub);
+//            publicationRepository.save(pub1);
+//
+//            Publication pub2 = publicationRepository.save(Publication.builder()
+//                    .isPublic(true)
+//                    .title("Hackathon Announcement")
+//                    .pubDesc("Join us for an exciting 48-hour hackathon next month!")
+//                    .date(LocalDateTime.of(2024, Month.FEBRUARY, 15, 14, 0))
+//                    .build());
+//            newClub.getPublications().add(pub2);
+//            newClub = clubRepository.save(newClub);
+//            pub2.setClub(newClub);
+//            publicationRepository.save(pub2);
+//
+//            Publication pub3 = publicationRepository.save(Publication.builder()
+//                    .isPublic(true)
+//                    .title("AI Workshop for Members")
+//                    .pubDesc("An exclusive workshop on AI advancements .")
+//                    .date(LocalDateTime.of(2024, Month.MARCH, 20, 16, 0))
+//                    .build());
+//            newClub.getPublications().add(pub3);
+//            newClub = clubRepository.save(newClub);
+//            pub3.setClub(newClub);
+//            publicationRepository.save(pub3);
+//
+//            Publication pub4 = publicationRepository.save(Publication.builder()
+//                    .isPublic(true)
+//                    .title("Tech Fair 2024")
+//                    .pubDesc("Showcase your projects .")
+//                    .date(LocalDateTime.of(2024, Month.MAY, 5, 11, 30))
+//                    .build());
+//            newClub.getPublications().add(pub4);
+//            newClub = clubRepository.save(newClub);
+//            pub4.setClub(newClub);
+//            publicationRepository.save(pub4);
+//
+//            Publication pub5 = publicationRepository.save(Publication.builder()
+//                    .isPublic(false)
+//                    .title("End of Year Celebration")
+//                    .pubDesc("Join us for our annual celebration to wrap up the year!")
+//                    .date(LocalDateTime.of(2024, Month.DECEMBER, 22, 18, 0))
+//                    .build());
+//            newClub.getPublications().add(pub5);
+//            newClub = clubRepository.save(newClub);
+//            pub5.setClub(newClub);
+//            publicationRepository.save(pub5);
+//            createEventsForClub(newClub);
+//            Demande demande = Demande.builder()
+//                    .date(new Date())
+//                    .description("Demande d'intégration pour le club TECH INNOVATORS")
+//                    .statutDemande(StatutDemande.EN_COURS)
+//                    .type(TypeDemande.CREATION_CLUB)
+//                    .motivation("J'aimerais m'impliquer dans les activités du club TECH INNOVATORS")
+//                    .etudiantDemandeur(student)
+//                    .club(newClub)
+//                    .integration(integration1)
+//                    .historiques(null)
+//                    .organisationEvenement(null)
+//                    .build();
+//            demandeRepository.save(demande);
 
         };
     }
