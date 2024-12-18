@@ -7,6 +7,7 @@ import club.management.club.features.enums.StatutDemande;
 import club.management.club.features.enums.TypeDemande;
 import club.management.club.features.repositories.*;
 import club.management.club.features.services.auths.AuthorityService;
+import club.management.club.shared.Constants.Roles;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -80,7 +81,7 @@ public class ClubApplication {
 
             Etudiant etudiant = etudiantRepository.findByEmail("bourich.sou.fst@uhp.ac.ma")
                     .orElseGet(this::createEtudiant);
-            Authority adminAuth = authorityService.findByName("ROLE_ADMIN")
+            Authority adminAuth = authorityService.findByName(Roles.ROLE_SUPERADMIN)
                     .orElseThrow(() -> new IllegalStateException("ROLE ADMIN was not initiated"));
 
             User admin = Etudiant.builder().firstName("Kaouthar").lastName("FSTS").cin("MD8978").authorities(Set.of(adminAuth)).accountCompleted(true).password(passwordEncoder.encode("12345678")).accountLEnabled(true).accountLocked(false).email("kaouthar@uhp.ac.ma").build();

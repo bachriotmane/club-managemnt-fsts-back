@@ -16,4 +16,5 @@ public class ExtensionsConstants {
             "png", "image/png",
             "gif", "image/gif"
     );
+    public static final Set<String> CSV_EXTENSIONS = Set.of("text/csv", "application/csv");
 }

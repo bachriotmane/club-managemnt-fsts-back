@@ -1,8 +1,7 @@
 package club.management.club.features.controllers;
 
 import club.management.club.features.dto.requests.UpdateUserRequest;
-import club.management.club.features.dto.responses.EtudiantDto;
-import club.management.club.features.dto.responses.UserRolesInsideClubResponse;
+
 import club.management.club.features.entities.Etudiant;
 import club.management.club.features.entities.Image;
 import club.management.club.features.entities.User;
@@ -15,13 +14,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
