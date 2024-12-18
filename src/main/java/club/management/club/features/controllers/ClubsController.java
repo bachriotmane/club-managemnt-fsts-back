@@ -157,17 +157,14 @@ public class ClubsController {
         List<ClubNameDTO> clubs = clubService.getAllClubs(authentication);
         return new ResponseEntity<>(clubs, HttpStatus.OK);
     }
-    @GetMapping("/deactivate/{clubId}")
+    @PatchMapping("/deactivate/{integrationId}")
     public void deactivateUserInsideClub(
-            Authentication authentication,
-            @RequestParam("studentId") String studentId,
-            @PathVariable("clubId") String clubId
+            @PathVariable("integrationId") String integrationId
     ){
-        String userEmail = authentication.getPrincipal().toString();
-        Etudiant etudiant = (Etudiant) userService.findUserByEmail(userEmail);
-        Integration integration = integrationRepository.findByEtudiantIdAndClubId(etudiant.getId(),clubId).orElseThrow(
-                () -> new ResourceNotFoundException("Intgeration","clubId",clubId)
+        Integration integration = integrationRepository.findById(integrationId).orElseThrow(
+                () -> new ResourceNotFoundException("Intgeration","integrationId",integrationId)
         );
-        integration.setDeactivate(integration.isDeactivate());
+        integration.setDeactivate(!integration.isDeactivate());
+        integrationRepository.save(integration);
     }
 }
