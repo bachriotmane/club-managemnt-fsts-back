@@ -1,12 +1,15 @@
 package club.management.club.features.services.users;
 
+import club.management.club.features.dto.responses.ListUsersResponse;
 import club.management.club.features.entities.Authority;
 import club.management.club.features.entities.Etudiant;
 import club.management.club.features.entities.User;
 import club.management.club.features.mappers.EtudiantMapper;
 import club.management.club.features.repositories.EtudiantRepository;
 import club.management.club.features.repositories.UserRepo;
+import club.management.club.shared.dtos.ListSuccessResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -55,4 +58,6 @@ public class UserService {
     public User getUserById(String id) {
         return userRepo.findById(id).orElse(null);
     }
+
+
 }
