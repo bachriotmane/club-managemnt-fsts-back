@@ -86,7 +86,8 @@ public class IntegrationServiceImpl implements IntegrationService {
                         updatedIntegration.getIntegrationDate(),
                         updatedIntegration.getEtudiant().getFiliere(),
                         updatedIntegration.getRoleName(),
-                        updatedIntegration.getMemberRole()
+                        updatedIntegration.getMemberRole(),
+                        updatedIntegration.isDeactivate()
                 )
         );
     }

@@ -14,6 +14,7 @@ public record MembersListDTO(
         Date dateIntegration,
         String filiere,
         String roleName,
-        MemberRole memberRole
+        MemberRole memberRole,
+        boolean deactivate
 )implements Serializable {
 }
