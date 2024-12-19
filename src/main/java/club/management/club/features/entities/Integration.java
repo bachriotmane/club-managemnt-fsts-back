@@ -24,6 +24,7 @@ public class Integration {
     private MemberRole memberRole;
     private Date integrationDate;
     private boolean isValid;
+    private boolean deactivate;
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Etudiant etudiant;

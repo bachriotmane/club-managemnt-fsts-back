@@ -65,7 +65,8 @@ public class ClubListMembers {
                         i.getIntegrationDate(),
                         i.getEtudiant().getFiliere(),
                         i.getRoleName(),
-                        i.getMemberRole()
+                        i.getMemberRole(),
+                        i.isDeactivate()
                 ))
                 .collect(Collectors.toSet());
     }
