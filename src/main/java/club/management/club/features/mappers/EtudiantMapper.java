@@ -8,6 +8,8 @@ import club.management.club.features.entities.Etudiant;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.repositories.AuthorityRepo;
 import club.management.club.features.repositories.ClubRepository;
+import club.management.club.features.repositories.EtudiantRepository;
+import club.management.club.shared.Constants.Roles;
 import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.exceptionHandler.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
@@ -28,7 +32,7 @@ public class EtudiantMapper {
    private final AuthorityRepo authorityRepository;
     @Value("${application.security.password-regex}")
     private String passwordRegex;
-
+   private  final EtudiantRepository etudiantRepository;
     @Value("${email.domain:.fst@uhp.ac.ma}")
     private String emailDomain;
     public EtudiantDto toEtudiantDto(Etudiant etudiant) {
@@ -80,24 +84,46 @@ public class EtudiantMapper {
         if (etudiantEditRequest.filiere() != null && !etudiantEditRequest.filiere().isEmpty()) {
             etudiant.setFiliere(etudiantEditRequest.filiere());
         }
+        etudiant.setAccountLocked(etudiantEditRequest.accountLocked());
 
         if (etudiantEditRequest.password() != null && !etudiantEditRequest.password().isEmpty()) {
-            if (!Pattern.matches(passwordRegex, etudiantEditRequest.password())) {
-                throw new BadRequestException(ValidationConstants.PASSWORD_IS_MANDATORY);
+            if (!isPasswordValid(etudiantEditRequest.password())) {
+                throw new BadRequestException(ValidationConstants.PASSWORD_FORMAT_INVALID);
             }
             etudiant.setPassword(passwordEncoder.encode(etudiantEditRequest.password()));
         }
 
         if (etudiantEditRequest.role() != null) {
-            Authority authority = authorityRepository.findByName(etudiantEditRequest.role());
+            String role = etudiantEditRequest.role();
+
+            if (Roles.ROLE_ADMIN.equals(role) || Roles.ROLE_SUPERADMIN.equals(role)) {
+                Authority authority = authorityRepository.findByName(role);
+                if (authority != null && authority.getUsers() != null && !authority.getUsers().isEmpty()) {
+                    String errorMessage;
+
+                    if (Roles.ROLE_SUPERADMIN.equals(role)) {
+                        errorMessage = ValidationConstants.ROLE_SUPERADMIN_ALREADY_ASSIGNED;
+                    } else {
+                        errorMessage = ValidationConstants.ROLE_ADMIN_ALREADY_ASSIGNED;
+                    }
+
+                    throw new BadRequestException(errorMessage);
+                }
+            }
+
+            Authority authority = authorityRepository.findByName(role);
             if (authority != null) {
-                Set<Authority> authorities = new HashSet<>();
+                Set<Authority> authorities = etudiant.getAuthorities() != null
+                        ? new HashSet<>(etudiant.getAuthorities())
+                        : new HashSet<>();
                 authorities.add(authority);
                 etudiant.setAuthorities(authorities);
             } else {
-                throw new BadRequestException("Role not found");
+                throw new BadRequestException("Rôle introuvable.");
             }
         }
+
+
 
         return etudiant;
     }
@@ -125,5 +151,15 @@ public class EtudiantMapper {
         }
 
         return subPart.length() == 3;
+    }
+    private boolean isPasswordValid(String password) {
+        if (password == null || password.length() < 8 || passwordRegex == null) {
+            return false;
+        }
+
+        Pattern pattern = Pattern.compile(passwordRegex);
+        Matcher matcher = pattern.matcher(password);
+
+        return matcher.matches();
     }
 }

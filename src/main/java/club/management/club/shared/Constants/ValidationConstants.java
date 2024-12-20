@@ -9,8 +9,8 @@ public class ValidationConstants {
     public static final String TYPE_OBJET_NOT_FOUND = "Type d'objet non supporté.";
     public static final String YOUR_IMAGE_CONTIENT_PROBLEME = "votre image  n'est pas validé.";
 
-    public static final String STUDENT_NOT_FOUND = "L'étudiant spécifié n'existe pas." ;
-    public  static  final String INTEGRATION_NOT_FOUND = "Integrarion de cette etudiant n'existe pas .";
+    public static final String STUDENT_NOT_FOUND = "L'étudiant spécifié n'existe pas.";
+    public static final String INTEGRATION_NOT_FOUND = "Integrarion de cette etudiant n'existe pas .";
     public static final String ROLE_NAME_IS_MANDATORY = "La fonction est obligatoire.";
     public static final String MEMBER_ROLE_IS_MANDATORY = "Le rôle du membre est obligatoire.";
     public static final String ROLE_NAME_IS_NOT_VALID = "Le rôle fourni n'est pas valide.";
@@ -36,4 +36,7 @@ public class ValidationConstants {
     public static final String CNE_ALREADY_EXISTS = "Le CNE est déjà utilisé.";
     public static final String INVALID_CSV_FILE = "Le fichier téléchargé est invalide.";
     public static final String INVALID_CSV_EXTENSION = "Le fichier téléchargé doit avoir l'extension .csv.";
-    public static final String INVALID_CSV_MIME_TYPE = "Le fichier téléchargé n'est pas un fichier CSV valide.";}
+    public static final String INVALID_CSV_MIME_TYPE = "Le fichier téléchargé n'est pas un fichier CSV valide.";
+    public static final String ROLE_ADMIN_ALREADY_ASSIGNED = "Le rôle ADMIN est déjà attribué à un utilisateur. Un seul administrateur est autorisé.";
+    public static final String ROLE_SUPERADMIN_ALREADY_ASSIGNED = "Le rôle SUPERADMIN est déjà attribué à un utilisateur. Veuillez contacter le support technique pour modifier ce rôle.";
+}

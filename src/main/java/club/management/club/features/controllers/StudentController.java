@@ -56,13 +56,12 @@ public class StudentController {
     }
     @PutMapping("/users/{userId}")
     @Operation(summary = "Edit user details.")
-    public ResponseEntity<SuccessResponse<String>> editUser(
+    public SuccessResponse<ListUsersResponse> editUser(
             @PathVariable("userId") String userId,
             @RequestBody UserEditRequest userEditRequest,
             Authentication authentication
     ) {
-        SuccessResponse<String> response = userCsvService.editUser(userId, userEditRequest, authentication);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return userCsvService.editUser(userId, userEditRequest, authentication);
     }
 
 }

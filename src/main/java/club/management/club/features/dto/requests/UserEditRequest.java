@@ -10,7 +10,7 @@ public record UserEditRequest(
          String cin,
          String filiere,
          String role,
-         Boolean accountLocked,
+         boolean accountLocked,
          String password
 )  implements Serializable {
 }

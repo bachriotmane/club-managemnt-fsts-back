@@ -58,17 +58,18 @@ public class UserCsvService {
 
     private StringBuilder generateCsvContent(List<Etudiant> students) {
         StringBuilder csvContent = new StringBuilder();
-        csvContent.append("FirstName,LastName,Email,CIN,CNE,Filiere,AccountLocked\n");
+        csvContent.append("FirstName,LastName,Email,CIN,CNE,Filiere,AccountLocked,password\n");
 
         for (Etudiant etudiant : students) {
-            csvContent.append(String.format("%s,%s,%s,%s,%s,%s,%b\n",
+            csvContent.append(String.format("%s,%s,%s,%s,%s,%s,%b,%s\n",
                     etudiant.getFirstName(),
                     etudiant.getLastName(),
                     etudiant.getEmail(),
                     etudiant.getCin(),
                     etudiant.getCne(),
                     etudiant.getFiliere(),
-                    etudiant.isAccountLocked()
+                    etudiant.isAccountLocked(),
+                    "Not visible"
               ));
         }
 
@@ -114,7 +115,7 @@ public class UserCsvService {
             }
 
             String[] data = line.split(",");
-            if (data.length == 7) {
+            if (data.length == 8) {
                 Etudiant etudiant = getEtudiant(data, authority);
                 studentValidator.validateStudent(etudiant, lineNumber);
                 etudiantRepository.save(etudiant);
@@ -131,11 +132,11 @@ public class UserCsvService {
         etudiant.setCin(data[3]);
         etudiant.setCne(data[4]);
         etudiant.setFiliere(data[5]);
-        etudiant.setAccountLocked(true);
+        etudiant.setAccountLocked(Boolean.parseBoolean(data[6]));
         etudiant.setAccountLEnabled(true);
         etudiant.setAccountCompleted(true);
         etudiant.setAuthorities(Set.of(authority));
-        etudiant.setPassword(passwordEncoder.encode(data[9]));
+        etudiant.setPassword(passwordEncoder.encode(data[7]));
 
         return etudiant;
     }
@@ -176,7 +177,7 @@ public class UserCsvService {
         );
     }
 
-    public SuccessResponse<String> editUser(String userId, UserEditRequest etudiantEditRequest, Authentication authentication) {
+    public SuccessResponse<ListUsersResponse> editUser(String userId, UserEditRequest etudiantEditRequest, Authentication authentication) {
         isAuthorized(authentication);
 
         var etudiant = etudiantRepository.findById(userId)
@@ -184,9 +185,22 @@ public class UserCsvService {
 
         Etudiant updatedEtudiant = etudiantMapper.toEtudiant(etudiantEditRequest, etudiant);
 
-        etudiantRepository.save(updatedEtudiant);
+       var newUser = etudiantRepository.save(updatedEtudiant);
 
-        return new SuccessResponse<>("Etudiant updated successfully");
+        return new SuccessResponse<>(new ListUsersResponse(
+                newUser.getId(),
+                newUser.getFirstName(),
+                newUser.getLastName(),
+                newUser.getEmail(),
+                newUser.getCin(),
+                newUser.getCne(),
+                newUser.getFiliere(),
+                newUser.isAccountLocked(),
+                newUser.getAuthorities().stream()
+                        .map(Authority::getName)
+                        .findFirst()
+                        .orElse(Roles.ROLE_USER)
+        ));
     }
 
 }
