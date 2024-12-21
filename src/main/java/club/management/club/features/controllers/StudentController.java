@@ -9,6 +9,7 @@ import club.management.club.shared.dtos.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -60,7 +61,7 @@ public class StudentController {
             @PathVariable("userId") String userId,
             @RequestBody UserEditRequest userEditRequest,
             Authentication authentication
-    ) {
+    ) throws MessagingException {
         return userCsvService.editUser(userId, userEditRequest, authentication);
     }
 

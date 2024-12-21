@@ -79,28 +79,28 @@ public class ClubApplication {
                 authorityRepo.save(Authority.builder().name("ROLE_ADMIN").build());
             }
 
-            Etudiant etudiant = etudiantRepository.findByEmail("bourich.sou.fst@uhp.ac.ma")
-                    .orElseGet(this::createEtudiant);
+//            Etudiant etudiant = etudiantRepository.findByEmail("bourich.sou.fst@uhp.ac.ma")
+//                    .orElseGet(this::createEtudiant);
             Authority adminAuth = authorityService.findByName(Roles.ROLE_SUPERADMIN)
                     .orElseThrow(() -> new IllegalStateException("ROLE ADMIN was not initiated"));
 
             User admin = Etudiant.builder().firstName("Kaouthar").lastName("FSTS").cin("MD8978").authorities(Set.of(adminAuth)).accountCompleted(true).password(passwordEncoder.encode("12345678")).accountLEnabled(true).accountLocked(false).email("kaouthar@uhp.ac.ma").build();
             userRepo.save(admin);
 
-            createClubsAndIntegrations(etudiant);
-            Authority authority = authorityService.findByName("ROLE_USER")
-                    .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
-            Etudiant student = new Etudiant();
-            student.setFirstName("OTMANE");
-            student.setLastName("BACHRI");
-            student.setAuthorities(Set.of(authority));
-            student.setFiliere("MIP (Maths Informatique, PC)");
-            student.setCne("K987654321");
-            student.setEmail("bachri.otm.fst@uhp.ac.ma");
-            student.setAccountLEnabled(true);
-            student.setAccountCompleted(true);
-            student.setPassword(passwordEncoder.encode("12345678"));
-            student = userRepo.save(student);
+//            createClubsAndIntegrations(etudiant);
+//            Authority authority = authorityService.findByName("ROLE_USER")
+//                    .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
+//            Etudiant student = new Etudiant();
+//            student.setFirstName("OTMANE");
+//            student.setLastName("BACHRI");
+//            student.setAuthorities(Set.of(authority));
+//            student.setFiliere("MIP (Maths Informatique, PC)");
+//            student.setCne("K987654321");
+//            student.setEmail("bachri.otm.fst@uhp.ac.ma");
+//            student.setAccountLEnabled(true);
+//            student.setAccountCompleted(true);
+//            student.setPassword(passwordEncoder.encode("12345678"));
+//            student = userRepo.save(student);
 
 
 // Creating another Etudiant
@@ -122,14 +122,14 @@ public class ClubApplication {
                     .build());
 
 // Adding first student to the new club
-            Integration integration1 = Integration.builder()
-                    .etudiant(student)
-                    .club(newClub)
-                    .memberRole(MemberRole.ADMIN)
-                    .roleName("President")
-                    .isValid(true)
-                    .build();
-            integration1 = integrationRepository.save(integration1);
+//            Integration integration1 = Integration.builder()
+//                    .etudiant(student)
+//                    .club(newClub)
+//                    .memberRole(MemberRole.ADMIN)
+//                    .roleName("President")
+//                    .isValid(true)
+//                    .build();
+//            integration1 = integrationRepository.save(integration1);
 //
 // Adding second student to the new club
             Integration integration2 = Integration.builder()
@@ -141,12 +141,12 @@ public class ClubApplication {
                     .build();
             integration2 = integrationRepository.save(integration2);
 
-// Associating integrations with the new club
-            newClub.setIntegrations(new ArrayList<>());
-            newClub.getIntegrations().add(integration1);
-            newClub.getIntegrations().add(integration2);
-            newClub = clubRepository.save(newClub);
-          //  demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
+//// Associating integrations with the new club
+//            newClub.setIntegrations(new ArrayList<>());
+//            newClub.getIntegrations().add(integration1);
+//            newClub.getIntegrations().add(integration2);
+//            newClub = clubRepository.save(newClub);
+//          //  demandeRepository.save(Demande.builder().statutDemande(StatutDemande.EN_COURS).date(new Date()).type(TypeDemande.INTEGRATION_CLUB).integration(integration1).etudiantDemandeur(student).club(newClub).build());
 
 // Adding publications to the new club
             Publication pub1 = publicationRepository.save(Publication.builder()
@@ -205,19 +205,19 @@ public class ClubApplication {
             pub5.setClub(newClub);
             publicationRepository.save(pub5);
             createEventsForClub(newClub);
-            Demande demande = Demande.builder()
-                    .date(new Date())
-                    .description("Demande d'intégration pour le club TECH INNOVATORS")
-                    .statutDemande(StatutDemande.EN_COURS)
-                    .type(TypeDemande.CREATION_CLUB)
-                    .motivation("J'aimerais m'impliquer dans les activités du club TECH INNOVATORS")
-                    .etudiantDemandeur(student)
-                    .club(newClub)
-                    .integration(integration1)
-                    .historiques(null)
-                    .organisationEvenement(null)
-                    .build();
-            demandeRepository.save(demande);
+//            Demande demande = Demande.builder()
+//                    .date(new Date())
+//                    .description("Demande d'intégration pour le club TECH INNOVATORS")
+//                    .statutDemande(StatutDemande.EN_COURS)
+//                    .type(TypeDemande.CREATION_CLUB)
+//                    .motivation("J'aimerais m'impliquer dans les activités du club TECH INNOVATORS")
+//                    .etudiantDemandeur(student)
+//                    .club(newClub)
+//                    .integration(integration1)
+//                    .historiques(null)
+//                    .organisationEvenement(null)
+//                    .build();
+//            demandeRepository.save(demande);
 
         };
     }

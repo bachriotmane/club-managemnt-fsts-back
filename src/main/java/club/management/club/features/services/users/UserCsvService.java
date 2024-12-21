@@ -12,6 +12,7 @@ import club.management.club.features.repositories.EtudiantRepository;
 import club.management.club.features.repositories.UserRepo;
 import club.management.club.features.services.auths.AuthorityService;
 import club.management.club.features.services.auths.JwtTokenService;
+import club.management.club.features.services.email.EmailService;
 import club.management.club.features.validators.CSVValidator;
 import club.management.club.features.validators.StudentValidator;
 import club.management.club.shared.Constants.Roles;
@@ -20,7 +21,9 @@ import club.management.club.shared.dtos.ListSuccessResponse;
 import club.management.club.shared.dtos.SuccessResponse;
 import club.management.club.shared.exceptionHandler.BadRequestException;
 import com.nimbusds.jose.util.StandardCharset;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,7 +52,9 @@ public class UserCsvService {
     private final EtudiantRepository etudiantRepo;
     private final AuthorityRepo authorityRepository;
     private final EtudiantMapper etudiantMapper;
-
+    private final EmailService emailService;
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
     public byte[] export(Authentication authentication) {
         var students = etudiantRepository.findAll();
         isAuthorized(authentication);
@@ -98,14 +104,14 @@ public class UserCsvService {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharset.UTF_8))) {
             processCsvFile(reader, authority);
-        } catch (IOException e) {
+        } catch (IOException | MessagingException e) {
             throw new RuntimeException("Error reading CSV file", e);
         }
 
         return new SuccessResponse<>("CSV file uploaded and students added successfully");
     }
 
-    private void processCsvFile(BufferedReader reader, Authority authority) throws IOException {
+    private void processCsvFile(BufferedReader reader, Authority authority) throws IOException, MessagingException {
         String line;
         int lineNumber = 1;
         while ((line = reader.readLine()) != null) {
@@ -119,6 +125,7 @@ public class UserCsvService {
                 Etudiant etudiant = getEtudiant(data, authority);
                 studentValidator.validateStudent(etudiant, lineNumber);
                 etudiantRepository.save(etudiant);
+                sendAccountCreationEmailWithPassword(etudiant,data[7]);
             }
             lineNumber++;
         }
@@ -139,6 +146,15 @@ public class UserCsvService {
         etudiant.setPassword(passwordEncoder.encode(data[7]));
 
         return etudiant;
+    }
+    private void sendAccountCreationEmailWithPassword(Etudiant etudiant, String password) throws MessagingException, UnsupportedEncodingException {
+
+        emailService.sendAccountCreationEmail(
+                etudiant.getEmail(),
+                etudiant.getFirstName() + " " + etudiant.getLastName(),
+                password,
+                "Création de compte réussie"
+        );
     }
 
     public ListSuccessResponse<ListUsersResponse> getAllUsers(Pageable paging, UserFilterDTO filter) {
@@ -177,7 +193,7 @@ public class UserCsvService {
         );
     }
 
-    public SuccessResponse<ListUsersResponse> editUser(String userId, UserEditRequest etudiantEditRequest, Authentication authentication) {
+    public SuccessResponse<ListUsersResponse> editUser(String userId, UserEditRequest etudiantEditRequest, Authentication authentication) throws MessagingException {
         isAuthorized(authentication);
 
         var etudiant = etudiantRepository.findById(userId)
@@ -186,6 +202,14 @@ public class UserCsvService {
         Etudiant updatedEtudiant = etudiantMapper.toEtudiant(etudiantEditRequest, etudiant);
 
        var newUser = etudiantRepository.save(updatedEtudiant);
+        if (etudiantEditRequest.isPasswordSend() && (etudiantEditRequest.password() != null && !etudiantEditRequest.password().isEmpty())) {
+            emailService.sendPasswordResetEmail(
+                    etudiantEditRequest.email(),
+                    etudiant.getFirstName() + " " + etudiant.getLastName(),
+                    etudiantEditRequest.password(),
+                    "Réinitialisation de votre mot de passe"
+            );
+        }
 
         return new SuccessResponse<>(new ListUsersResponse(
                 newUser.getId(),

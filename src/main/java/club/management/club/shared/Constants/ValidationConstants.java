@@ -24,8 +24,8 @@ public class ValidationConstants {
     public static final String COMMENT_NOT_EXIST = "User not authorized to delete this comment or comment does not exist";
     public static final String UNAUTHORIZED_ACTION = "Vous n'êtes pas autorisé à effectuer cette action.";
     // Validation des étudiants
-    public static final String EMAIL_FORMAT_INVALID = "Le format de l'email est invalide.";
-    public static final String EMAIL_ALREADY_EXISTS = "L'email est déjà utilisé.";
+    public static final String EMAIL_FORMAT_INVALID = "Le format de l'email fourni est invalide. Veuillez entrer un email valide se terminant par '.fst@uhp.ac.ma'.";
+    public static final String ACCOUNT_ALREADY_EXISTS = "Ce compte a déjà été créé avec cette adresse email. Veuillez supprimer cette ligne de votre fichier CSV avant de uplder le file.";
     public static final String FIRST_NAME_IS_MANDATORY = "Le prénom est obligatoire.";
     public static final String LAST_NAME_IS_MANDATORY = "Le nom de famille est obligatoire.";
     public static final String FILIERE_IS_MANDATORY = "La filière est obligatoire.";

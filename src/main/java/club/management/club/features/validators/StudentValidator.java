@@ -31,7 +31,7 @@ public class StudentValidator {
         }
 
         if (etudiantRepository.existsByEmail(etudiant.getEmail())) {
-            throw new BadRequestException("Ligne N° " + lineNumber + ": " + ValidationConstants.EMAIL_ALREADY_EXISTS);
+            throw new BadRequestException("Ligne N° " + lineNumber + ": " + ValidationConstants.ACCOUNT_ALREADY_EXISTS);
         }
 
         // Vérification de l'unicité du CIN
@@ -93,10 +93,10 @@ public class StudentValidator {
     }
 
     private boolean isPasswordValid(String password) {
+
         if (password == null || password.length() < 8 || passwordRegex == null) {
             return false;
         }
-
         Pattern pattern = Pattern.compile(passwordRegex);
         Matcher matcher = pattern.matcher(password);
 

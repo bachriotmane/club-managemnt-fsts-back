@@ -11,6 +11,7 @@ public record UserEditRequest(
          String filiere,
          String role,
          boolean accountLocked,
-         String password
+         String password,
+         boolean isPasswordSend
 )  implements Serializable {
 }

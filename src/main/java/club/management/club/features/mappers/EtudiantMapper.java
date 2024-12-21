@@ -8,7 +8,6 @@ import club.management.club.features.entities.Etudiant;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.repositories.AuthorityRepo;
 import club.management.club.features.repositories.ClubRepository;
-import club.management.club.features.repositories.EtudiantRepository;
 import club.management.club.shared.Constants.Roles;
 import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.exceptionHandler.BadRequestException;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -32,7 +30,6 @@ public class EtudiantMapper {
    private final AuthorityRepo authorityRepository;
     @Value("${application.security.password-regex}")
     private String passwordRegex;
-   private  final EtudiantRepository etudiantRepository;
     @Value("${email.domain:.fst@uhp.ac.ma}")
     private String emailDomain;
     public EtudiantDto toEtudiantDto(Etudiant etudiant) {
