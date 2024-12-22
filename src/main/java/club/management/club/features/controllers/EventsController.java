@@ -1,6 +1,7 @@
 package club.management.club.features.controllers;
 
 import club.management.club.features.dto.requests.EventRequest;
+import club.management.club.features.dto.responses.EventClubChartDTO;
 import club.management.club.features.dto.responses.EventResponseDTO;
 import club.management.club.features.dto.responses.PublicationDTO;
 import club.management.club.features.services.events.EventsService;
@@ -72,6 +73,9 @@ public class EventsController {
                 eventResponseDTO
         );
     }
+
+    @GetMapping("/chart/events/{year}")
+    public List<EventClubChartDTO> getEventClubs(@PathVariable int year)
 
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> deleteEvenementById(@PathVariable String id) {

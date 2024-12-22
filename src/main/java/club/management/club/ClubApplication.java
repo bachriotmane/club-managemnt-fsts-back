@@ -87,7 +87,7 @@ public class ClubApplication {
             User admin = Etudiant.builder().firstName("Kaouthar").lastName("FSTS").cin("MD8978").authorities(Set.of(adminAuth)).accountCompleted(true).password(passwordEncoder.encode("12345678")).accountLEnabled(true).accountLocked(false).email("kaouthar@uhp.ac.ma").build();
             userRepo.save(admin);
 
-            createClubsAndIntegrations(etudiant);
+//            createClubsAndIntegrations(etudiant);
             Authority authority = authorityService.findByName("ROLE_USER")
                     .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
             Etudiant student = new Etudiant();

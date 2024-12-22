@@ -2,6 +2,7 @@ package club.management.club.features.services.events.impl;
 
 import club.management.club.features.Specifications.EventsSpecifications;
 import club.management.club.features.dto.requests.EventRequest;
+import club.management.club.features.dto.responses.EventClubChartDTO;
 import club.management.club.features.dto.responses.EventResponseDTO;
 import club.management.club.features.dto.responses.PublicationDTO;
 import club.management.club.features.entities.Club;
@@ -24,8 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -46,6 +49,18 @@ public class EventsServiceImpl implements EventsService {
 
         // Sauvegarder l'événement mis à jour
         eventRepository.save(evenement);
+    }
+
+    @Override
+    public List<EventClubChartDTO> getEventsCountForClubs(int year) {
+        return clubRepository.findAll().stream()
+                .map(club -> {
+                    long clubCount = club.getEvenements().stream()
+                            .filter(evenement -> evenement.getDate().getYear() == year)
+                            .count();
+                    return new EventClubChartDTO(club.getId(), club.getNom(), (int) clubCount);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -3,6 +3,7 @@ package club.management.club.features.services.events;
 
 import club.management.club.features.dto.requests.EventRequest;
 import club.management.club.features.dto.requests.PublicationsRequest;
+import club.management.club.features.dto.responses.EventClubChartDTO;
 import club.management.club.features.dto.responses.EventResponseDTO;
 import club.management.club.features.dto.responses.PublicationDTO;
 
@@ -25,4 +26,5 @@ public interface EventsService {
     void deleteById(String id);
 
     void accepterEvenement(String id);
+    List<EventClubChartDTO> getEventsCountForClubs(int year);
 }
