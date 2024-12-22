@@ -30,12 +30,13 @@ public class StudentController {
 
     @GetMapping("/csv")
     @Operation(summary = "Download students as a csv file.")
-    public ResponseEntity<byte[]> generateCsvFile(Authentication authentication) {
+    public ResponseEntity<byte[]> generateCsvFile(Authentication authentication,
+                                           @RequestParam("uuidClub") String uuidClub) {
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", "students.csv");
 
-        byte[] csvBytes = userCsvService.export(authentication);
+        byte[] csvBytes = userCsvService.export(authentication,uuidClub);
         return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
     }
     @PostMapping(path = "/csv", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

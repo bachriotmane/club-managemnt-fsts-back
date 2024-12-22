@@ -8,11 +8,13 @@ import club.management.club.features.entities.Etudiant;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.repositories.AuthorityRepo;
 import club.management.club.features.repositories.ClubRepository;
+import club.management.club.features.services.auths.JwtTokenService;
 import club.management.club.shared.Constants.Roles;
 import club.management.club.shared.Constants.ValidationConstants;
 import club.management.club.shared.exceptionHandler.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +34,9 @@ public class EtudiantMapper {
     private String passwordRegex;
     @Value("${email.domain:.fst@uhp.ac.ma}")
     private String emailDomain;
+    private final JwtTokenService jwtTokenService;
+
+
     public EtudiantDto toEtudiantDto(Etudiant etudiant) {
         return new EtudiantDto(
             etudiant.getId(),
@@ -52,7 +57,7 @@ public class EtudiantMapper {
         );
     }
 
-    public Etudiant toEtudiant(UserEditRequest etudiantEditRequest, Etudiant existingEtudiant) {
+    public Etudiant toEtudiant(UserEditRequest etudiantEditRequest, Etudiant existingEtudiant, Authentication authentication) {
         Etudiant etudiant = existingEtudiant;
 
         if (etudiantEditRequest.firstName() != null && !etudiantEditRequest.firstName().isEmpty()) {
@@ -92,10 +97,15 @@ public class EtudiantMapper {
 
         if (etudiantEditRequest.role() != null) {
             String role = etudiantEditRequest.role();
-
+            var userId = jwtTokenService.getUserId(authentication);
+            if (userId.equals(etudiant.getId()) && !etudiantEditRequest.role().equals(Roles.ROLE_SUPERADMIN)) {
+                throw new BadRequestException(ValidationConstants.NOT_AUTHORIZED_CHANGE_YOUR_ROLE_CONTACT_SUPPORT);
+            }
             if (Roles.ROLE_ADMIN.equals(role) || Roles.ROLE_SUPERADMIN.equals(role)) {
                 Authority authority = authorityRepository.findByName(role);
-                if (authority != null && authority.getUsers() != null && !authority.getUsers().isEmpty()) {
+                boolean isCurrentUser = authority.getUsers().stream()
+                        .anyMatch(user -> user.getId().equals(etudiant.getId()));
+                if (!isCurrentUser && !authority.getUsers().isEmpty()) {
                     String errorMessage;
 
                     if (Roles.ROLE_SUPERADMIN.equals(role)) {
@@ -110,12 +120,12 @@ public class EtudiantMapper {
 
             Authority authority = authorityRepository.findByName(role);
             if (authority != null) {
-                Set<Authority> authorities = etudiant.getAuthorities() != null
-                        ? new HashSet<>(etudiant.getAuthorities())
-                        : new HashSet<>();
+                etudiant.setAuthorities(new HashSet<>());
+                Set<Authority> authorities = new HashSet<>();
                 authorities.add(authority);
                 etudiant.setAuthorities(authorities);
-            } else {
+            }
+            else {
                 throw new BadRequestException("Rôle introuvable.");
             }
         }

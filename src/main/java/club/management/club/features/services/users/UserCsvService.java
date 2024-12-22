@@ -23,7 +23,6 @@ import club.management.club.shared.exceptionHandler.BadRequestException;
 import com.nimbusds.jose.util.StandardCharset;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -53,10 +52,11 @@ public class UserCsvService {
     private final AuthorityRepo authorityRepository;
     private final EtudiantMapper etudiantMapper;
     private final EmailService emailService;
-    @Value("${application.mailing.frontend.activation-url}")
-    private String activationUrl;
-    public byte[] export(Authentication authentication) {
-        var students = etudiantRepository.findAll();
+
+    public byte[] export(Authentication authentication , String uuidClub) {
+        List<Etudiant> students;
+        if(!uuidClub.isEmpty()) students = etudiantRepository.findByClubIdAndValid(uuidClub);
+        else students = etudiantRepository.findAll();
         isAuthorized(authentication);
         StringBuilder csvContent = generateCsvContent(students);
         return csvContent.toString().getBytes(StandardCharset.UTF_8);
@@ -164,7 +164,8 @@ public class UserCsvService {
                 .where(UserSpecifications.withUserName(filter.userName()))
                 .and(UserSpecifications.withCin(filter.cin()))
                 .and(UserSpecifications.withCne(filter.cne()))
-                .and(UserSpecifications.withAuthority(authority));
+                .and(UserSpecifications.withAuthority(authority))
+                .and(UserSpecifications.withClubId(filter.uuidClub()));
 
         Page<Etudiant> users = etudiantRepo.findAll(spec, paging);
 
@@ -199,7 +200,7 @@ public class UserCsvService {
         var etudiant = etudiantRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException(ValidationConstants.USER_NOT_FOUND));
 
-        Etudiant updatedEtudiant = etudiantMapper.toEtudiant(etudiantEditRequest, etudiant);
+        Etudiant updatedEtudiant = etudiantMapper.toEtudiant(etudiantEditRequest, etudiant,authentication);
 
        var newUser = etudiantRepository.save(updatedEtudiant);
         if (etudiantEditRequest.isPasswordSend() && (etudiantEditRequest.password() != null && !etudiantEditRequest.password().isEmpty())) {

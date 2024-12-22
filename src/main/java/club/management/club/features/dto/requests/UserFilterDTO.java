@@ -4,5 +4,6 @@ public record UserFilterDTO(
         String userName,
         String role,
         String cin,
-        String cne
+        String cne,
+        String uuidClub
 ) { }

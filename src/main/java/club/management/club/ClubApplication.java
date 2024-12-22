@@ -81,11 +81,16 @@ public class ClubApplication {
 
             Etudiant etudiant = etudiantRepository.findByEmail("bourich.sou.fst@uhp.ac.ma")
                     .orElseGet(this::createEtudiant);
-            Authority adminAuth = authorityService.findByName(Roles.ROLE_SUPERADMIN)
+
+            Etudiant supperAdmin = etudiantRepository.findByEmail("kaouthar.000.fst@uhp.ac.ma")
+                    .orElseGet(this::createSupperAdminEtudiant);
+
+            Etudiant gestionnaires = etudiantRepository.findByEmail("gestionnaires.000.fst@uhp.ac.ma")
+                    .orElseGet(this::createGestionnairesEtudiant);
+            Authority admin = authorityService.findByName(Roles.ROLE_SUPERADMIN)
                     .orElseThrow(() -> new IllegalStateException("ROLE ADMIN was not initiated"));
 
-            User admin = Etudiant.builder().firstName("Kaouthar").lastName("FSTS").cin("MD8978").authorities(Set.of(adminAuth)).accountCompleted(true).password(passwordEncoder.encode("12345678")).accountLEnabled(true).accountLocked(false).email("kaouthar@uhp.ac.ma").build();
-            userRepo.save(admin);
+
 
             createClubsAndIntegrations(etudiant);
             Authority authority = authorityService.findByName("ROLE_USER")
@@ -221,7 +226,50 @@ public class ClubApplication {
 
         };
     }
+    private Etudiant createSupperAdminEtudiant() {
+        // Créer un nouvel Etudiant Admin
+        Etudiant adminEtudiant = new Etudiant();
+        adminEtudiant.setFirstName("Kaouthar");
+        adminEtudiant.setLastName("FSTS");
+        adminEtudiant.setEmail("kaouthar.000.fst@uhp.ac.ma");
+        adminEtudiant.setCin("MD8978");
+        adminEtudiant.setPassword(passwordEncoder.encode("12345678"));
+        adminEtudiant.setAccountLocked(false);
+        adminEtudiant.setAccountLEnabled(true);
+        adminEtudiant.setAccountCompleted(true);
+        adminEtudiant.setFiliere("Admin");
 
+        Authority adminAuth = authorityService.findByName(Roles.ROLE_SUPERADMIN)
+                .orElseThrow(() -> new IllegalStateException("ROLE_SUPPER_ADMIN was not found"));
+
+        adminEtudiant.setAuthorities(Set.of(adminAuth));
+
+        etudiantRepository.save(adminEtudiant);
+        return adminEtudiant;
+    }
+
+    private Etudiant createGestionnairesEtudiant() {
+        // Créer un nouvel Etudiant Gestionnaire
+        Etudiant gestionnairesEtudiant = new Etudiant();
+        gestionnairesEtudiant.setFirstName("Gestionnaires");
+        gestionnairesEtudiant.setLastName("Nom");
+        gestionnairesEtudiant.setEmail("gestionnaires.000.fst@uhp.ac.ma");
+        gestionnairesEtudiant.setCin("CIN654321");
+        gestionnairesEtudiant.setCne("CNE654321");
+        gestionnairesEtudiant.setFiliere("Gestion");
+        gestionnairesEtudiant.setPassword(passwordEncoder.encode("Gestion@20"));
+        gestionnairesEtudiant.setAccountLocked(false);
+        gestionnairesEtudiant.setAccountLEnabled(true);
+        gestionnairesEtudiant.setAccountCompleted(true);
+
+        Authority adminAuth = authorityService.findByName(Roles.ROLE_ADMIN)
+                .orElseThrow(() -> new IllegalStateException("ROLE_ADMIN was not found"));
+
+        gestionnairesEtudiant.setAuthorities(Set.of(adminAuth));
+
+        etudiantRepository.save(gestionnairesEtudiant);
+        return gestionnairesEtudiant;
+    }
     private Etudiant createEtudiant() {
         // Créer un nouvel Etudiant si l'email n'existe pas
         Etudiant etudiant = new Etudiant();
@@ -235,7 +283,7 @@ public class ClubApplication {
         etudiant.setAccountLocked(false);
         etudiant.setAccountLEnabled(true);
         etudiant.setAccountCompleted(true);
-        Authority authority = authorityService.findByName("ROLE_USER")
+        Authority authority = authorityService.findByName(Roles.ROLE_USER)
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
         etudiant.setAuthorities(Set.of(authority));
         etudiantRepository.save(etudiant);

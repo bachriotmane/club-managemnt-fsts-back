@@ -39,4 +39,5 @@ public class ValidationConstants {
     public static final String INVALID_CSV_MIME_TYPE = "Le fichier téléchargé n'est pas un fichier CSV valide.";
     public static final String ROLE_ADMIN_ALREADY_ASSIGNED = "Le rôle ADMIN est déjà attribué à un utilisateur. Un seul administrateur est autorisé.";
     public static final String ROLE_SUPERADMIN_ALREADY_ASSIGNED = "Le rôle SUPERADMIN est déjà attribué à un utilisateur. Veuillez contacter le support technique pour modifier ce rôle.";
+    public static final String NOT_AUTHORIZED_CHANGE_YOUR_ROLE_CONTACT_SUPPORT = "Non autorisé à changer votre rôle, contactez le support technique.";
 }
