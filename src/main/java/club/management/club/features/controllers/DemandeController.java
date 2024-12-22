@@ -120,6 +120,7 @@ public class DemandeController {
                 .etudiant(etudiant)
                 .isValid(false)
                 .roleName("member")
+                .deactivate(false)
                 .memberRole(MemberRole.MEMBER)
                 .club(savedClub)
                 .build();
@@ -300,9 +301,6 @@ public class DemandeController {
         int count = demandeService.countEvenementDemandesEnCours();
         return ResponseEntity.ok(count);
     }
-
-
-
 
 }
 

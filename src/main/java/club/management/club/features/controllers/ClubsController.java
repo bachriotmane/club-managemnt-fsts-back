@@ -2,14 +2,19 @@ package club.management.club.features.controllers;
 
 import club.management.club.features.dto.requests.ClubEditRequest;
 import club.management.club.features.dto.responses.*;
+import club.management.club.features.entities.Etudiant;
+import club.management.club.features.entities.Integration;
 import club.management.club.features.enums.MemberRole;
 import club.management.club.features.mappers.ClubsMapper;
+import club.management.club.features.repositories.IntegrationRepository;
 import club.management.club.features.services.clubs.ClubDetails;
 import club.management.club.features.services.clubs.ClubListMembers;
 import club.management.club.features.services.clubs.ClubService;
+import club.management.club.features.services.users.UserService;
 import club.management.club.shared.dtos.ListSuccessResponse;
 import club.management.club.features.services.clubs.ClubList;
 import club.management.club.shared.dtos.SuccessResponse;
+import club.management.club.shared.exceptionHandler.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +43,8 @@ public class ClubsController {
     private final ClubListMembers clubListMembers;
     private final ClubService clubService;
     private  final ClubsMapper clubsMapper;
+    private final IntegrationRepository integrationRepository;
+    private final UserService userService;
 
 
     @GetMapping
@@ -149,5 +156,15 @@ public class ClubsController {
     public ResponseEntity<List<ClubNameDTO>> getAllClubs(Authentication authentication) {
         List<ClubNameDTO> clubs = clubService.getAllClubs(authentication);
         return new ResponseEntity<>(clubs, HttpStatus.OK);
+    }
+    @PatchMapping("/deactivate/{integrationId}")
+    public void deactivateUserInsideClub(
+            @PathVariable("integrationId") String integrationId
+    ){
+        Integration integration = integrationRepository.findById(integrationId).orElseThrow(
+                () -> new ResourceNotFoundException("Intgeration","integrationId",integrationId)
+        );
+        integration.setDeactivate(!integration.isDeactivate());
+        integrationRepository.save(integration);
     }
 }
