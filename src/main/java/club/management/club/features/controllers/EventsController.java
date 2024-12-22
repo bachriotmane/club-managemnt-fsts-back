@@ -75,7 +75,9 @@ public class EventsController {
     }
 
     @GetMapping("/chart/events/{year}")
-    public List<EventClubChartDTO> getEventClubs(@PathVariable int year)
+    public List<EventClubChartDTO> getEventClubs(@PathVariable int year){
+        return eventsService.getEventsCountForClubs(year);
+    }
 
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> deleteEvenementById(@PathVariable String id) {
