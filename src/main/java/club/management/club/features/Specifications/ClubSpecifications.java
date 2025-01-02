@@ -69,5 +69,8 @@ public class ClubSpecifications {
         };
     }
 
+    public static Specification<Club> withoutBlockedClubs() {
+        return (root, query, builder) -> builder.isFalse(root.get("isBlocked"));
+    }
 
 }

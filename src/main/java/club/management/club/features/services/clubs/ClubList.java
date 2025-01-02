@@ -36,18 +36,26 @@ public class ClubList {
                                                                 String principalEmail
 
     ) {
-        String idPrincipal = userRepo.findUserByEmail(principalEmail).orElseThrow(() -> new RuntimeException("User not found")).getId();
-        var idStudent = isMyClubs ? jwtTokenService.getUserId(authentication) : null;
+        var  idUser = jwtTokenService.getUserId(authentication);
+        var idStudent = isMyClubs ?  idUser : null;
+        var  isAdmin = userRepo.findById(idUser)
+                .map(user -> user.getAuthorities().stream()
+                        .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getName())))
+                .orElse(false);
         var spec = ClubSpecifications.withNom(nomClub)
-                . and( !isMyClubs ? ClubSpecifications.withStudentId(idStudent) : ClubSpecifications.withStudentIdForMyClub(idStudent))
                 .and(ClubSpecifications.withIsValid(true));
 
-//        if(isMyClubs)  spec.and(ClubSpecifications.withStudentIdForMyClub(idStudent));
-//        else           spec.and(ClubSpecifications.withStudentId(idStudent));
-
+         if(isMyClubs) {
+             spec = spec.and(ClubSpecifications.withStudentIdForMyClub(idStudent))
+                     .and(ClubSpecifications.withoutBlockedClubs());
+         }
+         if( !isAdmin){
+             spec = spec.and( ClubSpecifications.withStudentId(idStudent))
+                     .and(ClubSpecifications.withoutBlockedClubs());
+         }
 
         var clubPage = clubRepository.findAll(spec, pageable);
-        var serviceResponses = getData(clubPage, idPrincipal);
+        var serviceResponses = getData(clubPage);
         return new ListSuccessResponse<>(
                 serviceResponses,
                 clubPage.getTotalElements(),
@@ -55,10 +63,9 @@ public class ClubList {
                 clubPage.hasNext()
         );
     }
-    private Set<ClubListResponse> getData(Page<Club> clubPage, String uid) {
+    private Set<ClubListResponse> getData(Page<Club> clubPage) {
 
-        User user = userRepo.findUserById(uid).orElse(null);
-       Stream<ClubListResponse>  clubListResponseWithoutFilter = clubPage.getContent().stream()
+       return  clubPage.getContent().stream()
                 .map(club -> new ClubListResponse(
                         club.getId(),
                         club.getNom(),
@@ -67,20 +74,14 @@ public class ClubList {
                         club.getLogo()!= null ? club.getLogo().getId() : null,
                         club.getInstagramme(),
                         club.isBlocked()
-                ));
-
-    if(user == null) return clubListResponseWithoutFilter.collect(Collectors.toSet());
-
-        return user.getAuthorities().stream()
-                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getName())) ? clubListResponseWithoutFilter.collect(Collectors.toSet()) :
-                clubListResponseWithoutFilter.filter(club -> !club.isBlocked()).collect(Collectors.toSet());
-
+                )).collect(Collectors.toSet());
     }
 
     public ListSuccessResponse<ClubListResponse> getClubsWhereUserAdmin(Pageable pageable, String uid) {
-        var spec = ClubSpecifications.withAdminOrModeratorRole(uid);
+        var spec = ClubSpecifications.withAdminOrModeratorRole(uid)
+                .and(ClubSpecifications.withoutBlockedClubs());
         var clubPage = clubRepository.findAll(spec, pageable);
-        var serviceResponses = getData(clubPage, uid);
+        var serviceResponses = getData(clubPage);
         return new ListSuccessResponse<>(
                 serviceResponses,
                 clubPage.getTotalElements(),
