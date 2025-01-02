@@ -11,6 +11,8 @@ import club.management.club.features.entities.MailToken;
 import club.management.club.features.entities.User;
 import club.management.club.features.services.images.impl.ImageServiceImpl;
 import club.management.club.features.services.users.UserService;
+import club.management.club.shared.Constants.ValidationConstants;
+import club.management.club.shared.exceptionHandler.BadRequestException;
 import club.management.club.shared.exceptionHandler.MailDontValidateException;
 import club.management.club.shared.exceptions.AccountAlreadyActivated;
 import club.management.club.shared.exceptions.AccountNotFoundException;
@@ -79,6 +81,9 @@ public class AuthenticationService {
         User user =  userService.findUserByEmail(request.getEmail());
         if (!user.isAccountLEnabled()){
             throw new MailDontValidateException();
+        }
+        if (user.isAccountLocked()) {
+            throw new BadRequestException(ValidationConstants.USER_IS_BLOCKED_ACCOUNT);
         }
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

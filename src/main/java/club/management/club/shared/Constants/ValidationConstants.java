@@ -40,4 +40,5 @@ public class ValidationConstants {
     public static final String ROLE_ADMIN_ALREADY_ASSIGNED = "Le rôle ADMIN est déjà attribué à un utilisateur. Un seul administrateur est autorisé.";
     public static final String ROLE_SUPERADMIN_ALREADY_ASSIGNED = "Le rôle SUPERADMIN est déjà attribué à un utilisateur. Veuillez contacter le support technique pour modifier ce rôle.";
     public static final String NOT_AUTHORIZED_CHANGE_YOUR_ROLE_CONTACT_SUPPORT = "Non autorisé à changer votre rôle, contactez le support technique.";
+    public static final String USER_IS_BLOCKED_ACCOUNT = "Votre compte est bloqué par l'administration. Veuillez contacter l'administrateur pour plus d'informations.";
 }
