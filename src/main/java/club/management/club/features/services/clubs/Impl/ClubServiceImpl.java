@@ -89,6 +89,14 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    public void blockClub(String clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new ResourceNotFoundException("Club", "clubId", clubId));
+        club.setBlocked(!club.isBlocked());
+       club =  clubRepository.save(club);
+    }
+
+    @Override
     public Club save(Club club) {
         return clubRepository.save(club);
     }

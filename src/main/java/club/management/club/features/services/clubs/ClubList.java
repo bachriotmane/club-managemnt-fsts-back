@@ -1,4 +1,6 @@
 package club.management.club.features.services.clubs;
+import club.management.club.features.entities.User;
+import club.management.club.features.repositories.UserRepo;
 import club.management.club.shared.dtos.ListSuccessResponse;
 import club.management.club.features.dto.responses.ClubListResponse;
 import club.management.club.features.entities.Club;
@@ -18,17 +20,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class ClubList {
     private final ClubRepository clubRepository;
     private final JwtTokenService jwtTokenService;
+    private final UserRepo userRepo;
+
     public ListSuccessResponse<ClubListResponse> getAllClubs(Authentication authentication,
                                                              Pageable pageable,
                                                              String nomClub,
-                                                             boolean isMyClubs
+                                                             boolean isMyClubs,
+                                                                String principalEmail
+
     ) {
+        String idPrincipal = userRepo.findUserByEmail(principalEmail).orElseThrow(() -> new RuntimeException("User not found")).getId();
         var idStudent = isMyClubs ? jwtTokenService.getUserId(authentication) : null;
         var spec = ClubSpecifications.withNom(nomClub)
                 . and( !isMyClubs ? ClubSpecifications.withStudentId(idStudent) : ClubSpecifications.withStudentIdForMyClub(idStudent))
@@ -39,7 +47,7 @@ public class ClubList {
 
 
         var clubPage = clubRepository.findAll(spec, pageable);
-        var serviceResponses = getData(clubPage);
+        var serviceResponses = getData(clubPage, idPrincipal);
         return new ListSuccessResponse<>(
                 serviceResponses,
                 clubPage.getTotalElements(),
@@ -47,23 +55,32 @@ public class ClubList {
                 clubPage.hasNext()
         );
     }
-    private Set<ClubListResponse> getData(Page<Club> clubPage) {
-        return clubPage.getContent().stream()
+    private Set<ClubListResponse> getData(Page<Club> clubPage, String uid) {
+
+        User user = userRepo.findUserById(uid).orElse(null);
+       Stream<ClubListResponse>  clubListResponseWithoutFilter = clubPage.getContent().stream()
                 .map(club -> new ClubListResponse(
                         club.getId(),
                         club.getNom(),
                         club.getDescription(),
                         club.getCreatedAt(),
                         club.getLogo()!= null ? club.getLogo().getId() : null,
-                        club.getInstagramme()
-                ))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                        club.getInstagramme(),
+                        club.isBlocked()
+                ));
+
+    if(user == null) return clubListResponseWithoutFilter.collect(Collectors.toSet());
+
+        return user.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getName())) ? clubListResponseWithoutFilter.collect(Collectors.toSet()) :
+                clubListResponseWithoutFilter.filter(club -> !club.isBlocked()).collect(Collectors.toSet());
+
     }
 
     public ListSuccessResponse<ClubListResponse> getClubsWhereUserAdmin(Pageable pageable, String uid) {
         var spec = ClubSpecifications.withAdminOrModeratorRole(uid);
         var clubPage = clubRepository.findAll(spec, pageable);
-        var serviceResponses = getData(clubPage);
+        var serviceResponses = getData(clubPage, uid);
         return new ListSuccessResponse<>(
                 serviceResponses,
                 clubPage.getTotalElements(),
@@ -86,8 +103,11 @@ public class ClubList {
                         club.getDescription(),
                         club.getCreatedAt(),
                         club.getLogo()!= null ? club.getLogo().getId() : null,
-                        club.getInstagramme()
+                        club.getInstagramme(),
+                        club.isBlocked()
+
                 ))
+                .filter(club -> !club.isBlocked())
                 .collect(Collectors.toSet());
 
         

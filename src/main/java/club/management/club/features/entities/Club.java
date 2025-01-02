@@ -23,6 +23,7 @@ public class Club {
     private String description;
     private Date createdAt;
     private boolean isValid;
+    private boolean isBlocked;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)

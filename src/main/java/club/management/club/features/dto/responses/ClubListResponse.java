@@ -9,7 +9,8 @@ public record ClubListResponse(
          String description,
          Date createdAt,
          String logo,
-         String instagramme
+         String instagramme,
+         boolean isBlocked
 
 ) implements Serializable {
 }

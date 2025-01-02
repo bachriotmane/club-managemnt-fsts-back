@@ -22,4 +22,6 @@ public interface ClubService {
 
     void accepterClub(String id);
     List<ClubNameDTO> getAllClubs(Authentication authentication) ;
+
+    void blockClub(String clubId);
 }

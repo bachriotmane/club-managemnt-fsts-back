@@ -23,10 +23,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,14 +51,16 @@ public class ClubsController {
 
     @GetMapping
     @Operation(summary = "Get all clubs.")
+    @PreAuthorize("isAuthenticated()")
     public ListSuccessResponse<ClubListResponse> getAllClubs(Authentication authentication,
                                                              @RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam(required = false) String nomClub,
-                                                             @RequestParam(required = false) boolean isMyClubs
+                                                             @RequestParam(required = false) boolean isMyClubs,
+                                                             Principal principal
     ) {
         var paging = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return clubList.getAllClubs(authentication,paging, nomClub,isMyClubs);
+        return clubList.getAllClubs(authentication,paging, nomClub,isMyClubs,principal.getName());
     }
     @GetMapping("/club/{uuid}")
     @Operation(summary = "Get club  details by UUID.")
@@ -166,5 +170,16 @@ public class ClubsController {
         );
         integration.setDeactivate(!integration.isDeactivate());
         integrationRepository.save(integration);
+    }
+
+
+    @PatchMapping("/blockClub/{clubId}")
+    public ResponseEntity<String> blockClub(@PathVariable String clubId) {
+        try {
+            clubService.blockClub(clubId);
+            return ResponseEntity.ok("Club bloqué avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erreur lors du blocage du club");
+        }
     }
 }
